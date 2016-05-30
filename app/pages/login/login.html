@@ -1,0 +1,21 @@
+<ion-navbar *navbar>
+  <ion-title>
+Login
+  </ion-title>
+</ion-navbar>
+
+<ion-content class="login">
+<ion-list>
+
+  <ion-item>
+    <ion-input type="text" placeholder="a4arshi@yahoo.com" #email></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input type="password" placeholder="Password" #pass></ion-input>
+  </ion-item>
+</ion-list>
+<!--<button style="margin-left: 40%">Login</button>-->
+<button full (click)="login(email,pass)">Full Button</button>
+
+</ion-content>
