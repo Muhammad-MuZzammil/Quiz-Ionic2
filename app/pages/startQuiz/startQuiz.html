@@ -14,18 +14,14 @@ Welcome to Quiz Page
 
 
 
-<ion-card   *ngFor="let item of data | async">
+<ion-card   *ngFor="let item of questionArr">
   <ion-card-header>
     Questions
   </ion-card-header>
-
+<div [innerHTML] = "item.html"></div>
   <ion-list>
-      <ion-icon name="md-book" item-left>  
-       {{item.$value | json}}
-          </ion-icon>
-    <!--<button ion-item>
       
-    </button>-->
+   
 
 
   </ion-list>

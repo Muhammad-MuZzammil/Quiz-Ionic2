@@ -21,40 +21,59 @@ export class startQuiz implements OnInit {
     }
     
     ngOnInit(){
-        this.data= this.af.database.list('quiz-in-progress/quiz-ID/')
+        this.data= this.af.database.list('quiz-in-progress/quiz01/')
         // console.log(this.data);
-        this.data.forEach(function (val) {
-            console.log(val)
-            val.forEach(function (object) {
+        this.data.forEach( (val) => {
+            // console.log(val)
+            val.forEach( (questionbanks)=> {
                 // console.log(object.$key)
                 // console.log(object.mybook)
                 
-                if(object.$key === "questionbanks") {
-                        for (var key in object) {
+                if(questionbanks.$key === "questionbanks") {
+                        for (var book in questionbanks) {
                             //    console.log('keyyyyy',key)
                             //    console.log('objectttttt',object[key])
                             //    console.log('objecttttttchappppppppp',object[key].chapters)
                                
                                
                                
-                        for (var key1 in object[key].chapters) {
-                               console.log('keyyyyy11',object[key].chapters[key1])
+                        for (var chapterID in questionbanks[book].chapters) {
+                            //    console.log('keyyyyy11',questionbanks[book].chapters[chapterID])
                          
                          
                                  
-                        for (var key2 in object[key].chapters[key1].topics) {
-                               console.log('keyyyyy11',object[key].chapters[key1].topics[key2])
+                        for (var topicID in questionbanks[book].chapters[chapterID].topics) {
+                            //    console.log('keyyyyy11',questionbanks[book].chapters[chapterID].topics[topicID])
                          
-                         for (var key3 in object[key].chapters[key1].topics[key2].questions) {
-                               console.log('keyyyyy11',object[key].chapters[key1].topics[key2].questions[key3])
+                         for (var QuestionsID in questionbanks[book].chapters[chapterID].topics[topicID].questions) {
+                            //    console.log('keyyyyy11',questionbanks[book].chapters[chapterID].topics[topicID].questions[QuestionsID])
                          
-                       this.questionArr.push(object[key].chapters[key1].topics[key2].questions[key3]);
-                               console.log(this.questionArr)
+                       this.questionArr.push(questionbanks[book].chapters[chapterID].topics[topicID].questions[QuestionsID]);
+                            //    console.log(this.questionArr)
+   
+   
+                     this.questionArr.forEach((Question) => {
+                            //    console.log(Question)
+                               
+                         for (var option in Question) {
+                            //    console.log(Question[option]);
+                            //    console.log(Question.type);
+                             if (Question.type === 1) {
+                                 
+                            //    console.log(Question.type);
+                         for (var showOpt in Question[option]) {
+                               console.log(showOpt);
+                          
+                          
+                            
+                         } 
+                             }
+                             
+                         }                               
                          
-                        
-                    }  
+                     });
                          
-                        
+                         }
                     }  
                         
                     }                            
