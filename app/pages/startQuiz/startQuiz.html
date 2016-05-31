@@ -5,30 +5,26 @@ Welcome to Quiz Page
   </ion-title>
 </ion-navbar>
 
-<ion-content class="login">
+<ion-content class="Quiz">
 <!--<ion-list>
   <ion-item >
    
   </ion-item>
 </ion-list>-->
 
-
-
-<ion-card   *ngFor="let item of data | async">
+<ion-card *ngFor="let quiz of questionArr">
   <ion-card-header>
     Questions
   </ion-card-header>
-
-  <ion-list>
-      <ion-icon name="md-book" item-left>  
-       {{item.$value | json}}
-          </ion-icon>
-    <!--<button ion-item>
-      
-    </button>-->
+<div *ngIf="quiz.type == 1"><div [innerHTML] = "quiz.html"></div></div>
 
 
-  </ion-list>
+<div *ngIf="quiz.type == 3">
+<div *ngFor="let childQuiz of quiz.questiones">  <b [innerHTML] = "childQuiz.html"></b> <br/>
+<div *ngFor="let option of childQuiz.options">  <i [innerHTML] = "option.html"></i></div>
+
+ </div>
+  </div>
 </ion-card>
 
 </ion-content>
