@@ -1,30 +1,58 @@
 <ion-navbar *navbar>
   <ion-title>
-Welcome to Quiz Page
+     Node Js Quiz
 
   </ion-title>
 </ion-navbar>
 
-<ion-content class="login">
-<!--<ion-list>
-  <ion-item >
-   
-  </ion-item>
-</ion-list>-->
-
-
-
-<ion-card   *ngFor="let item of questionArr">
+<ion-content class="Quiz" >
+  <ion-card>
   <ion-card-header>
-    Questions
   </ion-card-header>
-<div [innerHTML] = "item.html"></div>
-  <ion-list>
-      
-   
+  <ion-card-content *ngIf="question">
+    <div [innerHTML]="question.html"></div>
+    <ion-list *ngIf="question.type == 1">
+      <ion-item *ngFor="let option of question.options">
+        <ion-radio ></ion-radio>
+          <ion-label [innerHTML]="option.html"></ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ion-list *ngIf="question.type == 2">
+      <ion-item *ngFor="let option of question.options">
+          <ion-checkbox ></ion-checkbox>
+          <ion-label [innerHTML]="option.html"></ion-label>
+      </ion-item>
+    </ion-list>
+    <div *ngIf="question.type == 3">
+      <div *ngFor="let questionSet of question.questiones let i = index">
+            <ion-list *ngIf="questionSet.type === 1">
+              <div style="display: inline-flex;padding-top: 15px;"><b style="margin-right: 10px;">Q:{{i + 1}}</b><div [innerHTML]="questionSet.html"></div></div>
+              <ion-item *ngFor="let option of questionSet.options">
+                <ion-radio ></ion-radio>
+                  <ion-label [innerHTML]="option.html"></ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-list *ngIf="questionSet.type === 2">
+            <div style="display: inline-flex;padding-top: 15px;"><b style="margin-right: 10px;">Q:{{i + 1}}</b><div [innerHTML]="questionSet.html"></div></div>
+              <ion-item *ngFor="let option of questionSet.options">
+                <ion-checkbox ></ion-checkbox>
+                <ion-label [innerHTML]="option.html"></ion-label>
+              </ion-item>
+            </ion-list>
+
+      </div>
+    </div>
 
 
-  </ion-list>
+  </ion-card-content>
+
 </ion-card>
+  <!--ion-card-->
 
+  <ion-buttons end>
+    <button (click)="nextQuestion()" item-right *ngIf="!lastQuestion">Next</button>
+    <button (click)="nextQuestion()" item-right *ngIf="lastQuestion">Save</button>
+  </ion-buttons>
 </ion-content>
+<!--Ion-content-->
