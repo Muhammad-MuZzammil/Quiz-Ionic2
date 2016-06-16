@@ -6,11 +6,9 @@ import {Component,OnInit} from '@angular/core';
 
 import {AngularFire, FirebaseListObservable} from 'angularfire2';
 
-
-
-
 @Component({
     templateUrl: 'build/pages/startQuiz/startQuiz.html'
+
 })
 export class startQuiz implements OnInit {
 
@@ -81,6 +79,7 @@ export class startQuiz implements OnInit {
              })
          }// if statement end
          // push data in Quiz Array else if question type is == 2
+
          else if(question.type === 2){
              this.Quiz.push({
                  html: question.html,
@@ -109,6 +108,7 @@ export class startQuiz implements OnInit {
                       this.QuizQuestionSet.push(questionRadioButton);
                  }
                   //make question checkbox Object
+
                  else if(questionSet.type === 2) {
                     var questionCheckbox =  {
                           html: questionSet.html,
@@ -116,11 +116,13 @@ export class startQuiz implements OnInit {
                           option: this.CheckboxOptionArray,
                       }
                         //push question checkbox Object
+
                  this.QuizQuestionSet.push(questionCheckbox);
 
                  }
              })
              // push data in Quiz Array else question type is == 3
+
              this.Quiz.push({
                  html: question.html,
                  type: question.type,
@@ -203,4 +205,5 @@ export class startQuiz implements OnInit {
 
          }//if statement end
      }// save Quiz To firebase funtion end
+
 }
