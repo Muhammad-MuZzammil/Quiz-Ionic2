@@ -9,6 +9,9 @@
     "**/*.ts",
     "!node_modules/**/*"
   ],
+  "files": [
+  "node_modules/angularfire2/firebase3.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "typings/main",

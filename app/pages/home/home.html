@@ -1,20 +1,24 @@
 <ion-navbar *navbar>
-  <ion-title>
-    Home
-  </ion-title>
+    <ion-title>
+        Home
+    </ion-title>
 </ion-navbar>
 
 <ion-content class="home">
-     <ion-card>
-    <ion-card-content>
- <h1>Welcome to Quiz Page</h1>
-   </ion-card-content>
-</ion-card>
+    <h1>Welcome to Quiz Page</h1>
+    <ion-card *ngIf="groupQuiz" *ngFor="let quiz of groupQuiz; let i = index">
+        <div *ngIf="quiz">
+            <img src="https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png"/>
+            <ion-card-content>
+                <ion-card-title>
+                    <h1>{{quiz.quizTitle}}</h1>
+                </ion-card-title>
+                <strong>{{quiz.startTime | amCalendar }}</strong>
+                <ion-buttons end>
+                    <button secondary (click)="results(i)" end>Go to Quiz</button>
+                </ion-buttons>
+            </ion-card-content>
 
-    <div>
-      <button secondary (click)="results()" style="margin-left: 40%">
-        Go to Quiz
-      </button>
-
-    </div>
+        </div>
+    </ion-card>
 </ion-content>

@@ -1,10 +1,10 @@
 
-import {NavController} from 'ionic-angular';
+import {NavController,NavParams} from 'ionic-angular';
 // import {AngularFire} from 'angularfire2';
 // import {Observable} from 'rxjs/Observable';
 import {Component,OnInit} from '@angular/core';
-
-import {AngularFire, FirebaseListObservable} from 'angularfire2';
+// import {config} from "../../app";
+// import {AngularFire, FirebaseListObservable} from 'angularfire2';
 
 @Component({
     templateUrl: 'build/pages/startQuiz/startQuiz.html'
@@ -12,7 +12,7 @@ import {AngularFire, FirebaseListObservable} from 'angularfire2';
 })
 export class startQuiz implements OnInit {
 
-    data: FirebaseListObservable<any[]>;
+    // data: FirebaseListObservable<any[]>;
     questionArr: any[] = [];
     CheckboxOptionArray: any[] = [];
     questionKeyArray: any[] = [];
@@ -23,28 +23,26 @@ export class startQuiz implements OnInit {
     answer: String;
     Quiz: any[] = [];
     QuizQuestionSet: any[] = [];
-
-    constructor(public _navController: NavController, public af: AngularFire) { }
+    QuizId;
+    constructor(public _navController: NavController,public params: NavParams) { }
 
     ngOnInit() {
-        this.af.database.list('quiz-in-progress/quiz01/').subscribe((res) => {
-            this.questionArr = [];
-            res.forEach((quizData) => {
-            if (quizData.$key === "questionbanks") {
-                        for (var book in quizData) {
-                            console.log(book)
-                            for (var chapter in quizData[book].chapters) {
-                                for (var topic in quizData[book].chapters[chapter].topics) {
-                                    for (var question in quizData[book].chapters[chapter].topics[topic].questions) {
-                                        this.questionKeyArray.push(question);
-                                        this.questionArr.push(quizData[book].chapters[chapter].topics[topic].questions[question]);
-                                    } // for in loop questions end
-                                } // for in loop Topics end
-                            } // for in loop chapters end
-                        } // for in loop on Book end
-                        this.question = this.questionArr[this.index];
-                    }// if statement end
-              })// this.data For Each loop end
+        this.QuizId = this.params.get('quizId');
+        alert(this.QuizId)
+        firebase.database().ref('quiz-in-progress/quiz01/').on("value", (quizData)=>{
+            console.log(quizData.val()["questionbanks"])
+            for (var book in quizData.val()["questionbanks"]) {
+                              console.log(book)
+                              for (var chapter in quizData.val()["questionbanks"][book].chapters) {
+                                  for (var topic in quizData.val()["questionbanks"][book].chapters[chapter].topics) {
+                                      for (var question in quizData.val()["questionbanks"][book].chapters[chapter].topics[topic].questions) {
+                                          this.questionKeyArray.push(question);
+                                          this.questionArr.push(quizData.val()["questionbanks"][book].chapters[chapter].topics[topic].questions[question]);
+                                      } // for in loop questions end
+                                  } // for in loop Topics end
+                              } // for in loop chapters end
+                          } // for in loop on Book end
+            this.question = this.questionArr[this.index];
         })
     }// ngOnInit function end
 
@@ -150,12 +148,12 @@ export class startQuiz implements OnInit {
      }//nextQuestion show next question after liking on next button
      // save Quiz To firebase funtion start
      saveQuizToFirebase(quiz) {
-         var ref = new Firebase("https://luminous-torch-4640.firebaseio.com/");
+        //  var ref = new Firebase("https://luminous-torch-4640.firebaseio.com/");
 
          var multipathObject = {};
-         var userId = "arsalan";
-         var groupId = "panacloud";
-         var subgroupId = "meet-one";
+         var userId = "abcs";
+         var groupId = "groupquiz";
+         var subgroupId = "quisubgroup";
          var quizId = "quiz01";
          // if Quiz
          if(quiz) {
@@ -194,7 +192,7 @@ export class startQuiz implements OnInit {
                  }// if statement type == 3 end
 
              }) // quiz.forEach end
-             ref.update(multipathObject, function(error) {
+             firebase.database().ref().update(multipathObject, function(error) {
                  if(error) {
                      console.log(error)
                  }

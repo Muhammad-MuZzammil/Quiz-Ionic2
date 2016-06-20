@@ -6,15 +6,19 @@ import {ionicBootstrap, NavParams, ViewController,Platform} from 'ionic-angular'
 import {LoginPage} from "./pages/login/login";
 import {LoginService} from "./pages/login/LoginService";
 import {HomePage} from "./pages/home/home";
-import {HomeService} from "./pages/home/homeService";
-import {FIREBASE_PROVIDERS, defaultFirebase, firebaseAuthConfig, AuthProviders, AuthMethods} from "angularfire2";
+import {startQuiz} from "./pages/startQuiz/startQuiz";
+import {GetGroupQuizSchedule} from "./pages/home/GetGroupQuizSchedule";
+// import {FIREBASE_PROVIDERS, defaultFirebase, firebaseAuthConfig, AuthProviders, AuthMethods} from "angularfire2";
+
+
+// export const firebaseRef = firebase.initializeApp(config);
+
 @Component({
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
 
 class QuizApp {
   rootPage: any = LoginPage;
-
     constructor(platform: Platform, location: Location) {
 
 
@@ -27,9 +31,15 @@ class QuizApp {
 }
 ionicBootstrap(QuizApp, [
     LoginService,
-    FIREBASE_PROVIDERS,
-    defaultFirebase('https://luminous-torch-4640.firebaseio.com/'),
-    firebaseAuthConfig({
-        provider: AuthProviders.Custom,
-        method: AuthMethods.CustomToken
-  })]);
+    GetGroupQuizSchedule
+]);
+// ionicBootstrap(QuizApp, [
+//     LoginService,
+//     GetGroupQuizSchedule,
+//     FIREBASE_PROVIDERS,
+//     defaultFirebase('https://luminous-torch-4640.firebaseio.com/'),
+//     firebaseAuthConfig({
+//         provider: AuthProviders.Custom,
+//         method: AuthMethods.CustomToken
+//   })
+// ]);
