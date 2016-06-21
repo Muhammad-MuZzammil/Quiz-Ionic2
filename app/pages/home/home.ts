@@ -13,25 +13,15 @@ export class HomePage {
   constructor(private _navController: NavController,private _GetGroupQuizSchedule: GetGroupQuizSchedule) {
   }
   ngOnInit() {
-
+    // get all quiz Schedule and show in cards;
     this._GetGroupQuizSchedule.getQuiz().then((res) => {
-      console.log(res,"11111111111111111111111111111");
       this.groupQuiz = res;
-      console.log(this._GetGroupQuizSchedule.getQuizIndex(1))
-
     });
 
-  }
+  }//ngOnInit end
+  
   results(index){
-      this._GetGroupQuizSchedule.getQuizIndex(1)
-
-         this._navController.push(ResultPage,{quizId:this._GetGroupQuizSchedule.getQuizIndex(1)})
-
-
+    // push on result page
+         this._navController.push(ResultPage,{quizIdIndex: index})
   }
-  /*
-    pushPage(){
-      this._navController.push(SomeImportedPage, { userId: "12345"});
-    }
-  */
 }

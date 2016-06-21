@@ -1,10 +1,7 @@
 
 import {NavController,NavParams} from 'ionic-angular';
-// import {AngularFire} from 'angularfire2';
-// import {Observable} from 'rxjs/Observable';
 import {Component,OnInit} from '@angular/core';
-// import {config} from "../../app";
-// import {AngularFire, FirebaseListObservable} from 'angularfire2';
+import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 
 @Component({
     templateUrl: 'build/pages/startQuiz/startQuiz.html'
@@ -12,7 +9,6 @@ import {Component,OnInit} from '@angular/core';
 })
 export class startQuiz implements OnInit {
 
-    // data: FirebaseListObservable<any[]>;
     questionArr: any[] = [];
     CheckboxOptionArray: any[] = [];
     questionKeyArray: any[] = [];
@@ -24,12 +20,15 @@ export class startQuiz implements OnInit {
     Quiz: any[] = [];
     QuizQuestionSet: any[] = [];
     QuizId;
-    constructor(public _navController: NavController,public params: NavParams) { }
+    QuizParams;
+    constructor(public _navController: NavController,public params: NavParams,private QuizSchedule: GetGroupQuizSchedule) { }
 
     ngOnInit() {
-        this.QuizId = this.params.get('quizId');
-        alert(this.QuizId)
-        firebase.database().ref('quiz-in-progress/quiz01/').on("value", (quizData)=>{
+        this.QuizParams = this.params.get('quizshow');
+
+        this.QuizParams = this.QuizSchedule.getQuizId(this.QuizParams);
+
+        firebase.database().ref('quiz-in-progress').child(this.QuizParams).on("value", (quizData)=> {
             console.log(quizData.val()["questionbanks"])
             for (var book in quizData.val()["questionbanks"]) {
                               console.log(book)

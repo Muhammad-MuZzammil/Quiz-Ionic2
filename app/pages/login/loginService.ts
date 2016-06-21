@@ -4,33 +4,26 @@ import {Injectable} from "@angular/core";
 export class LoginService {
 
 
-  FirebaseLoginUser(user){
+    FirebaseLoginUser(user) {
 
-      localStorage.setItem('ngStorage-LoggedInUser',JSON.stringify(user.user));
+        localStorage.setItem('ngStorage-LoggedInUser', JSON.stringify(user.user));
 
-      // Firebase.goOnline();
-      firebase.database().goOnline(); // if previously manually signed out from firebase.
-    //  var auth = $firebaseAuth();
-      // var auth = $firebaseAuth(ref);
-        // console.log('token', token)
+        firebase.database().goOnline(); // if previously manually signed out from firebase.
+        return new Promise((resolve, reject) => {
 
+            firebase.auth().signInWithCustomToken(user.user.token).catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                if (error) {
+                    console.log({ errorCode: errorCode, errorMessage: errorMessage });
+                    reject({ errorCode: errorCode, errorMessage: errorMessage });
+                }
+                else {
+                    resolve("sign in")
+                }
+            });//signInWithCustomToken function end
+        }) // promsie end
+    }//FirebaseLoginUser function end
 
-      return new Promise((resolve, reject) => {
-
-        firebase.auth().signInWithCustomToken(user.user.token).catch(function(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // ...
-          if(error) {
-            console.log({errorCode: errorCode, errorMessage: errorMessage});
-            reject({errorCode: errorCode, errorMessage: errorMessage});
-          }
-          else {
-            resolve("sign in")
-          }
-});
-      })
-  }
-
-}
+}//LoginService Class end

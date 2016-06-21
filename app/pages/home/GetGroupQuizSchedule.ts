@@ -10,6 +10,7 @@ export class GetGroupQuizSchedule {
     groupQuizId = [];
     QuizScheduleKey = [];
     constructor() {
+        // Get data from localStorage;
         this.user = localStorage.getItem("ngStorage-LoggedInUser")
         this.user = JSON.parse(this.user);
         this.userId = this.user.userID;
@@ -17,11 +18,10 @@ export class GetGroupQuizSchedule {
 
     getQuiz() {
         return new Promise((resolve, reject) => {
-
+            // first data user all subgroup membership
             firebase.database().ref("user-subgroup-memberships").child(this.userId).on("value", (snapshot) => {
                 for (var groupId in snapshot.val()) {
                     for (var subgroupId in snapshot.val()[groupId]) {
-                        console.log(snapshot.val()[groupId][subgroupId])
                         if (snapshot.val()[groupId][subgroupId]["membership-type"] > 0) {
                             var QuizSchedule = firebase.database().ref("quiz-schedule").child(groupId).child(subgroupId);
                             QuizSchedule.off("child_added");
@@ -40,8 +40,7 @@ export class GetGroupQuizSchedule {
                                     var groupQuizIndex = this.QuizScheduleKey.indexOf(childChanged.key);
                                     this.groupQuiz[groupQuizIndex].scheduleIsStarted = childChanged.val().started;
 
-                                });
-                                // Add data in group quiz Array when child_changed
+                                }); // Add data in group quiz Array when child_changed
 
                                 QuizSchedule.child(snapshot.key).child("schedules").on("child_added", (schedule) => {
                                     // push child_added in local Array _self.groupQuiz and ScheduleKey in QuizScheduleKey Array
@@ -56,22 +55,21 @@ export class GetGroupQuizSchedule {
                                         subgroupId: subgroupId,
                                         scheduleId: schedule.key
                                     };
-
                                     this.groupQuiz.push(QuizSchedule);
                                     this.QuizScheduleKey.push(schedule.key);
-                                });
+                                });// child_added getting all scdules end
                                 this.groupQuizId.push(snapshot.key);
                                 resolve(this.groupQuiz);
-                            });
-                        }
+                            });// child_added on quiz-schedule end
+                        }// if statement checking membership-type > 0 end
+                    }// for in loop for getting subgroupId end
+                }// for in loop for getting groupId end
+            })//value event user-subgroup-memberships end
+        }) // promise end
+    }//getQuiz function end
 
-                    }
-                }
-            })
-        })
-
-    }
-    getQuizIndex(index) {
+    // get Quiz Id by index
+    getQuizId(index) {
         return this.groupQuizId[index]
     }
 }
