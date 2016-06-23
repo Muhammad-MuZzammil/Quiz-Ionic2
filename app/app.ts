@@ -6,7 +6,8 @@ import {LoginService} from "./pages/login/LoginService";
 import {HomePage} from "./pages/home/home";
 import {startQuiz} from "./pages/startQuiz/startQuiz";
 import {GetGroupQuizSchedule} from "./pages/home/GetGroupQuizSchedule";
-
+import {HTTP_PROVIDERS} from "@angular/http";
+import {QuizService} from "./pages/startQuiz/quizService";
 @Component({
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
@@ -25,5 +26,7 @@ class QuizApp {
 }
 ionicBootstrap(QuizApp, [
     LoginService,
-    GetGroupQuizSchedule
+    QuizService,
+    GetGroupQuizSchedule,
+    HTTP_PROVIDERS
 ]);

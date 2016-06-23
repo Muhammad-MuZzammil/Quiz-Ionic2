@@ -1,24 +1,16 @@
-<ion-navbar  hideBackButton *navbar>
+<ion-navbar hideBackButton *navbar>
     <ion-title>
-        Home
+        Welcome to Quiz Page
     </ion-title>
 </ion-navbar>
 
 <ion-content class="home">
-    <h1>Welcome to Quiz Page</h1>
-    <ion-card *ngIf="groupQuiz" *ngFor="let quiz of groupQuiz; let i = index">
-        <div *ngIf="quiz">
-            <img src="https://s3-us-west-2.amazonaws.com/defaultimgs/teamofteams.png"/>
-            <ion-card-content>
-                <ion-card-title>
-                    <h1>{{quiz.quizTitle}}</h1>
-                </ion-card-title>
-                <strong>{{quiz.startTime | amCalendar }}</strong>
-                <ion-buttons end>
-                    <button secondary (click)="results(i)" end>Go to Quiz</button>
-                </ion-buttons>
-            </ion-card-content>
-
-        </div>
-    </ion-card>
+    <ion-list>
+        <ion-item *ngFor="let quiz of groupQuiz; let i = index">
+            <h2>{{quiz.quizTitle}}</h2>
+            <i>{{quiz.startTime | amCalendar }}</i><br />
+            <i>Duration:{{quiz.duration }}</i>
+            <button seagreen item-right (click)="results(i)" *ngIf="quiz.scheduleIsStarted" (click)="checkIsQuizCanGiven(quiz,i)">Go to Quiz</button>
+        </ion-item>
+    </ion-list>
 </ion-content>

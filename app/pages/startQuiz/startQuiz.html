@@ -1,6 +1,6 @@
 <ion-navbar  hideBackButton *navbar>
   <ion-title>
-     Node Js Quiz
+     {{QuizUniqueId}}
 
   </ion-title>
 </ion-navbar>
@@ -10,17 +10,19 @@
   <ion-card-header>
   </ion-card-header>
   <ion-card-content *ngIf="question">
+    <div id="duration" style="float: right;"></div>
+
     <div [innerHTML]="question.html"></div>
     <ion-list radio-group *ngIf="question.type == 1" [(ngModel)]="optionRadioButton">
        <ion-item *ngFor="let option of question.options let i = index" >
            <ion-label [innerHTML]="option.html" ></ion-label>
-           <ion-radio value="{{option.html}}"></ion-radio>
+           <ion-radio value="{{option.html}}" (ionSelect)="active(optionRadioButton)"></ion-radio>
        </ion-item>
      </ion-list>
 
     <ion-list *ngIf="question.type == 2" >
       <ion-item *ngFor="let option of question.options; let i = index">
-          <ion-checkbox (change)="savequestion(option.html,checkbox.checked)" #checkbox [checked]=false ></ion-checkbox>
+          <ion-checkbox (ionChange)="savequestion(option.html,checkbox.checked)" #checkbox [checked]=false ></ion-checkbox>
           <ion-label [innerHTML]="option.html"></ion-label>
       </ion-item>
     </ion-list>
@@ -30,25 +32,25 @@
               <div style="display: inline-flex;padding-top: 15px;"><b style="margin-right: 10px;">Q:{{i + 1}}</b><div [innerHTML]="questionSet.html"></div></div>
               <ion-item *ngFor="let option of questionSet.options; let i = index">
                 <ion-radio value="{{option.html}}"></ion-radio>
-                  <ion-label [innerHTML]="option.html"></ion-label>
+                  <ion-label [innerHTML]="option.html" (ionSelect)="active(QuestionSetOptionRadioButton)"></ion-label>
               </ion-item>
             </ion-list>
             <ion-list *ngIf="questionSet.type === 2">
             <div style="display: inline-flex;padding-top: 15px;"><b style="margin-right: 10px;">Q:{{i + 1}}</b><div [innerHTML]="questionSet.html"></div></div>
               <ion-item *ngFor="let option of questionSet.options">
-                <ion-checkbox (change)="savequestion(option.html,checkbox.checked)" #checkbox [checked]=false  ></ion-checkbox>
+                <ion-checkbox (ionChange)="savequestion(option.html,checkbox.checked,3)" #checkbox [checked]=false  ></ion-checkbox>
                 <ion-label [innerHTML]="option.html"></ion-label>
               </ion-item>
             </ion-list>
 
       </div>
     </div>
-
-
   </ion-card-content>
   <ion-buttons end>
-      <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right *ngIf="!lastQuestion">Next</button>
-     <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right *ngIf="lastQuestion">Save</button>
+      <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right seagreen *ngIf="!lastQuestion" [hidden]="!optionRadioButton">Next</button>
+      <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right seagreen *ngIf="!lastQuestion" [hidden]="!QuestionSetOptionRadioButton">Next</button>
+     <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right seagreen *ngIf="lastQuestion" [hidden]="!optionRadioButton">Save</button>
+     <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right seagreen *ngIf="lastQuestion" [hidden]="!QuestionSetOptionRadioButton">Save</button>
   </ion-buttons>
 </ion-card>
   <!--ion-card-->

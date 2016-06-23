@@ -14,9 +14,8 @@ export class ResultPage {
     constructor(public _navController : NavController,public params: NavParams,private QuizSchedule: GetGroupQuizSchedule){
       this.QuizId = this.params.get('quizIdIndex');
       this.QuizData = this.QuizSchedule.groupQuiz[this.QuizId];
-
     }
      startQuiz(){
-      this._navController.push(startQuiz,{quizshow: this.QuizId});
+      this._navController.push(startQuiz,{quizshow: this.QuizId, groupId: this.QuizData.groupId, subgroupId: this.QuizData.subgroupId});
     }
 }
