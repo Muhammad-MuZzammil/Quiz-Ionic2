@@ -10,7 +10,7 @@
             <h2>{{quiz.quizTitle}}</h2>
             <i>{{quiz.startTime | amCalendar }}</i><br />
             <i>Duration:{{quiz.duration }}</i>
-            <button seagreen item-right (click)="results(i)" *ngIf="quiz.scheduleIsStarted" (click)="checkIsQuizCanGiven(quiz,i)">Go to Quiz</button>
+            <button seagreen item-right  *ngIf="quiz.scheduleIsStarted" (click)="checkIsQuizCanGiven(quiz,i)">Go to Quiz</button>
         </ion-item>
     </ion-list>
 </ion-content>
