@@ -28,10 +28,12 @@ export class GetGroupQuizSchedule {
                         QuizSchedule.off("child_added");
                         QuizSchedule.on("child_added", (snapshot) => {
                             for (var scheduleId in snapshot.val().schedules) {
+                                console.log(snapshot.val());
                                 var QuizSchedules = {
                                     imgLogoUrl: snapshot.val().imgLogoUrl,
                                     quizTitle: snapshot.val().title,
                                     duration: snapshot.val().duration,
+                                    "passing-marks": snapshot.val()["passing-marks"],
                                     schedule: snapshot.val().schedules[scheduleId]["title"],
                                     startTime: snapshot.val().schedules[scheduleId]["start-time"],
                                     scheduleIsStarted: snapshot.val().schedules[scheduleId]["started"],

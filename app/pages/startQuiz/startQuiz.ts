@@ -49,6 +49,16 @@ export class startQuiz implements OnInit {
                 } // for in loop chapters end
             } // for in loop on Book end
             this.question = this.questionArr[this.index];
+            console.log(this.questionArr)
+            var UserQuizObject = {
+                userId: this.QuizSchedule.getCurrentUser(),
+                groupId: this.GroupId,
+                subgroupId: this.subgroupId,
+                quizId: this.QuizUniqueId
+            }
+            this._QuizService.saveRandomQuestion(this.questionArr,UserQuizObject,this.questionKeyArray).then(function(res) {
+                console.log(res)
+            })
             this.countdown("duration", this.duration, 0);
         })
     }// ngOnInit function end
