@@ -16,7 +16,6 @@ export class LoginService {
                 var errorCode = error.code;
                 var errorMessage = error.message;
                 if (error) {
-                    console.log({ errorCode: errorCode, errorMessage: errorMessage });
                     reject({ errorCode: errorCode, errorMessage: errorMessage });
                 }
                 else {

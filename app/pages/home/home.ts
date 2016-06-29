@@ -43,10 +43,8 @@ export class HomePage {
             (this.quizObj).subscribe((res) => {
                 (res.json());
                 if (res.json().statusCode == 0) {
-                    console.log(res.json())
                     this._navController.push(ResultPage, { quizIdIndex: index })
                 }else {
-                    console.log(res.json())
                 }
             });//subscribe end
     }// checkIsQuizCanGiven end

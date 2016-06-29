@@ -25,9 +25,11 @@ export class startQuiz implements OnInit {
     subgroupId: string;
     showNext: boolean = false;
     showSave: boolean = false;
+    userAnswer: any;
     optionRadioButton;
     QuestionSetOptionRadioButton;
     duration
+    remainingTime
     constructor(public _navController: NavController, public params: NavParams, private QuizSchedule: GetGroupQuizSchedule, private _QuizService: QuizService) { }
 
     ngOnInit() {
@@ -48,18 +50,25 @@ export class startQuiz implements OnInit {
                     } // for in loop Topics end
                 } // for in loop chapters end
             } // for in loop on Book end
-            this.question = this.questionArr[this.index];
-            console.log(this.questionArr)
             var UserQuizObject = {
                 userId: this.QuizSchedule.getCurrentUser(),
                 groupId: this.GroupId,
                 subgroupId: this.subgroupId,
                 quizId: this.QuizUniqueId
             }
-            this._QuizService.saveRandomQuestion(this.questionArr,UserQuizObject,this.questionKeyArray).then(function(res) {
-                console.log(res)
+            this._QuizService.saveRandomQuestion(this.questionArr,UserQuizObject,this.questionKeyArray).then((res)=> {
+                if(res) {
+                    this.question = this.questionArr[res["question-started-index"]];
+                    this.userAnswer =  res.questions[res["question-started-index"]]
+                    for(var questionOriginalKey in this.userAnswer){
+                        this.remainingTime = this.userAnswer[questionOriginalKey]["timer"]
+                    }
+                    this.duration = this.remainingTime ? this.remainingTime : this.duration;
+                    this.countdown("duration", this.duration, 0);
+                }
+                // this._QuizService.userQuiz()
             })
-            this.countdown("duration", this.duration, 0);
+
         })
     }// ngOnInit function end
     // show Timer
@@ -84,8 +93,6 @@ export class startQuiz implements OnInit {
     }
     active(rad1) {
         if (rad1) {
-            console.log("rad1", rad1)
-
             this.showNext = true;
 
         }
@@ -185,6 +192,7 @@ export class startQuiz implements OnInit {
         this.index++;
         this.optionRadioButton = null;
         this.QuestionSetOptionRadioButton = null;
+        this.saveQuizToFirebase(this.Quiz)
         // check if this.questionArr.length is greater than index if greater than assign next question in this.question Object
         if (this.questionArr.length > this.index) {
             this.question = this.questionArr[this.index];
@@ -195,7 +203,7 @@ export class startQuiz implements OnInit {
             this.lastQuestion = true;
         }
         if (this.questionArr.length - 1 < this.index) {
-            this.saveQuizToFirebase(this.Quiz)
+
         }
 
     }//nextQuestion show next question after liking on next button
