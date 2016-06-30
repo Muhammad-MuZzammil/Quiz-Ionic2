@@ -56,7 +56,7 @@ export class startQuiz implements OnInit {
                 subgroupId: this.subgroupId,
                 quizId: this.QuizUniqueId
             }
-            this._QuizService.saveRandomQuestion(this.questionArr,UserQuizObject,this.questionKeyArray).then((res)=> {
+            this._QuizService.userQuiz(this.questionArr,UserQuizObject,this.questionKeyArray).then((res)=> {
                 if(res) {
                     this.question = this.questionArr[res["question-started-index"]];
                     this.userAnswer =  res.questions[res["question-started-index"]]
@@ -99,17 +99,17 @@ export class startQuiz implements OnInit {
 
     }
     // save checkbox question option in local array;
-    savequestion(option, checked, type) {
+    savequestion(option, checked, type,index) {
 
         if (checked) {
             type ? this.QuestionSetOptionRadioButton = true : this.optionRadioButton = true;
             this.CheckboxOptionArray.push({
-                html: option
+                checkboxOriginalIndex: index
             });
 
         } else {
             this.CheckboxOptionArray.splice(this.CheckboxOptionArray.indexOf({
-                html: option
+                html: index
             }), 1);
             if (type) {
                 this.CheckboxOptionArray.length == 0 ? this.QuestionSetOptionRadioButton = false : "";
@@ -124,14 +124,18 @@ export class startQuiz implements OnInit {
         var questionIndex = this.questionArr.indexOf(question); // find index of question index
         var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
         // push data in Quiz Array if question type is == 1
-        var radioOption = {
-            html: optionRadioButton
-        }
+
+        var radioButtonOptionIndex = parseInt(optionRadioButton.charAt(0))
+        var radioButtonOptionRandomIndex = question.options.length - (radioButtonOptionIndex + 1);
+        // var radioOption = {
+        //     html: optionRadioButton
+        // }
         if (question.type === 1) {
             this.Quiz.push({
                 html: question.html,
                 type: question.type,
-                option: radioOption,
+                optionOriginalIndex: radioButtonOptionIndex,
+                optionRandomIndex: radioButtonOptionRandomIndex,
                 questionKey: questionKey
             })
         }// if statement end

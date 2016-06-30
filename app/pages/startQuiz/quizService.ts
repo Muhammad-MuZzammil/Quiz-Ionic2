@@ -1,6 +1,8 @@
 import {Injectable} from "@angular/core";
 @Injectable()
 export class QuizService {
+    quizQuestionOriginalKeyArray = []
+    quizOptionOriginalKeyArray = []
     saveQuizToFirebase(UserQuizObject,quiz) {
         // if Qu
         console.log(quiz, "quiz")
@@ -10,17 +12,20 @@ export class QuizService {
         var subgroupId = UserQuizObject.subgroupId;
         var quizId = UserQuizObject.quizId;
         if (quiz) {
-            quiz.forEach(function(question) {
+            quiz.forEach((question) => {
+                var questionRandomIndex = this.quizQuestionOriginalKeyArray.indexOf(question.questionKey)
                 // check if question.type == 1
                 if (question.type == 1) {
                     // make object of quiz question radio button object
-                    multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + question.questionKey + "/options/" + 0 + "/"] = question.option;
+                        multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" +  questionRandomIndex + "/" + question.questionKey + "/options/" + question.optionRandomIndex + "/" + question.optionOriginalIndex + "/"] = true;
                 }
                 // check if question.type == 2
                 if (question.type == 2) {
                     // make object of quiz question checkbox object
-                    multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + question.questionKey + "/options"] = question.option;
-                }
+                    question.options.forEach((option, optionIndex) => {
+                        var optionRandomIndex = optionIndex == 0 ? question.options.length - 1 : question.options.length - (optionIndex + 1);
+                        multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" +  questionRandomIndex + "/" + questionKey + "/options/" + optionRandomIndex + "/" + optionIndex + "/"] = false;
+                    })
                 // check if question.type == 3
                 if (question.type == 3) {
                     question.questiones.forEach((questionSet, index) => {
@@ -61,8 +66,7 @@ export class QuizService {
     } // saveQuizToFirebase
 
     // save quiz question randomly
-    saveRandomQuestion(quiz , UserQuizObject,questionKeyArray) {
-        firebase.database.enableLogging(true);
+    saveRandomQuestion(quiz, UserQuizObject,questionKeyArray) {
         var multipathObject = {};
         var userId = UserQuizObject.userId;
         var groupId = UserQuizObject.groupId;
@@ -106,9 +110,8 @@ export class QuizService {
                         console.log(error)
                     }
                     else {
-                        this.userQuiz(UserQuizObject).then((res)=> {
+                        this.userQuiz(quiz, UserQuizObject,questionKeyArray).then((res)=> {
                             resolve(res)
-
                         })
                     }
                 }) // multipath update end
@@ -117,14 +120,40 @@ export class QuizService {
     }
 
 
-    userQuiz(UserQuizObject) {
+    userQuiz(quiz, UserQuizObject,questionKeyArray) {
         var userId = UserQuizObject.userId;
         var groupId = UserQuizObject.groupId;
         var subgroupId = UserQuizObject.subgroupId;
         var quizId = UserQuizObject.quizId;
+
         return new Promise((resolve, reject) => {
             firebase.database().ref("answer-users").child(userId).child(groupId).child(subgroupId).child(quizId).once("value", (usrQuiz)=> {
-                resolve(usrQuiz.val())
+                if(usrQuiz.val() == null) {
+                    this.saveRandomQuestion(quiz, UserQuizObject,questionKeyArray).then(res => {
+                        console.log(res,"resssssssssssssssssssss")
+                        resolve(res)
+                    })
+                }
+                else {
+                    usrQuiz.val().questions.forEach((questionObject) => {
+                        var questionkey;
+                        var optionAIndexArray = []
+                        for(questionkey in questionObject) {
+                            this.quizQuestionOriginalKeyArray.push(questionkey)
+                        }
+                        if(questionObject[questionkey].options) {
+                            console.log(questionObject[questionkey])
+                            questionObject[questionkey].options.forEach((option)=> {
+                                for(var optionOriginalIndex in option) {
+                                    optionAIndexArray.push(optionOriginalIndex)
+                                }
+                            })
+                        }
+                        this.quizOptionOriginalKeyArray.push({optionOriginalIndex: optionAIndexArray})
+                        var optionAIndexArray = []
+                    })
+                    resolve(usrQuiz.val());
+                }
             })
         })
     }
