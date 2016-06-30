@@ -30,6 +30,7 @@ export class startQuiz implements OnInit {
     QuestionSetOptionRadioButton;
     duration
     remainingTime
+    questioStartedIndex : number
     constructor(public _navController: NavController, public params: NavParams, private QuizSchedule: GetGroupQuizSchedule, private _QuizService: QuizService) { }
 
     ngOnInit() {
@@ -59,12 +60,13 @@ export class startQuiz implements OnInit {
             this._QuizService.userQuiz(this.questionArr,UserQuizObject,this.questionKeyArray).then((res)=> {
                 if(res) {
                     this.question = this.questionArr[res["question-started-index"]];
-                    this.userAnswer =  res.questions[res["question-started-index"]]
+                    this.userAnswer =  res.questions[res["question-started-index"]];
+                    this.questioStartedIndex = res["question-started-index"];
                     for(var questionOriginalKey in this.userAnswer){
                         this.remainingTime = this.userAnswer[questionOriginalKey]["timer"]
                     }
-                    this.duration = this.remainingTime ? this.remainingTime : this.duration;
-                    this.countdown("duration", this.duration, 0);
+                    // this.duration = this.remainingTime ? this.remainingTime : this.duration;
+                    this.countdown("duration", this.duration, 0, this.remainingTime);
                 }
                 // this._QuizService.userQuiz()
             })
@@ -72,8 +74,9 @@ export class startQuiz implements OnInit {
         })
     }// ngOnInit function end
     // show Timer
-    countdown(element, minutes, seconds) {
-        var time = minutes * 60 + seconds;
+    countdown(element, minutes, seconds,remainingTime) {
+            var time = remainingTime ? remainingTime : minutes * 60 + seconds;
+
         var interval = setInterval(()=> {
             var el = document.getElementById(element);
             if (time == 0) {
@@ -89,18 +92,13 @@ export class startQuiz implements OnInit {
             var text = minutes + ':' + seconds;
             el.innerHTML = text;
             time--;
+            this.remainingTime = time
+
         }, 1000);
     }
-    active(rad1) {
-        if (rad1) {
-            this.showNext = true;
-
-        }
-
-    }
+    active(rad1) {}
     // save checkbox question option in local array;
     savequestion(option, checked, type,index) {
-
         if (checked) {
             type ? this.QuestionSetOptionRadioButton = true : this.optionRadioButton = true;
             this.CheckboxOptionArray.push({
@@ -124,15 +122,12 @@ export class startQuiz implements OnInit {
         var questionIndex = this.questionArr.indexOf(question); // find index of question index
         var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
         // push data in Quiz Array if question type is == 1
-
-        var radioButtonOptionIndex = parseInt(optionRadioButton.charAt(0))
-        var radioButtonOptionRandomIndex = question.options.length - (radioButtonOptionIndex + 1);
-        // var radioOption = {
-        //     html: optionRadioButton
-        // }
         if (question.type === 1) {
+            var radioButtonOptionIndex = parseInt(optionRadioButton)
+            console.log(radioButtonOptionIndex);
+            var radioButtonOptionRandomIndex = question.options.length - (radioButtonOptionIndex + 1);
             this.Quiz.push({
-                html: question.html,
+                timer: this.remainingTime,
                 type: question.type,
                 optionOriginalIndex: radioButtonOptionIndex,
                 optionRandomIndex: radioButtonOptionRandomIndex,
@@ -142,10 +137,16 @@ export class startQuiz implements OnInit {
         // push data in Quiz Array else if question type is == 2
 
         else if (question.type === 2) {
+            var checkboxOptionIndex = [];
+             this.CheckboxOptionArray.forEach((checkboxIndex) => {
+                var CheckboxOptionRandomIndex = question.options.length - (checkboxIndex.checkboxOriginalIndex + 1);
+                checkboxOptionIndex.push({CheckboxOptionRandomIndex: CheckboxOptionRandomIndex})
+             })
             this.Quiz.push({
-                html: question.html,
+                timer: this.remainingTime,
                 type: question.type,
-                option: this.CheckboxOptionArray,
+                optionOriginalIndex: this.CheckboxOptionArray,
+                optionRandomIndex: checkboxOptionIndex,
                 questionKey: questionKey
             })
         }//else if statement end
@@ -156,14 +157,18 @@ export class startQuiz implements OnInit {
             question.questiones.forEach((questionSet, i) => {
                 // if question set question type == 1
                 if (questionSet.type === 1) {
-                    var questionSetRadioButtonOption = {
-                        html: QuestionSetOptionRadioButton
-                    }
+                    // var questionSetRadioButtonOption = {
+                    //     html: QuestionSetOptionRadioButton
+                    // }
+                    var questionSetRadioButtonOptionIndex = parseInt(QuestionSetOptionRadioButton);
+                    var questionSetRadioButtonOptionRandomIndex = questionSet.options.length - (questionSetRadioButtonOptionIndex + 1);
                     //make question Radio Button Object
                     var questionRadioButton = {
-                        html: questionSet.html,
-                        type: questionSet.type,
-                        option: questionSetRadioButtonOption,
+                        timer: this.remainingTime,
+                        type: question.type,
+                        optionOriginalIndex: questionSetRadioButtonOptionIndex,
+                        optionRandomIndex: questionSetRadioButtonOptionRandomIndex,
+                        questionKey: questionKey
                     }
                     // push question Radio Button Object
                     this.QuizQuestionSet.push(questionRadioButton);
@@ -221,8 +226,9 @@ export class startQuiz implements OnInit {
             subgroupId: this.subgroupId,
             quizId: this.QuizUniqueId
         }
-        this._QuizService.saveQuizToFirebase(UserQuizObject, quiz).then(() => {
+        this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.questioStartedIndex).then(() => {
             alert("Quiz Submit");
+            this.questioStartedIndex += 1;
         })
     }// save Quiz To firebase funtion end
 

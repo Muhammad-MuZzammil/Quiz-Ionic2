@@ -1,9 +1,10 @@
 import {Injectable} from "@angular/core";
 @Injectable()
 export class QuizService {
-    quizQuestionOriginalKeyArray = []
-    quizOptionOriginalKeyArray = []
-    saveQuizToFirebase(UserQuizObject,quiz) {
+    quizQuestionOriginalKeyArray = [];
+    quizQuestionSetOriginalKeyArray = [];
+    quizOptionOriginalKeyArray = [];
+    saveQuizToFirebase(UserQuizObject,quiz,questioStartedIndex) {
         // if Qu
         console.log(quiz, "quiz")
         var multipathObject = {};
@@ -15,6 +16,8 @@ export class QuizService {
             quiz.forEach((question) => {
                 var questionRandomIndex = this.quizQuestionOriginalKeyArray.indexOf(question.questionKey)
                 // check if question.type == 1
+                multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/question-started-index"] = questioStartedIndex + 1;
+                multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" +  questionRandomIndex + "/" + question.questionKey + "/timer"] = question.timer;
                 if (question.type == 1) {
                     // make object of quiz question radio button object
                         multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" +  questionRandomIndex + "/" + question.questionKey + "/options/" + question.optionRandomIndex + "/" + question.optionOriginalIndex + "/"] = true;
@@ -22,30 +25,45 @@ export class QuizService {
                 // check if question.type == 2
                 if (question.type == 2) {
                     // make object of quiz question checkbox object
-                    question.options.forEach((option, optionIndex) => {
-                        var optionRandomIndex = optionIndex == 0 ? question.options.length - 1 : question.options.length - (optionIndex + 1);
-                        multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" +  questionRandomIndex + "/" + questionKey + "/options/" + optionRandomIndex + "/" + optionIndex + "/"] = false;
+                    question.optionOriginalIndex.forEach((checkboxOption, checkboxOptionIndex) => {
+
+                        var CheckboxOptionRandomIndex = question.optionRandomIndex[checkboxOptionIndex].CheckboxOptionRandomIndex;
+                        // var optionRandomIndex = optionIndex == 0 ? question.options.length - 1 : question.options.length - (optionIndex + 1);
+                        multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" +  questionRandomIndex + "/" + question.questionKey + "/options/" + CheckboxOptionRandomIndex + "/" + checkboxOption.checkboxOriginalIndex + "/"] = true;
                     })
+                }
                 // check if question.type == 3
                 if (question.type == 3) {
-                    question.questiones.forEach((questionSet, index) => {
-
-                        multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + question.questionKey + "/questiones/" + index + "/html"] = questionSet.html;
-
-                        if (questionSet.type === 1) {
-                            // make object of quiz questionSet radio button object
-                            multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + question.questionKey + "/questiones/" + index + "/options/" + 0 + "/"] = questionSet.option;
-
-                        }
-                        else {
-                            // make object of quiz questionSet radio button object
-                            questionSet.option.forEach((questionSetOption, optionIndex) => {
-                                multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + question.questionKey + "/questiones/" + index + "/options/" + optionIndex + "/html"] = questionSetOption.html;
-
+                    question.questiones.forEach((questionSet, questionSetIndex) => {
+                        // var questionSetRandomIndex = questionSetIndex == 0 ? question.questiones.length - 1 : question.questiones.length - (questionSetIndex + 1);
+                        multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" +  questionRandomIndex + "/" + questionKey + "/correct"] = false;
+                        multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" +  questionRandomIndex + "/" + questionKey + "/timer"] = 50;
+                        multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + questionRandomIndex + "/" + questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/correct"] = false;
+                        if(questionSet.type === 1 || questionSet.type === 2) {
+                            questionSet.options.forEach((questionSetOption, questionSetOptionIndex) => {
+                            var questionSetOptionRandomIndex = questionSetOptionIndex == 0 ? questionSet.options.length - 1 : questionSet.options.length - (questionSetOptionIndex + 1);
+                            multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + questionRandomIndex + "/" + questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/options/" + questionSetOptionRandomIndex + "/" +  questionSetOptionIndex] = false;
                             })
-                        } // else statement in if(question.type === 3) end
-
+                        }
                     });//question questiones forEach end
+                    // question.questiones.forEach((questionSet, index) => {
+                    //
+                    //     multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + question.questionKey + "/questiones/" + index + "/html"] = questionSet.html;
+                    //
+                    //     if (questionSet.type === 1) {
+                    //         // make object of quiz questionSet radio button object
+                    //         multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + question.questionKey + "/questiones/" + index + "/options/" + 0 + "/"] = questionSet.option;
+                    //
+                    //     }
+                    //     else {
+                    //         // make object of quiz questionSet radio button object
+                    //         questionSet.option.forEach((questionSetOption, optionIndex) => {
+                    //             multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + question.questionKey + "/questiones/" + index + "/options/" + optionIndex + "/html"] = questionSetOption.html;
+                    //
+                    //         })
+                    //     } // else statement in if(question.type === 3) end
+                    //
+                    // });//question questiones forEach end
 
                 }// if statement type == 3 end
 
@@ -130,7 +148,6 @@ export class QuizService {
             firebase.database().ref("answer-users").child(userId).child(groupId).child(subgroupId).child(quizId).once("value", (usrQuiz)=> {
                 if(usrQuiz.val() == null) {
                     this.saveRandomQuestion(quiz, UserQuizObject,questionKeyArray).then(res => {
-                        console.log(res,"resssssssssssssssssssss")
                         resolve(res)
                     })
                 }
@@ -142,10 +159,16 @@ export class QuizService {
                             this.quizQuestionOriginalKeyArray.push(questionkey)
                         }
                         if(questionObject[questionkey].options) {
-                            console.log(questionObject[questionkey])
                             questionObject[questionkey].options.forEach((option)=> {
                                 for(var optionOriginalIndex in option) {
                                     optionAIndexArray.push(optionOriginalIndex)
+                                }
+                            })
+                        }
+                        if(questionObject[questionkey].questiones){
+                            questionObject[questionkey].questiones.forEach((questionSet,index) => {
+                                for(var questionSetOriginalIndex in questionSet) {
+                                    this.quizQuestionSetOriginalKeyArray.push({questionSetOriginalIndex: questionSetOriginalIndex});
                                 }
                             })
                         }
