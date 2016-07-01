@@ -39,18 +39,9 @@ export class startQuiz implements OnInit {
         this.subgroupId = this.params.get('subgroupId');
         this.QuizUniqueId = this.QuizSchedule.getQuizId(this.QuizParams);
         this.duration = this.QuizSchedule.groupQuiz[this.QuizParams].duration;
-
-        firebase.database().ref('quiz-in-progress').child(this.QuizUniqueId).on("value", (quizData) => {
-            for (var book in quizData.val()["questionbanks"]) {
-                for (var chapter in quizData.val()["questionbanks"][book].chapters) {
-                    for (var topic in quizData.val()["questionbanks"][book].chapters[chapter].topics) {
-                        for (var question in quizData.val()["questionbanks"][book].chapters[chapter].topics[topic].questions) {
-                            this.questionKeyArray.push(question);
-                            this.questionArr.push(quizData.val()["questionbanks"][book].chapters[chapter].topics[topic].questions[question]);
-                        } // for in loop questions end
-                    } // for in loop Topics end
-                } // for in loop chapters end
-            } // for in loop on Book end
+        this._QuizService.getQuizInProgess(this.QuizUniqueId).then(res => {
+            this.questionArr = res.quizQuestionArr;
+            this.questionKeyArray = res.questionKeyArray;
             var UserQuizObject = {
                 userId: this.QuizSchedule.getCurrentUser(),
                 groupId: this.GroupId,
@@ -60,16 +51,29 @@ export class startQuiz implements OnInit {
             this._QuizService.userQuiz(this.questionArr,UserQuizObject,this.questionKeyArray).then((res)=> {
                 if(res) {
                     this.question = this.questionArr[res["question-started-index"]];
-                    this.userAnswer =  res.questions[res["question-started-index"]];
-                    this.questioStartedIndex = res["question-started-index"];
-                    for(var questionOriginalKey in this.userAnswer){
+                    this.index = res["question-started-index"];
+                    this.index = this.index ? this.questionArr.length - this.index : this.index;
+                    this.userAnswer =  res.questions[this.index];
+
+                    for(var questionOriginalKey in this.userAnswer) {
                         this.remainingTime = this.userAnswer[questionOriginalKey]["timer"]
                     }
-                    // this.duration = this.remainingTime ? this.remainingTime : this.duration;
                     this.countdown("duration", this.duration, 0, this.remainingTime);
-                }
-                // this._QuizService.userQuiz()
-            })
+            }
+        })
+        // firebase.database().ref('quiz-in-progress').child(this.QuizUniqueId).once("value", (quizData) => {
+        //     for (var book in quizData.val()["questionbanks"]) {
+        //         for (var chapter in quizData.val()["questionbanks"][book].chapters) {
+        //             for (var topic in quizData.val()["questionbanks"][book].chapters[chapter].topics) {
+        //                 for (var question in quizData.val()["questionbanks"][book].chapters[chapter].topics[topic].questions) {
+        //                     this.questionKeyArray.push(question);
+        //                     this.questionArr.push(quizData.val()["questionbanks"][book].chapters[chapter].topics[topic].questions[question]);
+        //                 } // for in loop questions end
+        //             } // for in loop Topics end
+        //         } // for in loop chapters end
+        //     } // for in loop on Book end
+
+            //})
 
         })
     }// ngOnInit function end
@@ -107,7 +111,7 @@ export class startQuiz implements OnInit {
 
         } else {
             this.CheckboxOptionArray.splice(this.CheckboxOptionArray.indexOf({
-                html: index
+                checkboxOriginalIndex: index
             }), 1);
             if (type) {
                 this.CheckboxOptionArray.length == 0 ? this.QuestionSetOptionRadioButton = false : "";
@@ -124,7 +128,6 @@ export class startQuiz implements OnInit {
         // push data in Quiz Array if question type is == 1
         if (question.type === 1) {
             var radioButtonOptionIndex = parseInt(optionRadioButton)
-            console.log(radioButtonOptionIndex);
             var radioButtonOptionRandomIndex = question.options.length - (radioButtonOptionIndex + 1);
             this.Quiz.push({
                 timer: this.remainingTime,
@@ -163,9 +166,11 @@ export class startQuiz implements OnInit {
                     var questionSetRadioButtonOptionIndex = parseInt(QuestionSetOptionRadioButton);
                     var questionSetRadioButtonOptionRandomIndex = questionSet.options.length - (questionSetRadioButtonOptionIndex + 1);
                     //make question Radio Button Object
+                    console.log(questionSet.type,"questionSet.type");
+
                     var questionRadioButton = {
                         timer: this.remainingTime,
-                        type: question.type,
+                        type: questionSet.type,
                         optionOriginalIndex: questionSetRadioButtonOptionIndex,
                         optionRandomIndex: questionSetRadioButtonOptionRandomIndex,
                         questionKey: questionKey
@@ -176,10 +181,18 @@ export class startQuiz implements OnInit {
                 //make question checkbox Object
 
                 else if (questionSet.type === 2) {
+                    var checkboxOptionIndex = [];
+                     this.CheckboxOptionArray.forEach((checkboxIndex) => {
+                        var CheckboxOptionRandomIndex = questionSet.options.length - (checkboxIndex.checkboxOriginalIndex + 1);
+                        checkboxOptionIndex.push({CheckboxOptionRandomIndex: CheckboxOptionRandomIndex})
+                     })
+
                     var questionCheckbox = {
+                        timer: this.remainingTime,
                         html: questionSet.html,
                         type: questionSet.type,
-                        option: this.CheckboxOptionArray,
+                        optionOriginalIndex: this.CheckboxOptionArray,
+                        optionRandomIndex: checkboxOptionIndex
                     }
                     //push question checkbox Object
 
@@ -226,10 +239,12 @@ export class startQuiz implements OnInit {
             subgroupId: this.subgroupId,
             quizId: this.QuizUniqueId
         }
-        this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.questioStartedIndex).then(() => {
+        console.log(this.index, "index")
+        this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.index).then(() => {
             alert("Quiz Submit");
-            this.questioStartedIndex += 1;
+            // this.index += 1;
         })
+        this.Quiz = [];
     }// save Quiz To firebase funtion end
 
 }//startQuiz class end
