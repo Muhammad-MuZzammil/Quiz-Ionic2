@@ -13,24 +13,29 @@ import 'rxjs/add/operator/toPromise';
 })
 export class HomePage {
     groupQuiz: any = [];
-    quizObj: any = {}
+    quizObj: any = {};
+    loading: Loading
     constructor(private _navController: NavController, private _GetGroupQuizSchedule: GetGroupQuizSchedule) {
     }
     ngOnInit() {
         // get all quiz Schedule and show in cards;
-        let loading = Loading.create({
+        this.loading = Loading.create({
             content: 'Please wait...'
         });
-        this._navController.present(loading);
+        this._navController.present(this.loading);
 
         this._GetGroupQuizSchedule.getQuiz().then((res) => {
             this.groupQuiz = res;
-            loading.dismiss()
+            this.loading.dismiss()
         });
 
     }//ngOnInit end
     // can user can give quiz or not
     checkIsQuizCanGiven(quizObj, index) {
+        this.loading = Loading.create({
+            content: 'Please wait...'
+        });
+        this._navController.present(this.loading);
         this.quizObj = {
             "quizId": this._GetGroupQuizSchedule.getQuizId(index),
             "scheduleId": quizObj.scheduleId,
@@ -43,8 +48,10 @@ export class HomePage {
             (this.quizObj).subscribe((res) => {
                 (res.json());
                 if (res.json().statusCode == 0) {
+                    this.loading.dismiss()
                     this._navController.push(ResultPage, { quizIdIndex: index })
                 }else {
+                    this.loading.dismiss()
                 }
             });//subscribe end
     }// checkIsQuizCanGiven end
