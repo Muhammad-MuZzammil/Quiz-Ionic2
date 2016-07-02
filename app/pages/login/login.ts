@@ -14,7 +14,7 @@ import {LoginService} from "./LoginService";
 export class LoginPage {
   email;
   password;
-    constructor(public _navController : NavController,public http:Http, viewCtrl: ViewController,private _loginService: LoginService){
+    constructor(public _navController : NavController, public http:Http, viewCtrl: ViewController,private _loginService: LoginService){
       this.http = http;
     }
 

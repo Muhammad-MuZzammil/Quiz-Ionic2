@@ -3,6 +3,7 @@ import {NavController, NavParams} from 'ionic-angular';
 import {Component, OnInit} from '@angular/core';
 import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 import {QuizService} from "./quizService";
+import {quizResultComponent} from "../quizResult/quizResult";
 @Component({
     templateUrl: 'build/pages/startQuiz/startQuiz.html'
 
@@ -69,12 +70,11 @@ export class startQuiz implements OnInit {
 
     // show Timer
     countdown(element, minutes, seconds,remainingTime) {
-            var time = remainingTime ? remainingTime : minutes * 60 + seconds;
-
+        var time = remainingTime ? remainingTime : minutes * 60 + seconds;
         var interval = setInterval(()=> {
             var el = document.getElementById(element);
             if (time == 0) {
-                el.innerHTML = "countdown's over!";
+                el.innerHTML = "Time's over!";
                 clearInterval(interval);
                 this.saveQuizToFirebase(this.Quiz)
                 return;
@@ -91,6 +91,7 @@ export class startQuiz implements OnInit {
 
         }, 1000);// setInterval end
     }// show Timer end
+
     active(rad1) {}
     // save checkbox question option in local array;
     savequestion(option, checked, type,index) {
@@ -108,7 +109,6 @@ export class startQuiz implements OnInit {
             } else {
                 this.CheckboxOptionArray.length == 0 ? this.optionRadioButton = false : "";
             }
-
         }
     }    // save checkbox question option in local array;
 
@@ -152,14 +152,9 @@ export class startQuiz implements OnInit {
             question.questiones.forEach((questionSet, i) => {
                 // if question set question type == 1
                 if (questionSet.type === 1) {
-                    // var questionSetRadioButtonOption = {
-                    //     html: QuestionSetOptionRadioButton
-                    // }
                     var questionSetRadioButtonOptionIndex = parseInt(QuestionSetOptionRadioButton);
                     var questionSetRadioButtonOptionRandomIndex = questionSet.options.length - (questionSetRadioButtonOptionIndex + 1);
                     //make question Radio Button Object
-                    console.log(questionSet.type,"questionSet.type");
-
                     var questionRadioButton = {
                         timer: this.remainingTime,
                         type: questionSet.type,
@@ -206,9 +201,9 @@ export class startQuiz implements OnInit {
         this.index++;
         this.optionRadioButton = null;
         this.QuestionSetOptionRadioButton = false;
-        this.saveQuizToFirebase(this.Quiz)
         // check if this.questionArr.length is greater than index if greater than assign next question in this.question Object
         if (this.questionArr.length > this.index) {
+            this.saveQuizToFirebase(this.Quiz)
             this.QuestionSetOption = false;
             this.QuestionSetOptionRadioButton = false;
             this.question = this.questionArr[this.index];
@@ -218,11 +213,14 @@ export class startQuiz implements OnInit {
         if ((this.questionArr.length - 1) == this.index) {
             this.lastQuestion = true;
         }
-        if (this.questionArr.length - 1 < this.index) {}
+        if (this.questionArr.length - 1 < this.index) {
+            this.saveQuizToFirebase(this.Quiz,true)
+        }
 
     }//nextQuestion show next question after liking on next button
+
     // save Quiz To firebase funtion start
-    saveQuizToFirebase(quiz) {
+    saveQuizToFirebase(quiz,lastQuestion) {
         var UserQuizObject = {
             userId: this.QuizSchedule.getCurrentUser(),
             groupId: this.GroupId,
@@ -230,6 +228,9 @@ export class startQuiz implements OnInit {
             quizId: this.QuizUniqueId
         }
         this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.index).then(() => {
+            if(lastQuestion) {
+                this._navController.push(quizResultComponent, {quizId: this.QuizUniqueId});
+            }
         })
         this.Quiz = [];
     }// save Quiz To firebase funtion end
