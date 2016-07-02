@@ -11,28 +11,24 @@ export class startQuiz implements OnInit {
 
     questionArr: any[] = [];
     CheckboxOptionArray: any[] = [];
-    questionKeyArray: any[] = [];
-    index: number = 0;
-    question: any;
-    lastQuestion: boolean = false;
-    correct: boolean;
-    answer: boolean;
-    Quiz: any[] = [];
     QuizQuestionSet: any[] = [];
+    Quiz: any[] = [];
+    question: any;
+    questionKeyArray: string[] = [];
     QuizParams: string;
     QuizUniqueId: string;
-    GroupId: string;
     subgroupId: string;
-    showNext: boolean = false;
-    showSave: boolean = false;
+    GroupId: string;
+    index: number = 0;
+    lastQuestion: boolean = false;
     showTime: boolean = false;
     QuestionSetOption: boolean = false;
     userAnswer: any;
-    optionRadioButton;
-    QuestionSetOptionRadioButton;
-    duration
-    remainingTime
-    questioStartedIndex : number
+    optionRadioButton: boolean;
+    QuestionSetOptionRadioButton: boolean;
+    duration: number;
+    remainingTime: number;
+
     constructor(public _navController: NavController, public params: NavParams, private QuizSchedule: GetGroupQuizSchedule, private _QuizService: QuizService) { }
 
     ngOnInit() {
@@ -41,6 +37,7 @@ export class startQuiz implements OnInit {
         this.subgroupId = this.params.get('subgroupId');
         this.QuizUniqueId = this.QuizSchedule.getQuizId(this.QuizParams);
         this.duration = this.QuizSchedule.groupQuiz[this.QuizParams].duration;
+
         this._QuizService.getQuizInProgess(this.QuizUniqueId).then(res => {
             this.questionArr = res.quizQuestionArr;
             this.questionKeyArray = res.quizQuestionKeyArray;
@@ -54,8 +51,7 @@ export class startQuiz implements OnInit {
                 if(res) {
                     this.question = this.questionArr[res["question-started-index"]];
                     this.index = res["question-started-index"];
-                    console.log(this.index,"this.index",this.questionArr.length - 1)
-                    if(this.index === this.questionArr.length - 1){
+                    if(this.index === this.questionArr.length - 1) {
                         this.lastQuestion = true;
                     }
 
@@ -70,6 +66,7 @@ export class startQuiz implements OnInit {
         })
      })
     }// ngOnInit function end
+
     // show Timer
     countdown(element, minutes, seconds,remainingTime) {
             var time = remainingTime ? remainingTime : minutes * 60 + seconds;
@@ -92,12 +89,11 @@ export class startQuiz implements OnInit {
             time--;
             this.remainingTime = time
 
-        }, 1000);
-    }
+        }, 1000);// setInterval end
+    }// show Timer end
     active(rad1) {}
     // save checkbox question option in local array;
     savequestion(option, checked, type,index) {
-        console.log(type,"type")
         if (checked) {
             type ? this.QuestionSetOption = true : this.optionRadioButton = true;
             this.CheckboxOptionArray.push({
@@ -115,10 +111,10 @@ export class startQuiz implements OnInit {
 
         }
     }    // save checkbox question option in local array;
+
     //nextQuestion show next question after liking on next button
     nextQuestion(optionRadioButton, question, QuestionSetOptionRadioButton) {
         var questionIndex = this.questionArr.indexOf(question); // find index of question index
-        console.log(this.questionKeyArray,"questionIndex");
 
         var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
         // push data in Quiz Array if question type is == 1
@@ -207,11 +203,9 @@ export class startQuiz implements OnInit {
         } // else question type is == 3 end
         // empty CheckboxOptionArray after push data in quiz
         this.CheckboxOptionArray = [];
-        console.log(this.index,"this.index")
         this.index++;
-        console.log(this.index,"this.index")
         this.optionRadioButton = null;
-        this.QuestionSetOptionRadioButton = null;
+        this.QuestionSetOptionRadioButton = false;
         this.saveQuizToFirebase(this.Quiz)
         // check if this.questionArr.length is greater than index if greater than assign next question in this.question Object
         if (this.questionArr.length > this.index) {
@@ -224,25 +218,18 @@ export class startQuiz implements OnInit {
         if ((this.questionArr.length - 1) == this.index) {
             this.lastQuestion = true;
         }
-        if (this.questionArr.length - 1 < this.index) {
-
-        }
+        if (this.questionArr.length - 1 < this.index) {}
 
     }//nextQuestion show next question after liking on next button
     // save Quiz To firebase funtion start
     saveQuizToFirebase(quiz) {
-        //  var ref = new Firebase("https://luminous-torch-4640.firebaseio.com/");
-
         var UserQuizObject = {
             userId: this.QuizSchedule.getCurrentUser(),
             groupId: this.GroupId,
             subgroupId: this.subgroupId,
             quizId: this.QuizUniqueId
         }
-        console.log(this.index,"this.index")
         this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.index).then(() => {
-            // alert("Quiz Submit");
-            // this.index += 1;
         })
         this.Quiz = [];
     }// save Quiz To firebase funtion end

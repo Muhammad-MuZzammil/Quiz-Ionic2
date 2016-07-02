@@ -141,21 +141,6 @@ export class QuizService {
                         for(questionkey in questionObject) {
                             this.quizQuestionOriginalKeyArray.push(questionkey)
                         }
-                        // if(questionObject[questionkey].options) {
-                        //     questionObject[questionkey].options.forEach((option)=> {
-                        //         for(var optionOriginalIndex in option) {
-                        //             optionAIndexArray.push(optionOriginalIndex)
-                        //         }
-                        //     })
-                        // }
-                        // if(questionObject[questionkey].questiones) {
-                        //     questionObject[questionkey].questiones.forEach((questionSet,index) => {
-                        //         for(var questionSetOriginalIndex in questionSet) {
-                        //             this.quizQuestionSetOriginalKeyArray.push({questionSetOriginalIndex: questionSetOriginalIndex});
-                        //         }
-                        //     })
-                        // }
-                        // this.quizOptionOriginalKeyArray.push({optionOriginalIndex: optionAIndexArray})
                         var optionAIndexArray = []
                     })//forEach end
                     resolve(usrQuiz.val());
