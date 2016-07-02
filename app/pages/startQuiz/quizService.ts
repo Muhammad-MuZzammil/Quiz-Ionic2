@@ -17,6 +17,7 @@ export class QuizService {
             quiz.forEach((question) => {
                 var questionRandomIndex = this.quizQuestionOriginalKeyArray.indexOf(question.questionKey)
                 // check if question.type == 1
+                console.log(questioStartedIndex,"questioStartedIndex")
                 multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/question-started-index"] = questioStartedIndex;
                 multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" +  questionRandomIndex + "/" + question.questionKey + "/timer"] = question.timer;
                 if (question.type == 1) {

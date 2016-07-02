@@ -5,12 +5,22 @@
 </ion-navbar>
 
 <ion-content class="home">
-    <ion-list>
+    <ion-card class="height100px" *ngFor="let quiz of groupQuiz; let i = index">
+  <ion-card-content>
+    <b>{{quiz.quizTitle}}</b><br />
+    <i>{{quiz.startTime | amCalendar }}</i>
+    <i>Duration:{{quiz.duration }}</i>
+    <ion-buttons right>
+     <button seagreen  *ngIf="quiz.scheduleIsStarted" (click)="checkIsQuizCanGiven(quiz,i)">Go to Quiz</button>
+   </ion-buttons>
+
+
+  </ion-card-content>
+
+</ion-card>
+    <!-- <ion-list>
         <ion-item *ngFor="let quiz of groupQuiz; let i = index">
-            <h2>{{quiz.quizTitle}}</h2>
-            <i>{{quiz.startTime | amCalendar }}</i><br />
-            <i>Duration:{{quiz.duration }}</i>
-            <button seagreen item-right  *ngIf="quiz.scheduleIsStarted" (click)="checkIsQuizCanGiven(quiz,i)">Go to Quiz</button>
+
         </ion-item>
-    </ion-list>
+    </ion-list> -->
 </ion-content>
