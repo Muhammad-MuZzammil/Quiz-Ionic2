@@ -24,7 +24,6 @@ export class GetGroupQuizSchedule {
                 for (var subgroupId in group.val()) {
                     if (group.val()[subgroupId]["membership-type"] > 0) {
                         var QuizSchedule = firebase.database().ref("quiz-schedule").child(group.key).child(subgroupId);
-                        console.log(subgroupId, group.key)
                         QuizSchedule.off("child_added");
                         QuizSchedule.on("child_added", (snapshot) => {
                             for (var scheduleId in snapshot.val().schedules) {
@@ -32,6 +31,7 @@ export class GetGroupQuizSchedule {
                                     imgLogoUrl: snapshot.val().imgLogoUrl,
                                     quizTitle: snapshot.val().title,
                                     duration: snapshot.val().duration,
+                                    "passing-marks": snapshot.val()["passing-marks"],
                                     schedule: snapshot.val().schedules[scheduleId]["title"],
                                     startTime: snapshot.val().schedules[scheduleId]["start-time"],
                                     scheduleIsStarted: snapshot.val().schedules[scheduleId]["started"],
@@ -63,7 +63,6 @@ export class GetGroupQuizSchedule {
         headers.append('Content-Type', 'text/plain');
         let options: RequestOptions = new RequestOptions();
         options.headers = headers;
-        console.log(quizObj)
         return this.http.post('https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkquizschedule', JSON.stringify(quizObj), options)
 
     }

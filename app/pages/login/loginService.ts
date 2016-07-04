@@ -13,11 +13,9 @@ export class LoginService {
 
             firebase.auth().signInWithCustomToken(user.user.token).catch(function(error) {
                 // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
+
                 if (error) {
-                    console.log({ errorCode: errorCode, errorMessage: errorMessage });
-                    reject({ errorCode: errorCode, errorMessage: errorMessage });
+                    reject("Error!!");
                 }
                 else {
                     resolve("sign in")
