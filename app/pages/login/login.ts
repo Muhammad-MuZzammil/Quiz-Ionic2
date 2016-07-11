@@ -1,50 +1,86 @@
 
-import {NavController,ViewController} from 'ionic-angular';
+import {NavController, ViewController} from 'ionic-angular';
 import {Component} from "@angular/core";
-
+import {FORM_DIRECTIVES, FormBuilder, ControlGroup, Validators, AbstractControl} from '@angular/common';
 import {AngularFire} from 'angularfire2';
-import {Http ,Headers ,RequestOptions} from '@angular/http';
+import {Http, Headers, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/observable'
 import {HomePage} from '../home/home'
-
+import {CustomValidators} from "./customValidation";
 import {LoginService} from "./LoginService";
 @Component({
-  templateUrl: 'build/pages/login/login.html'
+    directives: [FORM_DIRECTIVES],
+    templateUrl: 'build/pages/login/login.html'
 })
 export class LoginPage {
-  email;
-  password;
-    constructor(public _navController : NavController, public http:Http, viewCtrl: ViewController,private _loginService: LoginService){
-      this.http = http;
-    }
+    // password;
+    email: AbstractControl;
+    password: AbstractControl;
+    authForm: ControlGroup;
+    constructor(public _navController: NavController, public http: Http, viewCtrl: ViewController, private _loginService: LoginService, private fb: FormBuilder) {
+        this.http = http;
 
-    login (email: HTMLInputElement, pass: HTMLInputElement){
-          this._navController.push(HomePage);
-            this.email = email.value;
-            this.password = pass.value;
+
+        this.authForm = fb.group({
+            'email': ['', Validators.compose([Validators.required, CustomValidators.EmailValidation])],
+            'password': ['', Validators.compose([Validators.required])]
+        });
+
+        this.email = this.authForm.controls['email'];
+        this.password = this.authForm.controls['password'];
+    }
+    login() {
+        if (this.authForm.valid) {
+            console.log('Submitted value: ', this.authForm.valid);
             let headers: Headers = new Headers();
-		        headers.append('Content-Type', 'text/plain');
-		        let options: RequestOptions = new RequestOptions();
-		        options.headers = headers;
+            headers.append('Content-Type', 'text/plain');
+            let options: RequestOptions = new RequestOptions();
+            options.headers = headers;
 
-            this.http.post('https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/signin', JSON.stringify({email: this.email , password: this.password}), options)
-            .subscribe((res) => {
-              (res.json());
-              if(res.json().statusCode !== 0) {
-                this._loginService.FirebaseLoginUser(res.json()).then((res)=>{
-                  this._navController.push(HomePage);
+            this.http.post('https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/signin', JSON.stringify(this.authForm.value), options)
+                .subscribe((res) => {
+                    (res.json());
+                    console.log(res.json(),"res.json()")
+                    if (res.json().statusCode !== 0) {
+                        console.log("res.json().statusCode");
+                        this._loginService.FirebaseLoginUser(res.json()).then((res) => {
+                            alert("")
+                            this._navController.push(HomePage);
 
-                },(error)=>{
-                  console.log(error);
-                })
-             }
-
-      //  if(this.email === res.json().user.email ){
-       //
-      //  }
-
-			});
+                        }, (error) => {
+                            console.log(error);
+                        })
+                    }
+                });
+        }
     }
+
+    // login (email: HTMLInputElement, pass: HTMLInputElement){
+    //         this.email = email.value;
+    //         this.password = pass.value;
+    //         let headers: Headers = new Headers();
+    //         headers.append('Content-Type', 'text/plain');
+    //         let options: RequestOptions = new RequestOptions();
+    //         options.headers = headers;
+    //
+    //         this.http.post('https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/signin', JSON.stringify({email: this.email , password: this.password}), options)
+    //         .subscribe((res) => {
+    //           (res.json());
+    //           if(res.json().statusCode !== 0) {
+    //             this._loginService.FirebaseLoginUser(res.json()).then((res)=>{
+    //               this._navController.push(HomePage);
+    //
+    //             },(error)=>{
+    //               console.log(error);
+    //             })
+    //          }
+    //
+    //   //  if(this.email === res.json().user.email ){
+    //    //
+    //   //  }
+    //
+    // 	});
+    // }
 
     // onPageWillEnter() { // THERE IT IS!!!
     //   var user = <any> localStorage.getItem("ngStorage-LoggedInUser")
@@ -65,7 +101,7 @@ export class LoginPage {
     //   }
     //
     //   }
-  //  videoItems: Observable<any[]>;
+    //  videoItems: Observable<any[]>;
     // constructor(public nav : NavController,public http:Http,private af:AngularFire){
     //   this.http = http;
     //   // this.videoItems=af.list('female/')
@@ -80,10 +116,10 @@ export class LoginPage {
     //       // console.log(this.email, " : " , this.password)
     //
     //   let headers: Headers = new Headers();
-		// headers.append('Content-Type', 'text/plain');
+    // headers.append('Content-Type', 'text/plain');
     //
-		// let options: RequestOptions = new RequestOptions();
-		// options.headers = headers;
+    // let options: RequestOptions = new RequestOptions();
+    // options.headers = headers;
     //
     //   // this.http.post('https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/signin',options)
     //   this.http.post('https://wgco9m0sl1.execute-api.us-east-1.amazonaws.com/dev/signin', JSON.stringify({email: this.email , password: this.password}), options)
@@ -108,8 +144,8 @@ export class LoginPage {
     //      this.nav.push(HomePage)
     //    }
     //
-		// 	});
+    // 	});
 
-      // this.nav.push(HomePage)
-  //  }
+    // this.nav.push(HomePage)
+    //  }
 }

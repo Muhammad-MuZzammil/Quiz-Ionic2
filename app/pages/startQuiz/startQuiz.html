@@ -1,10 +1,9 @@
-<ion-navbar hideBackButton *navbar>
-    <ion-title>
-        {{QuizUniqueId}}
 
-    </ion-title>
-</ion-navbar>
-
+<ion-header>
+  <ion-navbar hideBackButton>
+      {{QuizUniqueId}}
+  </ion-navbar>
+</ion-header>
 <ion-content class="Quiz">
     <div *ngIf="question">
         <div id="duration" text-center [hidden]="!showTime" padding></div>
@@ -19,12 +18,12 @@
             <checkbox-type [questionCheckbox]="question" (CheckboxSelectedOption)="saveCheckboxOption($event,question)"></checkbox-type>
         </div>
         <div *ngIf="question.type == 3" padding>
-            <question-set-type [questionSet]="question"></question-set-type>
+            <question-set-type [questionSet]="question" (questionSetCheckboxSelectedOption)="savequestionSetOption($event,question)"></question-set-type>
         </div>
         <ion-buttons end>
             <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right seagreen *ngIf="!lastQuestion" [disabled]="!checkboxOption && !optionRadioButton && !QuestionSetOption && !QuestionSetOptionRadioButton">Next</button>
 
-            <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right seagreen *ngIf="lastQuestion" [disabled]="!optionRadioButton && !QuestionSetOption && !QuestionSetOptionRadioButton">Save</button>
+            <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right seagreen *ngIf="lastQuestion" [disabled]="!checkboxOption && !optionRadioButton && !QuestionSetOption && !QuestionSetOptionRadioButton">Save</button>
         </ion-buttons>
     </div>
 

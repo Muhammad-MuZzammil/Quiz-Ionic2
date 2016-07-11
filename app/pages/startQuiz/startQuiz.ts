@@ -42,6 +42,7 @@ export class startQuiz implements OnInit {
         this.GroupId = this.params.get('groupId');
         this.subgroupId = this.params.get('subgroupId');
         this.QuizUniqueId = this.QuizSchedule.getQuizId(this.QuizParams);
+        console.log(this.QuizParams,this.GroupId,this.subgroupId,this.QuizUniqueId)
         this.duration = this.QuizSchedule.groupQuiz[this.QuizParams].duration;
 
         this._QuizService.getQuizInProgess(this.QuizUniqueId).then((res: any) => {
@@ -75,10 +76,8 @@ export class startQuiz implements OnInit {
     // show Timer
     countdown(element, minutes, seconds, remainingTime) {
         var time = remainingTime ? remainingTime : minutes * 60 + seconds;
-        console.log(element, minutes, seconds, remainingTime)
         var interval = setInterval(() => {
-            var el = document.getElementById("duration");
-            console.log(el)
+            var el = document.getElementById(element);
             if (time == 0) {
                 el.innerHTML = "Time's over!";
                 clearInterval(interval);
@@ -91,7 +90,6 @@ export class startQuiz implements OnInit {
             if (seconds < 10) seconds = <any>"0" + seconds;
             var text = minutes + ':' + seconds;
             this.showTime = true;
-            console.log(el, "element")
             el.innerHTML = text;
             time--;
             this.remainingTime = time
@@ -99,12 +97,14 @@ export class startQuiz implements OnInit {
         }, 1000);// setInterval end
     }// show Timer end
 
+    //function calls when RadioButtonSelectedOption outputs event tiger
     saveRadioButtonOption(radioOption, question) {
         this.optionRadioButton = true;
         var questionIndex = this.questionArr.indexOf(question); // find index of question index
 
         var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
 
+        // push radio button question details in Quiz Array
         this.Quiz.push({
             timer: this.remainingTime,
             type: radioOption.type,
@@ -113,11 +113,14 @@ export class startQuiz implements OnInit {
             questionKey: questionKey
         })
 
-    }
+    }//function calls when RadioButtonSelectedOption outputs event function end
+
+    //function calls when CheckboxSelectedOption outputs event tiger
     saveCheckboxOption(checkboxOption, question) {
         var questionIndex = this.questionArr.indexOf(question); // find index of question index
 
         var questionKey = this.questionKeyArray[questionIndex]
+
         if (checkboxOption) {
             console.log(checkboxOption, "checkboxOption")
             this.checkboxOption = true;
@@ -132,7 +135,37 @@ export class startQuiz implements OnInit {
         else {
             this.optionRadioButton = false;
         }
-    }
+    }//function calls when CheckboxSelectedOption outputs event function end
+
+    //function calls when CheckboxSelectedOption outputs event tiger
+    savequestionSetOption(questionSetOption, question) {
+        var questionIndex = this.questionArr.indexOf(question); // find index of question index
+
+        var questionKey = this.questionKeyArray[questionIndex]
+
+        if (questionSetOption) {
+            this.QuestionSetOption = true;
+            this.QuizQuestionSet.push({
+                timer: this.remainingTime,
+                type: questionSetOption.type,
+                optionOriginalIndex: questionSetOption.optionOriginalIndex,
+                optionRandomIndex: questionSetOption.optionRandomIndex,
+                questionKey: questionKey
+            })
+            this.Quiz.push({
+                timer: this.remainingTime,
+                html: question.html,
+                type: question.type,
+                questiones: this.QuizQuestionSet,
+                questionKey: questionKey
+            })
+            console.log(this.Quiz)
+        }
+        else {
+            this.optionRadioButton = false;
+        }
+    }//function calls when CheckboxSelectedOption outputs event function end
+
     // // save checkbox question option in local array;
     // savequestion(option, checked, type,index) {
     //     if (checked) {
@@ -166,21 +199,6 @@ export class startQuiz implements OnInit {
         else if (question.type === 2) {
             console.log(this.Quiz, "this.Quiz")
         }
-        // else if (question.type === 2) {
-        //     var checkboxOptionIndex = [];
-        //      this.CheckboxOptionArray.forEach((checkboxIndex) => {
-        //         var CheckboxOptionRandomIndex = question.options.length - (checkboxIndex.checkboxOriginalIndex + 1);
-        //         checkboxOptionIndex.push({CheckboxOptionRandomIndex: CheckboxOptionRandomIndex})
-        //      })
-        //     this.Quiz.push({
-        //         timer: this.remainingTime,
-        //         type: question.type,
-        //         optionOriginalIndex: this.CheckboxOptionArray,
-        //         optionRandomIndex: checkboxOptionIndex,
-        //         questionKey: questionKey
-        //     })
-        // }//else if statement end
-
         else {
             // push data in Quiz Array else question type is == 3
             this.QuizQuestionSet = [];
@@ -203,33 +221,26 @@ export class startQuiz implements OnInit {
                 //make question checkbox Object
 
                 else if (questionSet.type === 2) {
-                    var checkboxOptionIndex = [];
-                    this.CheckboxOptionArray.forEach((checkboxIndex) => {
-                        var CheckboxOptionRandomIndex = questionSet.options.length - (checkboxIndex.checkboxOriginalIndex + 1);
-                        checkboxOptionIndex.push({ CheckboxOptionRandomIndex: CheckboxOptionRandomIndex })
-                    })
+                    // var checkboxOptionIndex = [];
+                    // this.CheckboxOptionArray.forEach((checkboxIndex) => {
+                    //     var CheckboxOptionRandomIndex = questionSet.options.length - (checkboxIndex.checkboxOriginalIndex + 1);
+                    //     checkboxOptionIndex.push({ CheckboxOptionRandomIndex: CheckboxOptionRandomIndex })
+                    // })
 
-                    var questionCheckbox = {
-                        timer: this.remainingTime,
-                        html: questionSet.html,
-                        type: questionSet.type,
-                        optionOriginalIndex: this.CheckboxOptionArray,
-                        optionRandomIndex: checkboxOptionIndex
-                    }
+                    // var questionCheckbox = {
+                    //     timer: this.remainingTime,
+                    //     html: questionSet.html,
+                    //     type: questionSet.type,
+                    //     optionOriginalIndex: this.CheckboxOptionArray,
+                    //     optionRandomIndex: checkboxOptionIndex
+                    // }
                     //push question checkbox Object
 
-                    this.QuizQuestionSet.push(questionCheckbox);
-
+                    // this.QuizQuestionSet.push(questionCheckbox);
                 }
             })
             // push data in Quiz Array else question type is == 3
 
-            this.Quiz.push({
-                html: question.html,
-                type: question.type,
-                questiones: this.QuizQuestionSet,
-                questionKey: questionKey
-            })
         } // else question type is == 3 end
         // empty CheckboxOptionArray after push data in quiz
         this.CheckboxOptionArray = [];

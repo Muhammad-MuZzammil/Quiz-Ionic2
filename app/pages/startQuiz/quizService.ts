@@ -14,6 +14,7 @@ export class QuizService {
         var subgroupId = UserQuizObject.subgroupId;
         var quizId = UserQuizObject.quizId;
         if (quiz) {
+            console.log(quiz)
             quiz.forEach((question) => {
                 var questionRandomIndex = this.quizQuestionOriginalKeyArray.indexOf(question.questionKey)
                 // check if question.type == 1
@@ -33,6 +34,7 @@ export class QuizService {
                 }
                 // check if question.type == 3
                 if (question.type == 3) {
+                    alert("question.type == 3")
                     question.questiones.forEach((questionSet, questionSetIndex) => {
                         var questionSetRandomIndex = questionSetIndex == 0 ? question.questiones.length - 1 : question.questiones.length - (questionSetIndex + 1);
                         multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/timer"] = questionSet.timer;
@@ -129,6 +131,7 @@ export class QuizService {
         return new Promise((resolve, reject) => {
             firebase.database().ref("answer-users").child(userId).child(groupId).child(subgroupId).child(quizId).once("value", (usrQuiz) => {
                 if (usrQuiz.val() == null) {
+                    alert("15415")
                     this.saveRandomQuestion(quiz, UserQuizObject, questionKeyArray).then(res => {
                         resolve(res)
                     })

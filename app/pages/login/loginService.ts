@@ -10,14 +10,15 @@ export class LoginService {
 
         firebase.database().goOnline(); // if previously manually signed out from firebase.
         return new Promise((resolve, reject) => {
-
-            firebase.auth().signInWithCustomToken(user.user.token).catch(function(error) {
+            console.log(user)
+            firebase.auth().signInWithCustomToken(user.user.token).then(res => {
+                console.log("sign insign in")
+                resolve("sign in")
+            }).catch(function(error) {
+                alert("")
                 // Handle Errors here.
                 if (error) {
                     reject("Error!!");
-                }
-                else {
-                    resolve("sign in")
                 }
             });//signInWithCustomToken function end
         }) // promsie end

@@ -15,7 +15,7 @@ export class ResultPage {
       this.QuizId = this.params.get('quizIdIndex');
       this.QuizData = this.QuizSchedule.groupQuiz[this.QuizId];
     }
-     startQuiz(){
+     gotostartQuiz(){
       this._navController.push(startQuiz,{quizshow: this.QuizId, groupId: this.QuizData.groupId, subgroupId: this.QuizData.subgroupId});
     }
 }
