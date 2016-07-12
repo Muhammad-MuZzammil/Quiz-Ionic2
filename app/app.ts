@@ -1,7 +1,7 @@
 
 import {Component} from '@angular/core';
 import {ionicBootstrap,Platform} from 'ionic-angular';
-import {LoginPage} from "./pages/login/login";
+import {LoginPage} from "./pages/login/login.component.ts";
 import {LoginService} from "./pages/login/LoginService";
 import {HomePage} from "./pages/home/home";
 import {startQuiz} from "./pages/startQuiz/startQuiz";

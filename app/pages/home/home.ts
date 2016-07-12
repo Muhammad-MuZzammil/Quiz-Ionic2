@@ -2,28 +2,25 @@ import {Component} from "@angular/core";
 import {NavController, Loading} from 'ionic-angular';
 import {ResultPage} from '../result/result';
 import {GetGroupQuizSchedule} from "./GetGroupQuizSchedule";
-import {CalendarPipe} from 'angular2-moment';
-
+import {QuizCardHtml} from "./quizCard";
 
 import 'rxjs/add/operator/toPromise';
 
 @Component({
-    pipes: [CalendarPipe],
-    templateUrl: 'build/pages/home/home.html'
+    templateUrl: 'build/pages/home/home.html',
+    directives:[QuizCardHtml]
 })
 export class HomePage {
     groupQuiz: any = [];
     quizObj: any = {};
     loading: Loading
-    constructor(private _navController: NavController, private _GetGroupQuizSchedule: GetGroupQuizSchedule) {
-    }
+    constructor(private _navController: NavController, private _GetGroupQuizSchedule: GetGroupQuizSchedule) { }
     ngOnInit() {
         // get all quiz Schedule and show in cards;
         this.loading = Loading.create({
             content: 'Please wait...'
         });
         this._navController.present(this.loading);
-
         this._GetGroupQuizSchedule.getQuiz().then((res) => {
             this.groupQuiz = res;
             this.loading.dismiss()
@@ -37,19 +34,19 @@ export class HomePage {
         });
         this._navController.present(this.loading);
         this.quizObj = {
-            "quizId": this._GetGroupQuizSchedule.getQuizId(index),
-            "scheduleId": quizObj.scheduleId,
-            "subgroupId": quizObj.subgroupId,
+            "quizId": this._GetGroupQuizSchedule.getQuizId(quizObj.index),
+            "scheduleId": quizObj.quiz.scheduleId,
+            "subgroupId": quizObj.quiz.subgroupId,
             "userId": this._GetGroupQuizSchedule.getCurrentUser(),
-            "groupId": quizObj.groupId
+            "groupId": quizObj.quiz.groupId
         }
-        // call _GetGroupQuizSchedule.checkQuizSchedule function
+        // // call _GetGroupQuizSchedule.checkQuizSchedule function
         this._GetGroupQuizSchedule.checkQuizSchedule
             (this.quizObj).subscribe((res) => {
                 (res.json());
                 if (res.json().statusCode == 0) {
                     this.loading.dismiss()
-                    this._navController.push(ResultPage, { quizIdIndex: index })
+                    this._navController.push(ResultPage, { quizIdIndex: quizObj.index })
                 }else {
                     this.loading.dismiss()
                 }
