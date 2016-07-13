@@ -4,7 +4,6 @@ import {Component, EventEmitter} from "@angular/core";
     selector: "checkbox-type",
     template: `
   <h2 text-center>Options</h2>
-
   <ion-list padding>
         <ion-item *ngFor="let option of questionCheckbox.options; let i = index">
             <ion-checkbox (ionChange)="savequestion(option.html,checkbox.checked,null,i)" #checkbox [checked]=false></ion-checkbox>

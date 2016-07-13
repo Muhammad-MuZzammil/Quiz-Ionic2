@@ -15,6 +15,7 @@ import {QuestionSetSelectedOption} from "./questionSetType";
 export class startQuiz implements OnInit {
 
     questionArr: any[] = [];
+    questionDetail: any[] = [];
     CheckboxOptionArray: any[] = [];
     QuizQuestionSet: any[] = [];
     Quiz: any[] = [];
@@ -45,8 +46,11 @@ export class startQuiz implements OnInit {
         this.duration = this.QuizSchedule.groupQuiz[this.QuizParams].duration;
 
         this._QuizService.getQuizInProgess(this.QuizUniqueId).then((res: any) => {
-            console.log(res.quizArr)
-            this.questionArr = res.quizArr.question;
+            res.quizArr.forEach(questionDetail => {
+                this.questionArr.push(questionDetail.question)
+            });
+            console.log(this.questionArr,"33333333333")
+            this.questionDetail = res.quizArr;
             this.questionKeyArray = res.quizQuestionKeyArray;
             var UserQuizObject = {
                 userId: this.QuizSchedule.getCurrentUser(),
@@ -56,16 +60,17 @@ export class startQuiz implements OnInit {
             }
             this._QuizService.userQuiz(this.questionArr, UserQuizObject, this.questionKeyArray).then((response: any) => {
                 if (response) {
+                    console.log(response, "454545454554")
                     this.question = this.questionArr[response["question-started-index"]];
                     this.index = response["question-started-index"];
                     if (this.index === this.questionArr.length - 1) {
                         this.lastQuestion = true;
                     }
-                    var questionStartedIndex = this.index ? this.questionArr.length - this.index : this.index;
-                    this.userAnswer = response.questions[questionStartedIndex];
-                    for (var questionOriginalKey in this.userAnswer) {
-                        this.remainingTime = this.userAnswer[questionOriginalKey]["timer"]
-                    }
+                    // var questionStartedIndex = this.index ? this.questionArr.length - this.index : this.index;
+                    // this.userAnswer = response.questions[questionStartedIndex];
+                    // for (var questionOriginalKey in this.userAnswer) {
+                    //     this.remainingTime = this.userAnswer[questionOriginalKey]["timer"]
+                    // }
                     this.countdown("duration", this.duration, 0, this.remainingTime);
                 }
             })
@@ -99,6 +104,7 @@ export class startQuiz implements OnInit {
     //function calls when RadioButtonSelectedOption outputs event tiger
     saveRadioButtonOption(radioOption, question) {
         this.optionRadioButton = true;
+        console.log(question,"333333333333333333")
         var questionIndex = this.questionArr.indexOf(question); // find index of question index
 
         var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
@@ -109,7 +115,10 @@ export class startQuiz implements OnInit {
             type: radioOption.type,
             optionOriginalIndex: radioOption.optionOriginalIndex,
             optionRandomIndex: radioOption.optionRandomIndex,
-            questionKey: questionKey
+            questionKey: questionKey,
+            bookId: question.bookId,
+            chapterId: question.chapterId,
+            topicId: question.topicId
         })
 
     }//function calls when RadioButtonSelectedOption outputs event function end
