@@ -42,11 +42,11 @@ export class startQuiz implements OnInit {
         this.GroupId = this.params.get('groupId');
         this.subgroupId = this.params.get('subgroupId');
         this.QuizUniqueId = this.QuizSchedule.getQuizId(this.QuizParams);
-        console.log(this.QuizParams,this.GroupId,this.subgroupId,this.QuizUniqueId)
         this.duration = this.QuizSchedule.groupQuiz[this.QuizParams].duration;
 
         this._QuizService.getQuizInProgess(this.QuizUniqueId).then((res: any) => {
-            this.questionArr = res.quizQuestionArr;
+            console.log(res.quizArr)
+            this.questionArr = res.quizArr.question;
             this.questionKeyArray = res.quizQuestionKeyArray;
             var UserQuizObject = {
                 userId: this.QuizSchedule.getCurrentUser(),
@@ -57,7 +57,6 @@ export class startQuiz implements OnInit {
             this._QuizService.userQuiz(this.questionArr, UserQuizObject, this.questionKeyArray).then((response: any) => {
                 if (response) {
                     this.question = this.questionArr[response["question-started-index"]];
-                    console.log(this.question)
                     this.index = response["question-started-index"];
                     if (this.index === this.questionArr.length - 1) {
                         this.lastQuestion = true;
@@ -137,34 +136,34 @@ export class startQuiz implements OnInit {
         }
     }//function calls when CheckboxSelectedOption outputs event function end
 
-    //function calls when CheckboxSelectedOption outputs event tiger
-    savequestionSetOption(questionSetOption, question) {
-        var questionIndex = this.questionArr.indexOf(question); // find index of question index
-
-        var questionKey = this.questionKeyArray[questionIndex]
-
-        if (questionSetOption) {
-            this.QuestionSetOption = true;
-            this.QuizQuestionSet.push({
-                timer: this.remainingTime,
-                type: questionSetOption.type,
-                optionOriginalIndex: questionSetOption.optionOriginalIndex,
-                optionRandomIndex: questionSetOption.optionRandomIndex,
-                questionKey: questionKey
-            })
-            this.Quiz.push({
-                timer: this.remainingTime,
-                html: question.html,
-                type: question.type,
-                questiones: this.QuizQuestionSet,
-                questionKey: questionKey
-            })
-            console.log(this.Quiz)
-        }
-        else {
-            this.optionRadioButton = false;
-        }
-    }//function calls when CheckboxSelectedOption outputs event function end
+    // //function calls when CheckboxSelectedOption outputs event tiger
+    // savequestionSetOption(questionSetOption, question) {
+    //     var questionIndex = this.questionArr.indexOf(question); // find index of question index
+    //
+    //     var questionKey = this.questionKeyArray[questionIndex]
+    //
+    //     if (questionSetOption) {
+    //         this.QuestionSetOption = true;
+    //         this.QuizQuestionSet.push({
+    //             timer: this.remainingTime,
+    //             type: questionSetOption.type,
+    //             optionOriginalIndex: questionSetOption.optionOriginalIndex,
+    //             optionRandomIndex: questionSetOption.optionRandomIndex,
+    //             questionKey: questionKey
+    //         })
+    //         this.Quiz.push({
+    //             timer: this.remainingTime,
+    //             html: question.html,
+    //             type: question.type,
+    //             questiones: this.QuizQuestionSet,
+    //             questionKey: questionKey
+    //         })
+    //         console.log(this.Quiz)
+    //     }
+    //     else {
+    //         this.optionRadioButton = false;
+    //     }
+    // }//function calls when CheckboxSelectedOption outputs event function end
 
     // // save checkbox question option in local array;
     // savequestion(option, checked, type,index) {
@@ -266,7 +265,7 @@ export class startQuiz implements OnInit {
     }//nextQuestion show next question after liking on next button
 
     // save Quiz To firebase funtion start
-    saveQuizToFirebase(quiz, lastQuestion) {
+    saveQuizToFirebase(quiz, submit) {
         var UserQuizObject = {
             userId: this.QuizSchedule.getCurrentUser(),
             groupId: this.GroupId,
@@ -274,7 +273,7 @@ export class startQuiz implements OnInit {
             quizId: this.QuizUniqueId
         }
         this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.index).then(() => {
-            if (lastQuestion) {
+            if (submit) {
                 this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId });
             }
         })

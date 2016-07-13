@@ -1,7 +1,7 @@
 
-import {NavController, ViewController} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {Component} from "@angular/core";
-import {AngularFire} from 'angularfire2';
+//import {AngularFire} from 'angularfire2';
 import {Http, Headers, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/observable'
 import {HomePage} from '../home/home'
@@ -13,10 +13,7 @@ import {LoginFormComponent} from "./loginForm.component";
     directives:[LoginFormComponent]
 })
 export class LoginPage {
-    constructor(public _navController: NavController, public http: Http, viewCtrl: ViewController, private _loginService: LoginService) {
-        this.http = http;
-
-    }
+    constructor(public _navController: NavController, public http: Http,private _loginService: LoginService) {}
     // login function start
     login(UserCredentials) {
             let headers: Headers = new Headers();

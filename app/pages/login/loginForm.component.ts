@@ -45,7 +45,8 @@ export class LoginFormComponent {
   }
   login() {
     if (this.authForm.valid) {
-      this.LoginData.emit(this.authForm.value);
+      let UserCredentials = new Login(this.email.value,this.password.value);
+      this.LoginData.emit(UserCredentials);
     }
   }
 }

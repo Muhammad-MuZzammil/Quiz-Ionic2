@@ -89,7 +89,7 @@ export class QuizService {
                         var optionRandomIndex = optionIndex == 0 ? question.options.length - 1 : question.options.length - (optionIndex + 1);
                         multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + questionRandomIndex + "/" + questionKey + "/options/" + optionRandomIndex + "/" + optionIndex + "/"] = false;
                     })
-                }
+                }// question.type == 1 || question.type == 2 if statement end
                 // check if question.type == 3
                 if (question.type == 3) {
                     question.questiones.forEach((questionSet, questionSetIndex) => {
@@ -101,8 +101,8 @@ export class QuizService {
                             questionSet.options.forEach((questionSetOption, questionSetOptionIndex) => {
                                 var questionSetOptionRandomIndex = questionSetOptionIndex == 0 ? questionSet.options.length - 1 : questionSet.options.length - (questionSetOptionIndex + 1);
                                 multipathObject["answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questions/" + questionRandomIndex + "/" + questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/options/" + questionSetOptionRandomIndex + "/" + questionSetOptionIndex] = false;
-                            })
-                        }
+                            })//questionSet options forEach end
+                        }// if statement end questionSet.type === 1 || questionSet.type === 2
                     });//question questiones forEach end
                 }// if statement type == 3 end
             }) // quiz.forEach end
@@ -131,11 +131,10 @@ export class QuizService {
         return new Promise((resolve, reject) => {
             firebase.database().ref("answer-users").child(userId).child(groupId).child(subgroupId).child(quizId).once("value", (usrQuiz) => {
                 if (usrQuiz.val() == null) {
-                    alert("15415")
                     this.saveRandomQuestion(quiz, UserQuizObject, questionKeyArray).then(res => {
                         resolve(res)
                     })
-                }
+                }// if statement end
                 else {
                     usrQuiz.val().questions.forEach((questionObject) => {
                         var questionkey;
@@ -151,6 +150,7 @@ export class QuizService {
         })//Promise end
     }//userQuiz end
 
+    //Get Quiz In Progess Data
     getQuizInProgess(QuizUniqueId) {
         return new Promise((resolve, reject) => {
             firebase.database().ref('quiz-in-progress').child(QuizUniqueId).once("value", (quizData) => {
@@ -159,13 +159,21 @@ export class QuizService {
                         for (var topic in quizData.val()["questionbanks"][book].chapters[chapter].topics) {
                             for (var question in quizData.val()["questionbanks"][book].chapters[chapter].topics[topic].questions) {
                                 this.quizQuestionKeyArray.push(question);
-                                this.quizQuestionArr.push(quizData.val()["questionbanks"][book].chapters[chapter].topics[topic].questions[question]);
+                                this.quizQuestionArr.push(
+                                    {
+                                        question: quizData.val()["questionbanks"][book].chapters[chapter].topics[topic].questions[question],
+                                        bookId: book,
+                                        chapterId: chapter,
+                                        topicId: topic
+                                    }
+                                );
                             } // for in loop questions end
                         } // for in loop Topics end
                     } // for in loop chapters end
                 } // for in loop on Book end
-            })
-            resolve({ quizQuestionArr: this.quizQuestionArr, quizQuestionKeyArray: this.quizQuestionKeyArray })
-        })
-    }
+            })// firebase value event function end
+            console.log(this.quizQuestionArr)
+            resolve({ quizArr: this.quizQuestionArr, quizQuestionKeyArray: this.quizQuestionKeyArray });
+        }) // Promise end
+    }// Get Quiz In Progess Data end
 }

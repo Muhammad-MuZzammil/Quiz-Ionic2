@@ -8,6 +8,7 @@ import {startQuiz} from "./pages/startQuiz/startQuiz";
 import {GetGroupQuizSchedule} from "./pages/home/GetGroupQuizSchedule";
 import {HTTP_PROVIDERS} from "@angular/http";
 import {QuizService} from "./pages/startQuiz/quizService";
+
 @Component({
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
@@ -20,7 +21,7 @@ class QuizApp {
         platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
-              // StatusBar.styleDefault();
+            // StatusBar.styleDefault();
         });
     }
 }

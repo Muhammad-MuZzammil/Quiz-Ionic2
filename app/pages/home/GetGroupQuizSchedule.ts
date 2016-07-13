@@ -64,6 +64,5 @@ export class GetGroupQuizSchedule {
         let options: RequestOptions = new RequestOptions();
         options.headers = headers;
         return this.http.post('https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkquizschedule', JSON.stringify(quizObj), options)
-
     }
 }

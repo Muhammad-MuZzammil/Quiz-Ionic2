@@ -18,7 +18,7 @@
             <checkbox-type [questionCheckbox]="question" (CheckboxSelectedOption)="saveCheckboxOption($event,question)"></checkbox-type>
         </div>
         <div *ngIf="question.type == 3" padding>
-            <question-set-type [questionSet]="question" (questionSetCheckboxSelectedOption)="savequestionSetOption($event,question)"></question-set-type>
+            <question-set-type [questionSet]="question" (questionSetCheckboxSelectedOption)="savequestionSetOption($event,question)" [isLastQuestion]="lastQuestion"></question-set-type>
         </div>
         <ion-buttons end>
             <button (click)="nextQuestion(optionRadioButton,question,QuestionSetOptionRadioButton)" item-right seagreen *ngIf="!lastQuestion" [disabled]="!checkboxOption && !optionRadioButton && !QuestionSetOption && !QuestionSetOptionRadioButton">Next</button>

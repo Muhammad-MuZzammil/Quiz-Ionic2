@@ -10,7 +10,6 @@ import {Component, EventEmitter} from "@angular/core";
             <ion-radio value="{{i}}" (click)="selectOption(i)"></ion-radio>
         </ion-item>
     </ion-list>
-
   `,
   inputs: ["questionRadio"],
   outputs: ["RadioButtonSelectedOption"]
@@ -18,7 +17,7 @@ import {Component, EventEmitter} from "@angular/core";
 
 export class QuestionRadioTypeComponent {
   RadioButtonSelectedOption: EventEmitter<Object> = new EventEmitter();
-  questionRadio
+  questionRadio;
   selectOption(option) {
     // console.log(this.questionRadio, "questionRadio.options")
     var radioButtonOptionIndex = parseInt(option)
