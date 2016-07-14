@@ -17,7 +17,6 @@ export class QuizService {
             quiz.forEach((question) => {
                 var questionRandomIndex = this.quizQuestionKeyArray.indexOf(question.questionKey);
                  questionRandomIndex = questionRandomIndex == 0 ? this.quizQuestionKeyArray.length - 1 : this.quizQuestionKeyArray.length - (questionRandomIndex + 1);
-                console.log(questionRandomIndex,"questionRandomIndex")
                 // check if question.type == 1
                 multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId  + "/start-time"] = question.timer;
                 multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId  + "/question-started-index"] = questioStartedIndex;
@@ -44,7 +43,6 @@ export class QuizService {
                         }
                         if (questionSet.type === 2) {
                             questionSet.optionOriginalIndex.forEach((checkboxOption, checkboxOptionIndex) => {
-                                console.log(checkboxOption, "checkboxOption")
                                 var CheckboxOptionRandomIndex = questionSet.optionRandomIndex[checkboxOptionIndex].CheckboxOptionRandomIndex;
                                 multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/options/" + CheckboxOptionRandomIndex + "/" + checkboxOption.checkboxOriginalIndex] = true;
                             })
@@ -173,7 +171,6 @@ export class QuizService {
                         } // for in loop Topics end
                     } // for in loop chapters end
                 } // for in loop on Book end
-                console.log(this.quizQuestionArr)
                 resolve({ quizArr: this.quizQuestionArr, quizQuestionKeyArray: this.quizQuestionKeyArray });
             })// firebase value event function end
         }) // Promise end

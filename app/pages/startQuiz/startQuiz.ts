@@ -49,7 +49,7 @@ export class startQuiz implements OnInit {
             res.quizArr.forEach(questionDetail => {
                 this.questionArr.push(questionDetail.question)
             });
-            console.log(this.questionArr,"33333333333")
+            console.log(this.questionArr, "33333333333")
             this.questionDetail = res.quizArr;
             this.questionKeyArray = res.quizQuestionKeyArray;
             var UserQuizObject = {
@@ -104,11 +104,8 @@ export class startQuiz implements OnInit {
     //function calls when RadioButtonSelectedOption outputs event tiger
     saveRadioButtonOption(radioOption, question) {
         this.optionRadioButton = true;
-        console.log(question,"333333333333333333")
         var questionIndex = this.questionArr.indexOf(question); // find index of question index
-
         var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
-
         // push radio button question details in Quiz Array
         this.Quiz.push({
             timer: this.remainingTime,
@@ -121,7 +118,6 @@ export class startQuiz implements OnInit {
             topicId: question.topicId
         })
         this.nextQuestion()
-
     }//function calls when RadioButtonSelectedOption outputs event function end
 
     //function calls when CheckboxSelectedOption outputs event tiger
@@ -130,7 +126,6 @@ export class startQuiz implements OnInit {
 
         var questionKey = this.questionKeyArray[questionIndex]
         if (checkboxOption) {
-            console.log(checkboxOption, "checkboxOption")
             this.Quiz.push({
                 timer: this.remainingTime,
                 type: checkboxOption.type,
@@ -141,16 +136,14 @@ export class startQuiz implements OnInit {
                 chapterId: question.chapterId,
                 topicId: question.topicId
             })
-             this.nextQuestion()
+            this.nextQuestion()
         }
     }//function calls when CheckboxSelectedOption outputs event function end
 
     // //function calls when CheckboxSelectedOption outputs event tiger
     savequestionSetOption(questionSetOption, question) {
         var questionIndex = this.questionArr.indexOf(question); // find index of question index
-    
         var questionKey = this.questionKeyArray[questionIndex]
-    
         if (questionSetOption) {
             this.Quiz.push({
                 timer: this.remainingTime,
@@ -162,17 +155,13 @@ export class startQuiz implements OnInit {
                 chapterId: question.chapterId,
                 topicId: question.topicId
             })
-            console.log(this.Quiz,"this.Quiz");
             this.nextQuestion()
         }
     }//function calls when CheckboxSelectedOption outputs event function end
 
     //nextQuestion show next question after liking on next button
+
     nextQuestion() {
-        // var questionIndex = this.questionArr.indexOf(question); // find index of question index
-
-        // var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
-
         // empty CheckboxOptionArray after push data in quiz
         this.CheckboxOptionArray = [];
         this.index++;
