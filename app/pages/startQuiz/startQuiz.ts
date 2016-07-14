@@ -120,6 +120,7 @@ export class startQuiz implements OnInit {
             chapterId: question.chapterId,
             topicId: question.topicId
         })
+        this.nextQuestion()
 
     }//function calls when RadioButtonSelectedOption outputs event function end
 
@@ -128,128 +129,50 @@ export class startQuiz implements OnInit {
         var questionIndex = this.questionArr.indexOf(question); // find index of question index
 
         var questionKey = this.questionKeyArray[questionIndex]
-
         if (checkboxOption) {
             console.log(checkboxOption, "checkboxOption")
-            this.checkboxOption = true;
             this.Quiz.push({
                 timer: this.remainingTime,
                 type: checkboxOption.type,
                 optionOriginalIndex: checkboxOption.optionOriginalIndex,
                 optionRandomIndex: checkboxOption.optionRandomIndex,
-                questionKey: questionKey
+                questionKey: questionKey,
+                bookId: question.bookId,
+                chapterId: question.chapterId,
+                topicId: question.topicId
             })
-        }
-        else {
-            this.optionRadioButton = false;
+             this.nextQuestion()
         }
     }//function calls when CheckboxSelectedOption outputs event function end
 
     // //function calls when CheckboxSelectedOption outputs event tiger
-    // savequestionSetOption(questionSetOption, question) {
-    //     var questionIndex = this.questionArr.indexOf(question); // find index of question index
-    //
-    //     var questionKey = this.questionKeyArray[questionIndex]
-    //
-    //     if (questionSetOption) {
-    //         this.QuestionSetOption = true;
-    //         this.QuizQuestionSet.push({
-    //             timer: this.remainingTime,
-    //             type: questionSetOption.type,
-    //             optionOriginalIndex: questionSetOption.optionOriginalIndex,
-    //             optionRandomIndex: questionSetOption.optionRandomIndex,
-    //             questionKey: questionKey
-    //         })
-    //         this.Quiz.push({
-    //             timer: this.remainingTime,
-    //             html: question.html,
-    //             type: question.type,
-    //             questiones: this.QuizQuestionSet,
-    //             questionKey: questionKey
-    //         })
-    //         console.log(this.Quiz)
-    //     }
-    //     else {
-    //         this.optionRadioButton = false;
-    //     }
-    // }//function calls when CheckboxSelectedOption outputs event function end
-
-    // // save checkbox question option in local array;
-    // savequestion(option, checked, type,index) {
-    //     if (checked) {
-    //         type ? this.QuestionSetOption = true : this.optionRadioButton = true;
-    //         this.CheckboxOptionArray.push({
-    //             checkboxOriginalIndex: index
-    //         });
-    //     } else {
-    //         this.CheckboxOptionArray.splice(this.CheckboxOptionArray.indexOf({
-    //             checkboxOriginalIndex: index
-    //         }), 1);
-    //         if (type) {
-    //             this.CheckboxOptionArray.length == 0 ? this.QuestionSetOption = false : "";
-    //         } else {
-    //             this.CheckboxOptionArray.length == 0 ? this.optionRadioButton = false : "";
-    //         }
-    //     }
-    // }    // save checkbox question option in local array;
+    savequestionSetOption(questionSetOption, question) {
+        var questionIndex = this.questionArr.indexOf(question); // find index of question index
+    
+        var questionKey = this.questionKeyArray[questionIndex]
+    
+        if (questionSetOption) {
+            this.Quiz.push({
+                timer: this.remainingTime,
+                html: question.html,
+                type: question.type,
+                questiones: questionSetOption,
+                questionKey: questionKey,
+                bookId: question.bookId,
+                chapterId: question.chapterId,
+                topicId: question.topicId
+            })
+            console.log(this.Quiz,"this.Quiz");
+            this.nextQuestion()
+        }
+    }//function calls when CheckboxSelectedOption outputs event function end
 
     //nextQuestion show next question after liking on next button
-    nextQuestion(optionRadioButton, question, QuestionSetOptionRadioButton) {
-        var questionIndex = this.questionArr.indexOf(question); // find index of question index
+    nextQuestion() {
+        // var questionIndex = this.questionArr.indexOf(question); // find index of question index
 
-        var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
-        // push data in Quiz Array if question type is == 1
-        if (question.type === 1) {
-            console.log(this.Quiz, "this.Quiz")
-        }// if statement end
+        // var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
 
-        // push data in Quiz Array else if question type is == 2
-        else if (question.type === 2) {
-            console.log(this.Quiz, "this.Quiz")
-        }
-        else {
-            // push data in Quiz Array else question type is == 3
-            this.QuizQuestionSet = [];
-            question.questiones.forEach((questionSet, i) => {
-                // if question set question type == 1
-                if (questionSet.type === 1) {
-                    var questionSetRadioButtonOptionIndex = parseInt(QuestionSetOptionRadioButton);
-                    var questionSetRadioButtonOptionRandomIndex = questionSet.options.length - (questionSetRadioButtonOptionIndex + 1);
-                    //make question Radio Button Object
-                    var questionRadioButton = {
-                        timer: this.remainingTime,
-                        type: questionSet.type,
-                        optionOriginalIndex: questionSetRadioButtonOptionIndex,
-                        optionRandomIndex: questionSetRadioButtonOptionRandomIndex,
-                        questionKey: questionKey
-                    }
-                    // push question Radio Button Object
-                    this.QuizQuestionSet.push(questionRadioButton);
-                }
-                //make question checkbox Object
-
-                else if (questionSet.type === 2) {
-                    // var checkboxOptionIndex = [];
-                    // this.CheckboxOptionArray.forEach((checkboxIndex) => {
-                    //     var CheckboxOptionRandomIndex = questionSet.options.length - (checkboxIndex.checkboxOriginalIndex + 1);
-                    //     checkboxOptionIndex.push({ CheckboxOptionRandomIndex: CheckboxOptionRandomIndex })
-                    // })
-
-                    // var questionCheckbox = {
-                    //     timer: this.remainingTime,
-                    //     html: questionSet.html,
-                    //     type: questionSet.type,
-                    //     optionOriginalIndex: this.CheckboxOptionArray,
-                    //     optionRandomIndex: checkboxOptionIndex
-                    // }
-                    //push question checkbox Object
-
-                    // this.QuizQuestionSet.push(questionCheckbox);
-                }
-            })
-            // push data in Quiz Array else question type is == 3
-
-        } // else question type is == 3 end
         // empty CheckboxOptionArray after push data in quiz
         this.CheckboxOptionArray = [];
         this.index++;

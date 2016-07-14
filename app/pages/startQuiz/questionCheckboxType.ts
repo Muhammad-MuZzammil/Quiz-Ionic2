@@ -10,14 +10,22 @@ import {Component, EventEmitter} from "@angular/core";
             <ion-label [innerHTML]="option.html"></ion-label>
         </ion-item>
     </ion-list>
+    <ion-buttons end>
+        <button (click)="nextQuestion(question)" item-right seagreen *ngIf="!isLastQuestion" [disabled]="!checkboxOption">Next</button>
+
+        <button (click)="nextQuestion(question)" item-right seagreen *ngIf="isLastQuestion" [disabled]="!checkboxOption">Save</button>
+    </ion-buttons>
   `,
-    inputs: ["questionCheckbox"],
+    inputs: ["questionCheckbox","isLastQuestion"],
     outputs: ["CheckboxSelectedOption"]
 })
 export class QuestionCheckboxTypeComponent {
     CheckboxSelectedOption: EventEmitter<Object> = new EventEmitter();
     CheckboxOptionArray: any[] = [];
     questionCheckbox;
+    checkboxOption: boolean = false
+    checkboxOptionDetail;
+
     constructor() { }
     // save checkbox question option in local array;
     savequestion(option, checked, type, index) {
@@ -25,28 +33,31 @@ export class QuestionCheckboxTypeComponent {
             this.CheckboxOptionArray.push({
                 checkboxOriginalIndex: index
             });
-            console.log(this.CheckboxOptionArray, "this.CheckboxOptionArray")
+
             var checkboxOptionIndex = [];
             this.CheckboxOptionArray.forEach((checkboxIndex) => {
                 var CheckboxOptionRandomIndex = this.questionCheckbox.options.length - (checkboxIndex.checkboxOriginalIndex + 1);
                 checkboxOptionIndex.push({ CheckboxOptionRandomIndex: CheckboxOptionRandomIndex })
             })
-
-            var checkboxOptionDetail = {
+            this.checkboxOptionDetail = {
                 type: 2,
                 optionOriginalIndex: this.CheckboxOptionArray,
                 optionRandomIndex: checkboxOptionIndex,
             }
-            this.CheckboxSelectedOption.emit(checkboxOptionDetail)
-
+           this.checkboxOption = true;
         } else {
             this.CheckboxOptionArray.splice(this.CheckboxOptionArray.indexOf({
                 checkboxOriginalIndex: index
             }), 1);
+
             if (this.CheckboxOptionArray.length == 0) {
                 this.CheckboxSelectedOption.emit(null)
+                this.checkboxOption = false
             }
 
         }
+    }// save checkbox question option in local array;
+    nextQuestion(question) {
+        this.CheckboxSelectedOption.emit(this.checkboxOptionDetail)
     }
-}    // save checkbox question option in local array;
+}    

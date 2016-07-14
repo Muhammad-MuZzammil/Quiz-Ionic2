@@ -1,5 +1,11 @@
 import {Component, EventEmitter} from "@angular/core";
 
+interface RadioType {
+  type: number,
+  optionOriginalIndex: number,
+  optionRandomIndex: number
+}
+
 @Component({
   selector: "radio-type",
   template: `
@@ -10,24 +16,36 @@ import {Component, EventEmitter} from "@angular/core";
             <ion-radio value="{{i}}" (click)="selectOption(i)"></ion-radio>
         </ion-item>
     </ion-list>
+    <ion-buttons end>
+        <button (click)="nextQuestion(question)" item-right seagreen *ngIf="!isLastQuestion" [disabled]="!optionRadioButton">Next</button>
+
+        <button (click)="nextQuestion(question)" item-right seagreen *ngIf="isLastQuestion" [disabled]="!optionRadioButton ">Save</button>
+    </ion-buttons>
   `,
-  inputs: ["questionRadio"],
+  inputs: ["questionRadio","isLastQuestion"],
   outputs: ["RadioButtonSelectedOption"]
 })
 
 export class QuestionRadioTypeComponent {
   RadioButtonSelectedOption: EventEmitter<Object> = new EventEmitter();
   questionRadio;
+  radioQuestionDetail: RadioType;
+  optionRadioButton: boolean = false;
   selectOption(option) {
-    // console.log(this.questionRadio, "questionRadio.options")
+
     var radioButtonOptionIndex = parseInt(option)
     var radioButtonOptionRandomIndex = this.questionRadio.options.length - (radioButtonOptionIndex + 1);
-    var radioQuestionDetail = {
+
+    this.radioQuestionDetail = {
       type: 1,
       optionOriginalIndex: radioButtonOptionIndex,
       optionRandomIndex: radioButtonOptionRandomIndex,
     }
-    this.RadioButtonSelectedOption.emit(radioQuestionDetail);
+
+    this.optionRadioButton = true;
   }
 
+  nextQuestion() {
+    this.RadioButtonSelectedOption.emit(this.radioQuestionDetail);
+  }
 }
