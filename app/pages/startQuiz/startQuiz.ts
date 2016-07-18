@@ -44,39 +44,46 @@ export class startQuiz implements OnInit {
         this.subgroupId = this.params.get('subgroupId');
         this.QuizUniqueId = this.QuizSchedule.getQuizId(this.QuizParams);
         this.duration = this.QuizSchedule.groupQuiz[this.QuizParams].duration;
-
-        this._QuizService.getQuizInProgess(this.QuizUniqueId).then((res: any) => {
-            res.quizArr.forEach(questionDetail => {
-                this.questionArr.push(questionDetail.question)
-            });
-            console.log(this.questionArr, "33333333333")
-            this.questionDetail = res.quizArr;
-            this.questionKeyArray = res.quizQuestionKeyArray;
-            var UserQuizObject = {
-                userId: this.QuizSchedule.getCurrentUser(),
-                groupId: this.GroupId,
-                subgroupId: this.subgroupId,
-                quizId: this.QuizUniqueId
-            }
-            this._QuizService.userQuiz(this.questionArr, UserQuizObject, this.questionKeyArray).then((response: any) => {
-                if (response) {
-                    console.log(response, "454545454554")
-                    this.question = this.questionArr[response["question-started-index"]];
-                    this.index = response["question-started-index"];
-                    if (this.index === this.questionArr.length - 1) {
-                        this.lastQuestion = true;
-                    }
-                    // var questionStartedIndex = this.index ? this.questionArr.length - this.index : this.index;
-                    // this.userAnswer = response.questions[questionStartedIndex];
-                    // for (var questionOriginalKey in this.userAnswer) {
-                    //     this.remainingTime = this.userAnswer[questionOriginalKey]["timer"]
-                    // }
-                    this.countdown("duration", this.duration, 0, this.remainingTime);
-                }
+        if (this._QuizService.quizQuestionArr) {
+            this.getQuizInfo(this._QuizService.quizQuestionArr, this._QuizService.quizQuestionKeyArray)
+        } else {
+            this._QuizService.getQuizInProgess(this.QuizUniqueId).then((res: any) => {
+                  this.getQuizInfo(res.quizArr, res.quizQuestionKeyArray)
             })
-        })
-    }// ngOnInit function end
+        }
 
+    }// ngOnInit function end
+    getQuizInfo(quizArr, quizQuestionKeyArray) {
+        quizArr.forEach(questionDetail => {
+            this.questionArr.push(questionDetail.question)
+        });
+
+        this.questionDetail = quizArr;
+        this.questionKeyArray = quizQuestionKeyArray
+        // this.questionKeyArray = quizQuestionKeyArray;
+
+        var UserQuizObject = {
+            userId: this.QuizSchedule.getCurrentUser(),
+            groupId: this.GroupId,
+            subgroupId: this.subgroupId,
+            quizId: this.QuizUniqueId
+        }
+        this._QuizService.userQuiz(this.questionArr, UserQuizObject, this.questionKeyArray).then((response: any) => {
+            if (response) {
+                this.question = this.questionArr[response["question-started-index"]];
+                this.index = response["question-started-index"];
+                if (this.index === this.questionArr.length - 1) {
+                    this.lastQuestion = true;
+                }
+                // var questionStartedIndex = this.index ? this.questionArr.length - this.index : this.index;
+                // this.userAnswer = response.questions[questionStartedIndex];
+                // for (var questionOriginalKey in this.userAnswer) {
+                //     this.remainingTime = this.userAnswer[questionOriginalKey]["timer"]
+                // }
+                this.countdown("duration", this.duration, 0, this.remainingTime);
+            }
+        })
+    }
     // show Timer
     countdown(element, minutes, seconds, remainingTime) {
         var time = remainingTime ? remainingTime : minutes * 60 + seconds;

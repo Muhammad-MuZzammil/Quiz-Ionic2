@@ -153,6 +153,7 @@ export class QuizService {
 
     //Get Quiz In Progess Data
     getQuizInProgess(QuizUniqueId) {
+        console.log(QuizUniqueId,"QuizUniqueId")
         return new Promise((resolve, reject) => {
             firebase.database().ref('quiz-in-progress').child(QuizUniqueId).once("value", (quizData) => {
                 for (var book in quizData.val()["questionbanks"]) {

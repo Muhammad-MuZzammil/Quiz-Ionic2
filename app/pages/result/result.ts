@@ -3,6 +3,8 @@ import {Component} from "@angular/core";
 import {NavController,NavParams} from 'ionic-angular';
 import {HomePage} from '../home/home'
 import {startQuiz} from '../startQuiz/startQuiz'
+import {QuizService} from '../startQuiz/quizService'
+
 import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 
 @Component({
@@ -11,8 +13,15 @@ import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 export class ResultPage {
   QuizId;
   QuizData;
-    constructor(public _navController : NavController,public params: NavParams,private QuizSchedule: GetGroupQuizSchedule){
+  quizData;
+  totalQuestion: number;
+    constructor(public _navController : NavController,public params: NavParams,private QuizSchedule: GetGroupQuizSchedule,private quiz: QuizService){
+      // console.log(this.quiz)
       this.QuizId = this.params.get('quizIdIndex');
+     this.quiz.getQuizInProgess(this.QuizSchedule.getQuizId(this.QuizId)).then((res: any) => {
+       this.totalQuestion = res.quizArr.length;
+     });
+
       this.QuizData = this.QuizSchedule.groupQuiz[this.QuizId];
     }
      gotostartQuiz(){
