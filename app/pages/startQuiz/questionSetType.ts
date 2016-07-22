@@ -41,8 +41,9 @@ export class QuestionSetSelectedOption {
     // push checkbox option in CheckboxOptionArray when checked
     savequestion(selectedOption) {
         // when radio Option index
-        if(selectedOption.radioButtonIndex) {
+        if(selectedOption.radioButtonIndex == 0 || selectedOption.radioButtonIndex) {
         this.RadioIndex = selectedOption.radioButtonIndex;
+         this.QuestionSetOption = true
         }
         if (selectedOption.checked) {
             // push checkbox Option Index when checked
@@ -74,8 +75,7 @@ export class QuestionSetSelectedOption {
                 var questionRadioButton = {
                     timer: this.duration,
                     type: questionSet.type,
-                    optionOriginalIndex: questionSetRadioButtonOptionIndex,
-                    optionRandomIndex: questionSetRadioButtonOptionRandomIndex
+                    optionOriginalIndex: questionSetRadioButtonOptionIndex
                 }
                 // push question Radio Button Object
                 this.QuizQuestionSet.push(questionRadioButton);
@@ -95,8 +95,7 @@ export class QuestionSetSelectedOption {
                     timer: this.duration,
                     html: questionSet.html,
                     type: questionSet.type,
-                    optionOriginalIndex: this.CheckboxOptionArray,
-                    optionRandomIndex: checkboxOptionIndex
+                    optionOriginalIndex: this.CheckboxOptionArray
                 }
                 //push question checkbox Object
                 this.QuizQuestionSet.push(questionCheckbox);

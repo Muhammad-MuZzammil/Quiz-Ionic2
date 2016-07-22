@@ -23,14 +23,14 @@ export class QuizService {
                 multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/timer"] = question.timer;
                 if (question.type == 1) {
                     // make object of quiz question radio button object
-                    multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/options/" + question.optionRandomIndex + "/" + question.optionOriginalIndex + "/"] = true;
+                    multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/options/" + question.optionOriginalIndex + "/"] = true;
                 }
                 // check if question.type == 2
                 if (question.type == 2) {
                     // make object of quiz question checkbox object
                     question.optionOriginalIndex.forEach((checkboxOption, checkboxOptionIndex) => {
                         var CheckboxOptionRandomIndex = question.optionRandomIndex[checkboxOptionIndex].CheckboxOptionRandomIndex;
-                        multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/options/" + CheckboxOptionRandomIndex + "/" + checkboxOption.checkboxOriginalIndex + "/"] = true;
+                        multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/options/"  + checkboxOption.checkboxOriginalIndex + "/"] = true;
                     })
                 }
                 // check if question.type == 3
@@ -39,12 +39,12 @@ export class QuizService {
                         var questionSetRandomIndex = questionSetIndex == 0 ? question.questiones.length - 1 : question.questiones.length - (questionSetIndex + 1);
                         multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/timer"] = questionSet.timer;
                         if (questionSet.type === 1) {
-                            multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/options/" + questionSet.optionRandomIndex + "/" + questionSet.optionOriginalIndex] = true;
+                            multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/options/" +  + questionSet.optionOriginalIndex] = true;
                         }
                         if (questionSet.type === 2) {
                             questionSet.optionOriginalIndex.forEach((checkboxOption, checkboxOptionIndex) => {
-                                var CheckboxOptionRandomIndex = questionSet.optionRandomIndex[checkboxOptionIndex].CheckboxOptionRandomIndex;
-                                multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/options/" + CheckboxOptionRandomIndex + "/" + checkboxOption.checkboxOriginalIndex] = true;
+                                // var CheckboxOptionRandomIndex = questionSet.optionRandomIndex[checkboxOptionIndex].CheckboxOptionRandomIndex;
+                                multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/options/" + checkboxOption.checkboxOriginalIndex] = true;
                             })
                         }
                     });//question questiones forEach end
@@ -87,10 +87,10 @@ export class QuizService {
                     // make object of quiz question radio button object
                     multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + questionDetail.bookId + "/chapters/" + questionDetail.chapterId + "/topics/" + questionDetail.topicId  +  "/questions/" + questionRandomIndex + "/" + questionKey + "/correct"] = false;
                     multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + questionDetail.bookId + "/chapters/" + questionDetail.chapterId + "/topics/" + questionDetail.topicId  + "/questions/" + questionRandomIndex + "/" + questionKey + "/timer"] = 0;
-                    question.options.forEach((option, optionIndex) => {
-                        var optionRandomIndex = optionIndex == 0 ? question.options.length - 1 : question.options.length - (optionIndex + 1);
-                        multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + questionDetail.bookId + "/chapters/" + questionDetail.chapterId + "/topics/" + questionDetail.topicId  + "/questions/" + questionRandomIndex + "/" + questionKey + "/options/" + optionRandomIndex + "/" + optionIndex + "/"] = false;
-                    })
+                    // question.options.forEach((option, optionIndex) => {
+                    //     var optionRandomIndex = optionIndex == 0 ? question.options.length - 1 : question.options.length - (optionIndex + 1);
+                    //     multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + questionDetail.bookId + "/chapters/" + questionDetail.chapterId + "/topics/" + questionDetail.topicId  + "/questions/" + questionRandomIndex + "/" + questionKey + "/options/" + optionIndex + "/"] = false;
+                    // })
                 }// question.type == 1 || question.type == 2 if statement end
                 // check if question.type == 3
                 if (question.type == 3) {
@@ -100,10 +100,10 @@ export class QuizService {
                         multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + questionDetail.bookId + "/chapters/" + questionDetail.chapterId + "/topics/" + questionDetail.topicId  + "/questions/" + questionRandomIndex + "/" + questionKey + "/timer"] = 0;
                         multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + questionDetail.bookId + "/chapters/" + questionDetail.chapterId + "/topics/" + questionDetail.topicId  + "/questions/" + questionRandomIndex + "/" + questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/correct"] = false;
                         if (questionSet.type === 1 || questionSet.type === 2) {
-                            questionSet.options.forEach((questionSetOption, questionSetOptionIndex) => {
-                                var questionSetOptionRandomIndex = questionSetOptionIndex == 0 ? questionSet.options.length - 1 : questionSet.options.length - (questionSetOptionIndex + 1);
-                                multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + questionDetail.bookId + "/chapters/" + questionDetail.chapterId + "/topics/" + questionDetail.topicId  + "/questions/" + questionRandomIndex + "/" + questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/options/" + questionSetOptionRandomIndex + "/" + questionSetOptionIndex] = false;
-                            })//questionSet options forEach end
+                            // questionSet.options.forEach((questionSetOption, questionSetOptionIndex) => {
+                            //     var questionSetOptionRandomIndex = questionSetOptionIndex == 0 ? questionSet.options.length - 1 : questionSet.options.length - (questionSetOptionIndex + 1);
+                            //     multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + questionDetail.bookId + "/chapters/" + questionDetail.chapterId + "/topics/" + questionDetail.topicId  + "/questions/" + questionRandomIndex + "/" + questionKey + "/questiones/" + questionSetRandomIndex + "/" + questionSetIndex + "/options/"  + questionSetOptionIndex] = false;
+                            // })//questionSet options forEach end
                         }// if statement end questionSet.type === 1 || questionSet.type === 2
                     });//question questiones forEach end
                 }// if statement type == 3 end
@@ -153,7 +153,6 @@ export class QuizService {
 
     //Get Quiz In Progess Data
     getQuizInProgess(QuizUniqueId) {
-        console.log(QuizUniqueId,"QuizUniqueId")
         return new Promise((resolve, reject) => {
             firebase.database().ref('quiz-in-progress').child(QuizUniqueId).once("value", (quizData) => {
                 for (var book in quizData.val()["questionbanks"]) {

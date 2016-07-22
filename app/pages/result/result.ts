@@ -11,12 +11,11 @@ import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
   templateUrl: 'build/pages/result/result.html'
 })
 export class ResultPage {
-  QuizId;
+  QuizId: string;
   QuizData;
   quizData;
   totalQuestion: number;
     constructor(public _navController : NavController,public params: NavParams,private QuizSchedule: GetGroupQuizSchedule,private quiz: QuizService){
-      // console.log(this.quiz)
       this.QuizId = this.params.get('quizIdIndex');
      this.quiz.getQuizInProgess(this.QuizSchedule.getQuizId(this.QuizId)).then((res: any) => {
        this.totalQuestion = res.quizArr.length;

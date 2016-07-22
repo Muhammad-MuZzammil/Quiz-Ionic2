@@ -8,7 +8,7 @@ import {startQuiz} from "./pages/startQuiz/startQuiz";
 import {GetGroupQuizSchedule} from "./pages/home/GetGroupQuizSchedule";
 import {HTTP_PROVIDERS} from "@angular/http";
 import {QuizService} from "./pages/startQuiz/quizService";
-
+import {quizResultComponent} from "./pages/quizResult/quizResult";
 @Component({
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })

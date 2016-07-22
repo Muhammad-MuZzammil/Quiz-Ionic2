@@ -7,6 +7,8 @@ import {quizResultComponent} from "../quizResult/quizResult";
 import {QuestionRadioTypeComponent} from "./questionRadioType";
 import {QuestionCheckboxTypeComponent} from "./questionCheckboxType";
 import {QuestionSetSelectedOption} from "./questionSetType";
+import {Observable} from 'rxjs/observable'
+
 @Component({
     templateUrl: 'build/pages/startQuiz/startQuiz.html',
     directives: [QuestionRadioTypeComponent, QuestionCheckboxTypeComponent, QuestionSetSelectedOption]
@@ -36,7 +38,10 @@ export class startQuiz implements OnInit {
     duration: number;
     remainingTime: number;
 
-    constructor(public _navController: NavController, public params: NavParams, private QuizSchedule: GetGroupQuizSchedule, private _QuizService: QuizService) { }
+    constructor(public _navController: NavController,
+        public params: NavParams,
+        private QuizSchedule: GetGroupQuizSchedule,
+        private _QuizService: QuizService) { }
 
     ngOnInit() {
         this.QuizParams = this.params.get('quizshow');
@@ -44,11 +49,12 @@ export class startQuiz implements OnInit {
         this.subgroupId = this.params.get('subgroupId');
         this.QuizUniqueId = this.QuizSchedule.getQuizId(this.QuizParams);
         this.duration = this.QuizSchedule.groupQuiz[this.QuizParams].duration;
+
         if (this._QuizService.quizQuestionArr) {
-            this.getQuizInfo(this._QuizService.quizQuestionArr, this._QuizService.quizQuestionKeyArray)
+            this.getQuizInfo(this._QuizService.quizQuestionArr, this._QuizService.quizQuestionKeyArray);
         } else {
             this._QuizService.getQuizInProgess(this.QuizUniqueId).then((res: any) => {
-                  this.getQuizInfo(res.quizArr, res.quizQuestionKeyArray)
+                this.getQuizInfo(res.quizArr, res.quizQuestionKeyArray);
             })
         }
 
@@ -118,7 +124,6 @@ export class startQuiz implements OnInit {
             timer: this.remainingTime,
             type: radioOption.type,
             optionOriginalIndex: radioOption.optionOriginalIndex,
-            optionRandomIndex: radioOption.optionRandomIndex,
             questionKey: questionKey,
             bookId: question.bookId,
             chapterId: question.chapterId,
@@ -137,7 +142,6 @@ export class startQuiz implements OnInit {
                 timer: this.remainingTime,
                 type: checkboxOption.type,
                 optionOriginalIndex: checkboxOption.optionOriginalIndex,
-                optionRandomIndex: checkboxOption.optionRandomIndex,
                 questionKey: questionKey,
                 bookId: question.bookId,
                 chapterId: question.chapterId,
@@ -200,9 +204,10 @@ export class startQuiz implements OnInit {
             subgroupId: this.subgroupId,
             quizId: this.QuizUniqueId
         }
+        console.log("UserQuizObject Stated Quiz",UserQuizObject)
         this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.index).then(() => {
             if (submit) {
-                this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId });
+                this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId, groupId: this.GroupId,subgroupId: this.subgroupId  });
             }
         })
         this.Quiz = [];
