@@ -8,14 +8,14 @@ import {QuestionRadioTypeComponent} from "./questionRadioType";
 import {QuestionCheckboxTypeComponent} from "./questionCheckboxType";
 import {QuestionSetSelectedOption} from "./questionSetType";
 import {Observable} from 'rxjs/observable'
-
+import {GroupQuizService} from "./../services/getUserGroupQuiz";
 @Component({
     templateUrl: 'build/pages/startQuiz/startQuiz.html',
     directives: [QuestionRadioTypeComponent, QuestionCheckboxTypeComponent, QuestionSetSelectedOption]
 
 })
 export class startQuiz implements OnInit {
-
+// this.groupQuizService.getUserData()
     questionArr: any[] = [];
     questionDetail: any[] = [];
     CheckboxOptionArray: any[] = [];
@@ -37,17 +37,20 @@ export class startQuiz implements OnInit {
     QuestionSetOptionRadioButton: boolean;
     duration: number;
     remainingTime: number;
-
+    userObj;
     constructor(public _navController: NavController,
         public params: NavParams,
         private QuizSchedule: GetGroupQuizSchedule,
-        private _QuizService: QuizService) { }
+        private _QuizService: QuizService,
+        private _groupQuizService: GroupQuizService) { }
 
     ngOnInit() {
         this.QuizParams = this.params.get('quizshow');
         this.GroupId = this.params.get('groupId');
         this.subgroupId = this.params.get('subgroupId');
         this.QuizUniqueId = this.QuizSchedule.getQuizId(this.QuizParams);
+
+        this.userObj = this._groupQuizService.getUserQuizData();
         this.duration = this.QuizSchedule.groupQuiz[this.QuizParams].duration;
 
         if (this._QuizService.quizQuestionArr) {
@@ -204,7 +207,6 @@ export class startQuiz implements OnInit {
             subgroupId: this.subgroupId,
             quizId: this.QuizUniqueId
         }
-        console.log("UserQuizObject Stated Quiz",UserQuizObject)
         this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.index).then(() => {
             if (submit) {
                 this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId, groupId: this.GroupId,subgroupId: this.subgroupId  });

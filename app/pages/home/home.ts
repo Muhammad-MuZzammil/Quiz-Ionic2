@@ -3,18 +3,21 @@ import {NavController, Loading} from 'ionic-angular';
 import {ResultPage} from '../result/result';
 import {GetGroupQuizSchedule} from "./GetGroupQuizSchedule";
 import {QuizCardHtml} from "./quizCard";
+import {HttpService} from "./../services/httpService";
+import {GroupQuizService} from "./../services/getUserGroupQuiz";
+
 
 import 'rxjs/add/operator/toPromise';
 
 @Component({
     templateUrl: 'build/pages/home/home.html',
-    directives:[QuizCardHtml]
+    directives: [QuizCardHtml]
 })
 export class HomePage {
     groupQuiz: any = [];
     quizObj: any = {};
     loading: Loading
-    constructor(private _navController: NavController, private _GetGroupQuizSchedule: GetGroupQuizSchedule) { }
+    constructor(private _navController: NavController, private _GetGroupQuizSchedule: GetGroupQuizSchedule,private _httpService: HttpService,private _groupQuizService: GroupQuizService) { }
     ngOnInit() {
         // get all quiz Schedule and show in cards;
         this.loading = Loading.create({
@@ -33,6 +36,7 @@ export class HomePage {
             content: 'Please wait...'
         });
         this._navController.present(this.loading);
+
         this.quizObj = {
             "quizId": this._GetGroupQuizSchedule.getQuizId(quizObj.index),
             "scheduleId": quizObj.quiz.scheduleId,
@@ -40,17 +44,21 @@ export class HomePage {
             "userId": this._GetGroupQuizSchedule.getCurrentUser(),
             "groupId": quizObj.quiz.groupId
         }
+        this._groupQuizService.UserData(this.quizObj);
+        console.log("-------------------",this.quizObj)
         // // call _GetGroupQuizSchedule.checkQuizSchedule function
-        this._GetGroupQuizSchedule.checkQuizSchedule
-            (this.quizObj).subscribe((res) => {
-                (res.json());
-                if (res.json().statusCode == 0) {
+        let body = JSON.stringify(this.quizObj);
+        let url = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkquizschedule";
+        this._httpService.httpPost(url, body) // call httpService httpPost method 
+            .subscribe((res) => {
+                console.log(res);
+                 if (res.statusCode == 0) {
                     this.loading.dismiss()
                     this._navController.push(ResultPage, { quizIdIndex: quizObj.index })
-                }else {
+                } else {
                     this.loading.dismiss()
                 }
-            });//subscribe end
+            });// subscribe function end
     }// checkIsQuizCanGiven end
 
 }
