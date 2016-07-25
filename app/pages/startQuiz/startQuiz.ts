@@ -48,10 +48,10 @@ export class startQuiz implements OnInit {
         this.QuizParams = this.params.get('quizshow');
         this.GroupId = this.params.get('groupId');
         this.subgroupId = this.params.get('subgroupId');
-        this.QuizUniqueId = this.QuizSchedule.getQuizId(this.QuizParams);
+        this.QuizUniqueId = this._groupQuizService.getQuizId(this.QuizParams);
 
         this.userObj = this._groupQuizService.getUserQuizData();
-        this.duration = this.QuizSchedule.groupQuiz[this.QuizParams].duration;
+        this.duration = this._groupQuizService.groupQuiz[this.QuizParams].duration;
 
         if (this._QuizService.quizQuestionArr) {
             this.getQuizInfo(this._QuizService.quizQuestionArr, this._QuizService.quizQuestionKeyArray);
@@ -72,7 +72,7 @@ export class startQuiz implements OnInit {
         // this.questionKeyArray = quizQuestionKeyArray;
 
         var UserQuizObject = {
-            userId: this.QuizSchedule.getCurrentUser(),
+            userId: this._groupQuizService.getCurrentUser(),
             groupId: this.GroupId,
             subgroupId: this.subgroupId,
             quizId: this.QuizUniqueId
@@ -202,7 +202,7 @@ export class startQuiz implements OnInit {
     // save Quiz To firebase funtion start
     saveQuizToFirebase(quiz, submit) {
         var UserQuizObject = {
-            userId: this.QuizSchedule.getCurrentUser(),
+            userId: this._groupQuizService.getCurrentUser(),
             groupId: this.GroupId,
             subgroupId: this.subgroupId,
             quizId: this.QuizUniqueId

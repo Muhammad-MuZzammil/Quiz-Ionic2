@@ -17,11 +17,11 @@ export class ResultPage {
   totalQuestion: number;
     constructor(public _navController : NavController,public params: NavParams,private QuizSchedule: GetGroupQuizSchedule,private quiz: QuizService,private groupQuizService:GroupQuizService){
       this.QuizId = this.params.get('quizIdIndex');
-     this.quiz.getQuizInProgess(this.QuizSchedule.getQuizId(this.QuizId)).then((res: any) => {
+     this.quiz.getQuizInProgess(this.groupQuizService.getQuizId(this.QuizId)).then((res: any) => {
        this.totalQuestion = res.quizArr.length;
      });
-
-      this.QuizData = this.QuizSchedule.groupQuiz[this.QuizId];
+     
+      this.QuizData = this.groupQuizService.groupQuiz[this.QuizId];
     }
      gotostartQuiz(){
       this._navController.push(startQuiz,{quizshow: this.QuizId, groupId: this.QuizData.groupId, subgroupId: this.QuizData.subgroupId});

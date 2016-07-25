@@ -24,7 +24,7 @@ export class HomePage {
             content: 'Please wait...'
         });
         this._navController.present(this.loading);
-        this._GetGroupQuizSchedule.getQuiz().then((res) => {
+        this._groupQuizService.getQuiz().then((res) => {
             this.groupQuiz = res;
             this.loading.dismiss()
         });
@@ -38,20 +38,18 @@ export class HomePage {
         this._navController.present(this.loading);
 
         this.quizObj = {
-            "quizId": this._GetGroupQuizSchedule.getQuizId(quizObj.index),
+            "quizId": this._groupQuizService.getQuizId(quizObj.index),
             "scheduleId": quizObj.quiz.scheduleId,
             "subgroupId": quizObj.quiz.subgroupId,
-            "userId": this._GetGroupQuizSchedule.getCurrentUser(),
+            "userId": this._groupQuizService.getCurrentUser(),
             "groupId": quizObj.quiz.groupId
         }
         this._groupQuizService.UserData(this.quizObj);
-        console.log("-------------------",this.quizObj)
         // // call _GetGroupQuizSchedule.checkQuizSchedule function
         let body = JSON.stringify(this.quizObj);
         let url = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkquizschedule";
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
-                console.log(res);
                  if (res.statusCode == 0) {
                     this.loading.dismiss()
                     this._navController.push(ResultPage, { quizIdIndex: quizObj.index })

@@ -6,7 +6,6 @@
     </ion-navbar>
 </ion-header>
 <ion-content padding>
-    <h1>Quiz-Result</h1>
-    <fail-result></fail-result>
-    <pass-result></pass-result>
+    <fail-result *ngIf="isFailed" [result]="result"></fail-result>
+    <pass-result *ngIf="isPassed" [result]="result"></pass-result>
 </ion-content>

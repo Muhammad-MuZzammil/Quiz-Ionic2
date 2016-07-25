@@ -4,24 +4,35 @@ import {FailResultComponent} from "./fail.result.component";
 import {PassResultComponent} from "./pass.result.component";
 import {Http, Headers, RequestOptions} from '@angular/http';
 import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
+import {HttpService} from "./../services/httpService";
+import {GroupQuizService} from "./../services/getUserGroupQuiz"
 @Component({
   templateUrl: "build/pages/quizResult/quizResult.html",
   directives: [FailResultComponent, PassResultComponent]
 })
 export class quizResultComponent {
   passingMarks;
-  quiz: NavParams
+  quiz: any
   groupId: NavParams
   subgroupId: NavParams
   loading: Loading
+  QuizData;
+  isPassed: boolean;
+  isFailed: boolean;
+  result
   constructor(private params: NavParams,
     public http: Http,
     private _navController: NavController,
-    private QuizSchedule: GetGroupQuizSchedule
+    private QuizSchedule: GetGroupQuizSchedule,
+    private _httpService: HttpService,
+    private GroupQuizService: GroupQuizService
   ) {
     this.quiz = this.params.get("quizId");
     this.groupId = this.params.get("groupId");
     this.subgroupId = this.params.get("subgroupId");
+    this.QuizData = this.GroupQuizService.groupQuiz[this.GroupQuizService.groupQuizId.indexOf(this.quiz)];
+    //passing-marks
+    console.log("this.QuizData: ", this.QuizData)
   }
 
   ionViewLoaded() {
@@ -37,15 +48,25 @@ export class quizResultComponent {
       subgroupId: this.subgroupId,
       quizId: this.quiz,
     }
-    let headers: Headers = new Headers();
-    headers.append('Content-Type', 'text/plain');
-    let options: RequestOptions = new RequestOptions();
-    options.headers = headers;
-    console.log(UserQuizObject, "UserQuizObject")
-    this.http.post('https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/quizresult', JSON.stringify(UserQuizObject), options)
+    let body = JSON.stringify(UserQuizObject);
+    console.log(UserQuizObject, "UserCredentials")
+    let url = 'https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/quizresult';
+    this._httpService.httpPost(url, body) // call httpService httpPost method 
       .subscribe((res) => {
         this.loading.dismiss()
-        console.log("quiz Result: ", res.json());
+        if (res.data) {
+          if (this.QuizData["passing-marks"] <= res.data.percentage) {
+            console.log("quiz Result: ", res.data);
+            this.isPassed = true;
+            this.result = res.data
+          }
+          else {
+            this.isFailed = true;
+            console.log( res.data)
+            this.result = res.data
+          }
+        }
+
       });// subscribe end
   }
 }

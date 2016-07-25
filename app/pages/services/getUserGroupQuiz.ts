@@ -44,6 +44,7 @@ export class GroupQuizService {
                                 this.QuizScheduleKey.push(scheduleId);
                             }// for in loop end
                             this.groupQuizId.push(snapshot.key);
+                            console.log("this.groupQuizId: " ,this.groupQuizId)                            
                             resolve(this.groupQuiz);
                         }); // child_added on quiz-schedule end
                     }// if statement checking membership-type > 0 end
