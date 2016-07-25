@@ -5,7 +5,7 @@ import {HomePage} from '../home/home'
 import {startQuiz} from '../startQuiz/startQuiz'
 import {QuizService} from '../startQuiz/quizService'
 import {GroupQuizService} from "./../services/getUserGroupQuiz";
-import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
+// import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 
 @Component({
   templateUrl: 'build/pages/result/result.html'
@@ -15,12 +15,12 @@ export class ResultPage {
   QuizData;
   quizData;
   totalQuestion: number;
-    constructor(public _navController : NavController,public params: NavParams,private QuizSchedule: GetGroupQuizSchedule,private quiz: QuizService,private groupQuizService:GroupQuizService){
+    constructor(public _navController : NavController,public params: NavParams,private quiz: QuizService,private groupQuizService:GroupQuizService){
       this.QuizId = this.params.get('quizIdIndex');
      this.quiz.getQuizInProgess(this.groupQuizService.getQuizId(this.QuizId)).then((res: any) => {
        this.totalQuestion = res.quizArr.length;
      });
-     
+
       this.QuizData = this.groupQuizService.groupQuiz[this.QuizId];
     }
      gotostartQuiz(){

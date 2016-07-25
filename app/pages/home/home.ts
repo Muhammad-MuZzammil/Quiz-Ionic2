@@ -17,7 +17,7 @@ export class HomePage {
     groupQuiz: any = [];
     quizObj: any = {};
     loading: Loading
-    constructor(private _navController: NavController, private _GetGroupQuizSchedule: GetGroupQuizSchedule,private _httpService: HttpService,private _groupQuizService: GroupQuizService) { }
+    constructor(private _navController: NavController, private _httpService: HttpService, private _groupQuizService: GroupQuizService) { }
     ngOnInit() {
         // get all quiz Schedule and show in cards;
         this.loading = Loading.create({
@@ -30,6 +30,7 @@ export class HomePage {
         });
 
     }//ngOnInit end
+    
     // can user can give quiz or not
     checkIsQuizCanGiven(quizObj, index) {
         this.loading = Loading.create({
@@ -50,7 +51,7 @@ export class HomePage {
         let url = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkquizschedule";
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
-                 if (res.statusCode == 0) {
+                if (res.statusCode == 0) {
                     this.loading.dismiss()
                     this._navController.push(ResultPage, { quizIdIndex: quizObj.index })
                 } else {

@@ -1,7 +1,7 @@
 
 import {NavController, NavParams} from 'ionic-angular';
 import {Component, OnInit} from '@angular/core';
-import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
+// import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 import {QuizService} from "./quizService";
 import {quizResultComponent} from "../quizResult/quizResult";
 import {QuestionRadioTypeComponent} from "./questionRadioType";
@@ -40,7 +40,6 @@ export class startQuiz implements OnInit {
     userObj;
     constructor(public _navController: NavController,
         public params: NavParams,
-        private QuizSchedule: GetGroupQuizSchedule,
         private _QuizService: QuizService,
         private _groupQuizService: GroupQuizService) { }
 

@@ -3,7 +3,7 @@ import {NavParams, Loading, NavController} from 'ionic-angular';
 import {FailResultComponent} from "./fail.result.component";
 import {PassResultComponent} from "./pass.result.component";
 import {Http, Headers, RequestOptions} from '@angular/http';
-import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
+// import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 import {HttpService} from "./../services/httpService";
 import {GroupQuizService} from "./../services/getUserGroupQuiz"
 @Component({
@@ -23,7 +23,6 @@ export class quizResultComponent {
   constructor(private params: NavParams,
     public http: Http,
     private _navController: NavController,
-    private QuizSchedule: GetGroupQuizSchedule,
     private _httpService: HttpService,
     private GroupQuizService: GroupQuizService
   ) {
@@ -43,7 +42,7 @@ export class quizResultComponent {
     this._navController.present(this.loading);
 
     var UserQuizObject = {
-      userId: this.QuizSchedule.getCurrentUser(),
+      userId: this.GroupQuizService.getCurrentUser(),
       groupId: this.groupId,
       subgroupId: this.subgroupId,
       quizId: this.quiz,

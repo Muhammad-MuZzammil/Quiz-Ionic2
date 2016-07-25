@@ -30,7 +30,6 @@ class QuizApp {
 ionicBootstrap(QuizApp, [
     LoginService,
     QuizService,
-    GetGroupQuizSchedule,
     HTTP_PROVIDERS,
     HttpService,
     GroupQuizService
