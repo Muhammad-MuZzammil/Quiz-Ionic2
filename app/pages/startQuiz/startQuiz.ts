@@ -1,7 +1,6 @@
 
 import {NavController, NavParams} from 'ionic-angular';
 import {Component, OnInit} from '@angular/core';
-// import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 import {QuizService} from "./quizService";
 import {quizResultComponent} from "../quizResult/quizResult";
 import {QuestionRadioTypeComponent} from "./questionRadioType";
@@ -9,13 +8,14 @@ import {QuestionCheckboxTypeComponent} from "./questionCheckboxType";
 import {QuestionSetSelectedOption} from "./questionSetType";
 import {Observable} from 'rxjs/observable'
 import {GroupQuizService} from "./../services/getUserGroupQuiz";
+
 @Component({
     templateUrl: 'build/pages/startQuiz/startQuiz.html',
     directives: [QuestionRadioTypeComponent, QuestionCheckboxTypeComponent, QuestionSetSelectedOption]
 
 })
 export class startQuiz implements OnInit {
-// this.groupQuizService.getUserData()
+    // this.groupQuizService.getUserData()
     questionArr: any[] = [];
     questionDetail: any[] = [];
     CheckboxOptionArray: any[] = [];
@@ -80,14 +80,14 @@ export class startQuiz implements OnInit {
             if (response) {
                 this.question = this.questionArr[response["question-started-index"]];
                 this.index = response["question-started-index"];
+                this.remainingTime = response["duration"];
                 if (this.index === this.questionArr.length - 1) {
                     this.lastQuestion = true;
                 }
-                // var questionStartedIndex = this.index ? this.questionArr.length - this.index : this.index;
-                // this.userAnswer = response.questions[questionStartedIndex];
-                // for (var questionOriginalKey in this.userAnswer) {
-                //     this.remainingTime = this.userAnswer[questionOriginalKey]["timer"]
-                // }
+                else if (this.index === this.questionArr.length) {
+                    this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId, groupId: this.GroupId, subgroupId: this.subgroupId });
+                    return;
+                }
                 this.countdown("duration", this.duration, 0, this.remainingTime);
             }
         })
@@ -103,15 +103,18 @@ export class startQuiz implements OnInit {
                 this.saveQuizToFirebase(this.Quiz, true)
                 return;
             }
-            var minutes = Math.floor(time / 60);
-            if (minutes < 10) minutes = <any>"0" + minutes;
-            var seconds = time % 60;
-            if (seconds < 10) seconds = <any>"0" + seconds;
-            var text = minutes + ':' + seconds;
-            this.showTime = true;
-            el.innerHTML = text;
-            time--;
-            this.remainingTime = time
+            if (time) {
+                var minutes = Math.floor(time / 60);
+                if (minutes < 10) minutes = <any>"0" + minutes;
+                var seconds = time % 60;
+                if (seconds < 10) seconds = <any>"0" + seconds;
+                var text = minutes + ':' + seconds;
+                this.showTime = true;
+                el.innerHTML = text;
+                time--;
+                this.remainingTime = time
+            }
+
 
         }, 1000);// setInterval end
     }// show Timer end
@@ -208,7 +211,7 @@ export class startQuiz implements OnInit {
         }
         this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.index).then(() => {
             if (submit) {
-                this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId, groupId: this.GroupId,subgroupId: this.subgroupId  });
+                this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId, groupId: this.GroupId, subgroupId: this.subgroupId });
             }
         })
         this.Quiz = [];

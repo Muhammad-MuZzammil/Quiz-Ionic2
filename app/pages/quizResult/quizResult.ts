@@ -30,8 +30,6 @@ export class quizResultComponent {
     this.groupId = this.params.get("groupId");
     this.subgroupId = this.params.get("subgroupId");
     this.QuizData = this.GroupQuizService.groupQuiz[this.GroupQuizService.groupQuizId.indexOf(this.quiz)];
-    //passing-marks
-    console.log("this.QuizData: ", this.QuizData)
   }
 
   ionViewLoaded() {
@@ -48,20 +46,17 @@ export class quizResultComponent {
       quizId: this.quiz,
     }
     let body = JSON.stringify(UserQuizObject);
-    console.log(UserQuizObject, "UserCredentials")
     let url = 'https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/quizresult';
     this._httpService.httpPost(url, body) // call httpService httpPost method 
       .subscribe((res) => {
         this.loading.dismiss()
         if (res.data) {
           if (this.QuizData["passing-marks"] <= res.data.percentage) {
-            console.log("quiz Result: ", res.data);
             this.isPassed = true;
             this.result = res.data
           }
           else {
             this.isFailed = true;
-            console.log( res.data)
             this.result = res.data
           }
         }

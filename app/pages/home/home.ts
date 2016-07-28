@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {NavController, Loading} from 'ionic-angular';
 import {ResultPage} from '../result/result';
-import {GetGroupQuizSchedule} from "./GetGroupQuizSchedule";
+// import {GetGroupQuizSchedule} from "./GetGroupQuizSchedule";
 import {QuizCardHtml} from "./quizCard";
 import {HttpService} from "./../services/httpService";
 import {GroupQuizService} from "./../services/getUserGroupQuiz";
@@ -25,6 +25,7 @@ export class HomePage {
         });
         this._navController.present(this.loading);
         this._groupQuizService.getQuiz().then((res) => {
+            this.groupQuiz = [];
             this.groupQuiz = res;
             this.loading.dismiss()
         });

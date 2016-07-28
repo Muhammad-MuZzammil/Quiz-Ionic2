@@ -14,16 +14,14 @@ import {HttpService} from "./../services/httpService";
     directives: [LoginFormComponent]
 })
 export class LoginPage {
-    constructor(public _navController: NavController, public http: Http, private _loginService: LoginService,private _httpService : HttpService) { }
+    constructor(public _navController: NavController, public http: Http, private _loginService: LoginService, private _httpService: HttpService) { }
     // login function start
     login(UserCredentials) {
         let body = JSON.stringify(UserCredentials);
-        console.log(UserCredentials,"UserCredentials")
         let url = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/signin";
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
-                console.log(res);
-                 if (res.statusCode !== 0) {
+                if (res.statusCode !== 0) {
                     this._loginService.FirebaseLoginUser(res).then((res) => {
                         this._navController.push(HomePage);
                     }, (error) => {

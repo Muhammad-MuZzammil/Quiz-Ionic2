@@ -18,7 +18,7 @@ export class QuizService {
                 var questionRandomIndex = this.quizQuestionKeyArray.indexOf(question.questionKey);
                  questionRandomIndex = questionRandomIndex == 0 ? this.quizQuestionKeyArray.length - 1 : this.quizQuestionKeyArray.length - (questionRandomIndex + 1);
                 // check if question.type == 1
-                multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId  + "/start-time"] = question.timer;
+                multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId  + "/duration"] = question.timer;                
                 multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId  + "/question-started-index"] = questioStartedIndex;
                 multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId  + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/timer"] = question.timer;
                 if (question.type == 1) {
@@ -76,7 +76,8 @@ export class QuizService {
         if (quiz) {
             multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/total-score"] = 0
             multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/question-started-index"] = 0;
-            multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/start-time"] = 0;
+            multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId  + "/start-time"] = firebase.database.ServerValue.TIMESTAMP;
+            multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/duration"] = 0;            
             quiz.forEach(function(questionDetail, i) {
 
                 var question = questionDetail;
