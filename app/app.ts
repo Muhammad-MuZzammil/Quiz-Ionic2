@@ -11,6 +11,7 @@ import {QuizService} from "./pages/startQuiz/quizService";
 import {quizResultComponent} from "./pages/quizResult/quizResult";
 import {HttpService} from "./pages/services/httpService";
 import {GroupQuizService} from "./pages/services/getUserGroupQuiz";
+import {ResultQuizService} from "./pages/result/result.service.component";
 @Component({
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
@@ -32,5 +33,6 @@ ionicBootstrap(QuizApp, [
     QuizService,
     HTTP_PROVIDERS,
     HttpService,
-    GroupQuizService
+    GroupQuizService,
+    ResultQuizService
 ]);

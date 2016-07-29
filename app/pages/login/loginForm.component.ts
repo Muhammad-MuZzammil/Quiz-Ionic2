@@ -8,14 +8,14 @@ import {Login} from "./login"
   <form [ngFormModel]="authForm" (ngSubmit)="login()" novalidate>
       <ion-item>
           <ion-label floating>Email</ion-label>
-          <ion-input type="email" [ngFormControl]="email" required value="a4arshi@yahoo.com"></ion-input>
+          <ion-input type="email" [ngFormControl]="email" required ></ion-input>
       </ion-item>
       <span class="text-error" *ngIf="email.dirty && !email.valid" padding>
           <span *ngIf="email.errors.EmailValidation">* Email Address is not Valid</span>
       </span>
       <ion-item [class.error]="!password.valid && password.touched">
           <ion-label floating>Password</ion-label>
-          <ion-input type="password" value="" [ngFormControl]="password" value="123"></ion-input>
+          <ion-input type="password" value="" [ngFormControl]="password" ></ion-input>
       </ion-item>
       <span class="text-error" *ngIf="password.dirty && !password.valid" padding>
           password is required

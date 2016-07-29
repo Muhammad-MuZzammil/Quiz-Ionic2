@@ -14,5 +14,9 @@
     Total Questions :{{totalQuestion}} <br/>
     No. of Attempts Allowed : 1
   </h4>
-   <button secondry seagreen (click)="gotostartQuiz()" style="margin-left: 40%">Quiz Start</button>
+  <div *ngIf="givenQuiz">
+    <h2>Date: {{givenQuiz["start-time"]  | amDateFormat:'LL'}}</h2>
+    <h2>Your Score: {{givenQuiz["total-score"]}} %</h2>
+  </div>
+   <button secondry seagreen (click)="gotostartQuiz()" style="margin-left: 40%" *ngIf="!canQuizGiven">Quiz Start</button>
 </ion-content>

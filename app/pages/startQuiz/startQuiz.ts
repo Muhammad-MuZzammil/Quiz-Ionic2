@@ -38,6 +38,7 @@ export class startQuiz implements OnInit {
     duration: number;
     remainingTime: number;
     userObj;
+     questionLenght:number;
     constructor(public _navController: NavController,
         public params: NavParams,
         private _QuizService: QuizService,
@@ -79,6 +80,7 @@ export class startQuiz implements OnInit {
         this._QuizService.userQuiz(this.questionArr, UserQuizObject, this.questionKeyArray).then((response: any) => {
             if (response) {
                 this.question = this.questionArr[response["question-started-index"]];
+                this.questionLenght = this.questionArr.length;
                 this.index = response["question-started-index"];
                 this.remainingTime = response["duration"];
                 if (this.index === this.questionArr.length - 1) {

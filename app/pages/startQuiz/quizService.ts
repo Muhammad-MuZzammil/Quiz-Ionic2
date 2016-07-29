@@ -74,7 +74,8 @@ export class QuizService {
         var subgroupId = UserQuizObject.subgroupId;
         var quizId = UserQuizObject.quizId;
         if (quiz) {
-            multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/total-score"] = 0
+            multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/total-score"] = 0;
+            multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/is-quiz-given"] = false;
             multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/question-started-index"] = 0;
             multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId  + "/start-time"] = firebase.database.ServerValue.TIMESTAMP;
             multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/duration"] = 0;            
