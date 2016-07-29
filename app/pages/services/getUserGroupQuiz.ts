@@ -25,6 +25,10 @@ export class GroupQuizService {
                 for (var subgroupId in group.val()) {
                     if (group.val()[subgroupId]["membership-type"] > 0) {
                         var QuizSchedule = firebase.database().ref("quiz-schedule").child(group.key).child(subgroupId);
+                        QuizSchedule.off("child_changed")
+                        QuizSchedule.on("child_changed", function (changedSnapshot) {
+                        console.log("changedddddddddddddddddddddddddddddddddddd",changedSnapshot.val())
+                        })                        
                         QuizSchedule.off("child_added");
                         QuizSchedule.on("child_added", (snapshot) => {
                             for (var scheduleId in snapshot.val().schedules) {
