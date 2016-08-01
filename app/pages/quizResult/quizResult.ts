@@ -43,24 +43,28 @@ export class quizResultComponent {
       userId: this.GroupQuizService.getCurrentUser(),
       groupId: this.groupId,
       subgroupId: this.subgroupId,
-      quizId: this.quiz,
+      quizId: this.quiz
     }
+    console.log(UserQuizObject)
     let body = JSON.stringify(UserQuizObject);
     let url = 'https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/quizresult';
     this._httpService.httpPost(url, body) // call httpService httpPost method 
       .subscribe((res) => {
-        this.loading.dismiss()
+        console.log(res);
         if (res.data) {
+          console.log(res.data)
+          console.log(this.QuizData)
           if (this.QuizData["passing-marks"] <= res.data.percentage) {
             this.isPassed = true;
             this.result = res.data
+            this.loading.dismiss()
           }
           else {
             this.isFailed = true;
-            this.result = res.data
+            this.result = res.data;
+            this.loading.dismiss()
           }
         }
-
       });// subscribe end
   }
 }
