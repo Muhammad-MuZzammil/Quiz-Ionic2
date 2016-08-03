@@ -9,13 +9,14 @@ export class GroupQuizService {
     groupQuiz = [];
     groupQuizId = [];
     QuizScheduleKey = [];
-    userData:Object;
+    userData: Object;
     handleError = "Error";
     constructor(private http: Http) {
         // Get data from localStorage;
         this.user = localStorage.getItem("ngStorage-LoggedInUser")
         this.user = JSON.parse(this.user);
         this.userId = this.user.userID;
+        // this.getUserQuizAnswer();
     }
 
     getQuiz() {
@@ -27,8 +28,8 @@ export class GroupQuizService {
                         var QuizSchedule = firebase.database().ref("quiz-schedule").child(group.key).child(subgroupId);
                         QuizSchedule.off("child_changed")
                         QuizSchedule.on("child_changed", function (changedSnapshot) {
-                        console.log("changedddddddddddddddddddddddddddddddddddd",changedSnapshot.val())
-                        })                        
+                            console.log("changedddddddddddddddddddddddddddddddddddd", changedSnapshot.val())
+                        })
                         QuizSchedule.off("child_added");
                         QuizSchedule.on("child_added", (snapshot) => {
                             for (var scheduleId in snapshot.val().schedules) {
@@ -75,5 +76,34 @@ export class GroupQuizService {
         let options: RequestOptions = new RequestOptions();
         options.headers = headers;
         return this.http.post('https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkquizschedule', JSON.stringify(quizObj), options)
+    }
+    getUserQuizAnswer() {
+        firebase.database().ref("quiz-answer-users").child("arsalanrajput").child("group").child("subgroup").child("html5").once("value", (quizAns) => {
+            console.log(quizAns.val());
+            if (quizAns.val().questionbanks !== null) {
+                for (var book in quizAns.val().questionbanks) {
+                    for (var chapter in quizAns.val().questionbanks[book].chapters) {
+                        for (var topic in quizAns.val().questionbanks[book].chapters[chapter].topics) {
+                            quizAns.val().questionbanks[book].chapters[chapter].topics[topic].questions.forEach(question => {
+                                // console.log(question,"question question question")
+                                for (var questionKey in question) {
+                                    // console.log(question[questionKey],"question[questionKey]")
+                                    if (question[questionKey].questiones) {
+                                        console.log(question[questionKey].questiones)
+                                    } else {
+                                        console.log(question[questionKey], "options")
+                                        question[questionKey].options.forEach(selectedOption => {
+                                            console.log(selectedOption, "selectedOption")
+                                        });
+                                    }
+                                    // console.log(this.quiz.questionbanks[book].chapters[chapter].topics[topic].questions[questionKey],"questionKey")
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+        })
     }
 }

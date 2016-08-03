@@ -12,10 +12,10 @@
             <ion-card-content [innerHTML]="question.html" padding></ion-card-content>
         </ion-card>
         <div *ngIf="question.type == 1">
-            <radio-type [questionRadio]="question" (RadioButtonSelectedOption)="saveRadioButtonOption($event, question)" [isLastQuestion]="lastQuestion"></radio-type>
+            <radio-type [questionRadio]="question" (RadioButtonSelectedOption)="saveRadioButtonOption($event, question)" [remainingTime]="remainingTime" [isLastQuestion]="lastQuestion"></radio-type>
         </div>
         <div *ngIf="question.type == 2">
-            <checkbox-type [questionCheckbox]="question" (CheckboxSelectedOption)="saveCheckboxOption($event,question)"></checkbox-type>
+            <checkbox-type [questionCheckbox]="question" (CheckboxSelectedOption)="saveCheckboxOption($event,question)" [remainingTime]="remainingTime"></checkbox-type>
         </div>
         <div *ngIf="question.type == 3" padding>
             <question-set-type [questionSet]="question" (questionSetCheckboxSelectedOption)="savequestionSetOption($event,question)" [duration]="remainingTime" [isLastQuestion]="lastQuestion"></question-set-type>

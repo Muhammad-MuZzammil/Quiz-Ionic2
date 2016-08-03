@@ -18,7 +18,6 @@ export class startQuiz implements OnInit {
     // this.groupQuizService.getUserData()
     questionArr: any[] = [];
     questionDetail: any[] = [];
-    CheckboxOptionArray: any[] = [];
     QuizQuestionSet: any[] = [];
     Quiz: any[] = [];
     question: any;
@@ -32,13 +31,11 @@ export class startQuiz implements OnInit {
     showTime: boolean = false;
     QuestionSetOption: boolean = false;
     userAnswer: any;
-    optionRadioButton: boolean;
     checkboxOption: boolean;
-    QuestionSetOptionRadioButton: boolean;
     duration: number;
     remainingTime: number;
     userObj;
-     questionLenght:number;
+    questionLenght: number;
     constructor(public _navController: NavController,
         public params: NavParams,
         private _QuizService: QuizService,
@@ -62,6 +59,8 @@ export class startQuiz implements OnInit {
         }
 
     }// ngOnInit function end
+
+    // get user quiz answer
     getQuizInfo(quizArr, quizQuestionKeyArray) {
         quizArr.forEach(questionDetail => {
             this.questionArr.push(questionDetail.question)
@@ -69,7 +68,6 @@ export class startQuiz implements OnInit {
 
         this.questionDetail = quizArr;
         this.questionKeyArray = quizQuestionKeyArray
-        // this.questionKeyArray = quizQuestionKeyArray;
 
         var UserQuizObject = {
             userId: this._groupQuizService.getCurrentUser(),
@@ -77,102 +75,78 @@ export class startQuiz implements OnInit {
             subgroupId: this.subgroupId,
             quizId: this.QuizUniqueId
         }
+        //calls to get user quiz answer data;
         this._QuizService.userQuiz(this.questionArr, UserQuizObject, this.questionKeyArray).then((response: any) => {
             if (response) {
                 this.question = this.questionArr[response["question-started-index"]];
                 this.questionLenght = this.questionArr.length;
                 this.index = response["question-started-index"];
                 this.remainingTime = response["duration"];
+                // if last question then true 
                 if (this.index === this.questionArr.length - 1) {
                     this.lastQuestion = true;
                 }
-                else if (this.index === this.questionArr.length) {
-                    this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId, groupId: this.GroupId, subgroupId: this.subgroupId });
-                    return;
+                // console.log("this.index",this.index,this.questionArr.length, this.questionArr.length -1)
+                else if(this.index === this.questionArr.length) {
+                      this.saveQuizToFirebase(this.Quiz, true)
                 }
                 this.countdown("duration", this.duration, 0, this.remainingTime);
             }
         })
-    }
+    }   // get user quiz answer end
+
     // show Timer
     countdown(element, minutes, seconds, remainingTime) {
+
         var time = remainingTime ? remainingTime : minutes * 60 + seconds;
         var interval = setInterval(() => {
             var el = document.getElementById(element);
-            if (time == 0) {
-                el.innerHTML = "Time's over!";
-                clearInterval(interval);
-                this.saveQuizToFirebase(this.Quiz, true)
-                return;
+            if (el) {
+                if (time == 0) {
+                    el.innerHTML = "Time's over!";
+                    clearInterval(interval);
+                    this.saveQuizToFirebase(this.Quiz, true)
+                    return;
+                }
+                if (time) {
+                    var minutes = Math.floor(time / 60);
+                    if (minutes < 10) minutes = <any>"0" + minutes;
+                    var seconds = time % 60;
+                    if (seconds < 10) seconds = <any>"0" + seconds;
+                    var text = minutes + ':' + seconds;
+                    this.showTime = true;
+                    el.innerHTML = text;
+                    time--;
+                    this.remainingTime = time
+                }
             }
-            if (time) {
-                var minutes = Math.floor(time / 60);
-                if (minutes < 10) minutes = <any>"0" + minutes;
-                var seconds = time % 60;
-                if (seconds < 10) seconds = <any>"0" + seconds;
-                var text = minutes + ':' + seconds;
-                this.showTime = true;
-                el.innerHTML = text;
-                time--;
-                this.remainingTime = time
-            }
-
-
         }, 1000);// setInterval end
     }// show Timer end
 
     //function calls when RadioButtonSelectedOption outputs event tiger
     saveRadioButtonOption(radioOption, question) {
-        this.optionRadioButton = true;
-        var questionIndex = this.questionArr.indexOf(question); // find index of question index
-        var questionKey = this.questionKeyArray[questionIndex] // get data of question by giving index
+
         // push radio button question details in Quiz Array
-        this.Quiz.push({
-            timer: this.remainingTime,
-            type: radioOption.type,
-            optionOriginalIndex: radioOption.optionOriginalIndex,
-            questionKey: questionKey,
-            bookId: question.bookId,
-            chapterId: question.chapterId,
-            topicId: question.topicId
-        })
-        this.nextQuestion()
+        if (radioOption) {
+            this.Quiz.push(radioOption)
+            this.nextQuestion();
+        }
+
     }//function calls when RadioButtonSelectedOption outputs event function end
 
     //function calls when CheckboxSelectedOption outputs event tiger
     saveCheckboxOption(checkboxOption, question) {
-        var questionIndex = this.questionArr.indexOf(question); // find index of question index
-
-        var questionKey = this.questionKeyArray[questionIndex]
         if (checkboxOption) {
-            this.Quiz.push({
-                timer: this.remainingTime,
-                type: checkboxOption.type,
-                optionOriginalIndex: checkboxOption.optionOriginalIndex,
-                questionKey: questionKey,
-                bookId: question.bookId,
-                chapterId: question.chapterId,
-                topicId: question.topicId
-            })
+            this.Quiz.push(checkboxOption)
             this.nextQuestion()
         }
     }//function calls when CheckboxSelectedOption outputs event function end
 
     // //function calls when CheckboxSelectedOption outputs event tiger
     savequestionSetOption(questionSetOption, question) {
-        var questionIndex = this.questionArr.indexOf(question); // find index of question index
-        var questionKey = this.questionKeyArray[questionIndex]
+
         if (questionSetOption) {
-            this.Quiz.push({
-                timer: this.remainingTime,
-                html: question.html,
-                type: question.type,
-                questiones: questionSetOption,
-                questionKey: questionKey,
-                bookId: question.bookId,
-                chapterId: question.chapterId,
-                topicId: question.topicId
-            })
+            this.Quiz.push(questionSetOption)
             this.nextQuestion()
         }
     }//function calls when CheckboxSelectedOption outputs event function end
@@ -180,16 +154,13 @@ export class startQuiz implements OnInit {
     //nextQuestion show next question after liking on next button
 
     nextQuestion() {
-        // empty CheckboxOptionArray after push data in quiz
-        this.CheckboxOptionArray = [];
         this.index++;
-        this.optionRadioButton = null;
-        this.QuestionSetOptionRadioButton = false;
         // check if this.questionArr.length is greater than index if greater than assign next question in this.question Object
         if (this.questionArr.length > this.index) {
+
             this.saveQuizToFirebase(this.Quiz, null)
             this.QuestionSetOption = false;
-            this.QuestionSetOptionRadioButton = false;
+            // this.QuestionSetOptionRadioButton = false;
             this.question = this.questionArr[this.index];
 
         }

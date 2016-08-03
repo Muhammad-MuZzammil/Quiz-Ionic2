@@ -19,7 +19,7 @@ export class quizResultComponent {
   QuizData;
   isPassed: boolean;
   isFailed: boolean;
-  result
+  result = {}
   constructor(private params: NavParams,
     public http: Http,
     private _navController: NavController,
@@ -45,23 +45,40 @@ export class quizResultComponent {
       subgroupId: this.subgroupId,
       quizId: this.quiz
     }
-    console.log(UserQuizObject)
     let body = JSON.stringify(UserQuizObject);
     let url = 'https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/quizresult';
     this._httpService.httpPost(url, body) // call httpService httpPost method 
       .subscribe((res) => {
-        console.log(res);
         if (res.data) {
-          console.log(res.data)
-          console.log(this.QuizData)
           if (this.QuizData["passing-marks"] <= res.data.percentage) {
             this.isPassed = true;
-            this.result = res.data
+            this.result["correctAnswers"] = res.data["correctAnswers"];
+            if (res.data["percentage"].toString().split(".")[1]) {
+              let perc = res.data["percentage"].toString().split(".")[1];
+              if (perc.length > 2) {
+                this.result["percentage"] = res.data["percentage"].toFixed(2);
+              } else {
+                this.result["percentage"] = res.data["percentage"];
+              }
+            } else {
+              this.result["percentage"] = res.data["percentage"];
+            }
             this.loading.dismiss()
           }
           else {
             this.isFailed = true;
-            this.result = res.data;
+            this.result["correctAnswers"] = res.data["correctAnswers"];
+            if (res.data["percentage"].toString().split(".")[1]) {
+              let perc = res.data["percentage"].toString().split(".")[1];
+              if (perc.length > 2) {
+                this.result["percentage"] = res.data["percentage"].toFixed(2);
+              } else {
+                this.result["percentage"] = res.data["percentage"];
+              }
+
+            } else {
+              this.result["percentage"] = res.data["percentage"];
+            }
             this.loading.dismiss()
           }
         }

@@ -20,7 +20,6 @@ import {Component, EventEmitter} from "@angular/core";
 
 export class QuestionSetCheckboxComponent {
     checkboxOption: EventEmitter<Object> = new EventEmitter();
-    constructor() { }
 
     savequestion(checked,checkboxOptionIndex,questionIndex) {
         this.checkboxOption.emit({

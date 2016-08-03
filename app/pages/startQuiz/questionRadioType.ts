@@ -1,9 +1,13 @@
 import {Component, EventEmitter} from "@angular/core";
 
 interface RadioType {
+  timer: number,
+  questionKey: string,
+  bookId: string,
+  chapterId: string,
+  topicId: string,
   type: number,
-  optionOriginalIndex: number,
-  optionRandomIndex: number
+  optionOriginalIndex: number
 }
 
 @Component({
@@ -22,7 +26,7 @@ interface RadioType {
         <button (click)="nextQuestion(question)" item-right seagreen *ngIf="isLastQuestion" [disabled]="!optionRadioButton ">Save</button>
     </ion-buttons>
   `,
-  inputs: ["questionRadio","isLastQuestion"],
+  inputs: ["questionRadio", "isLastQuestion", "remainingTime"],
   outputs: ["RadioButtonSelectedOption"]
 })
 
@@ -31,17 +35,24 @@ export class QuestionRadioTypeComponent {
   questionRadio;
   radioQuestionDetail: RadioType;
   optionRadioButton: boolean = false;
+  radioButtonArray: Array<Object> = [];
+  remainingTime: number
   selectOption(option) {
-
-    var radioButtonOptionIndex = parseInt(option)
-    var radioButtonOptionRandomIndex = this.questionRadio.options.length - (radioButtonOptionIndex + 1);
+    //  var radioButtonArray = [];
+    this.radioButtonArray = []
+    let radioButtonOption = parseInt(option)
+    this.radioButtonArray.push({ radioButtonOptionIndex: radioButtonOption })
+    var radioButtonOptionRandomIndex = this.questionRadio.options.length - (radioButtonOption + 1);
 
     this.radioQuestionDetail = {
+      timer: this.remainingTime,
+      questionKey: this.questionRadio.questionKey,
+      bookId: this.questionRadio.bookId,
+      chapterId: this.questionRadio.chapterId,
+      topicId: this.questionRadio.topicId,
       type: 1,
-      optionOriginalIndex: radioButtonOptionIndex,
-      optionRandomIndex: radioButtonOptionRandomIndex,
+      optionOriginalIndex: radioButtonOption
     }
-
     this.optionRadioButton = true;
   }
 

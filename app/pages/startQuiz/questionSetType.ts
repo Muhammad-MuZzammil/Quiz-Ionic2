@@ -37,13 +37,18 @@ export class QuestionSetSelectedOption {
     checkboxOptionDetail;
     QuestionSetOption: boolean = false;
     RadioIndex: number = null;
-
+    submitted:  boolean;
     // push checkbox option in CheckboxOptionArray when checked
     savequestion(selectedOption) {
+        if(this.submitted) {
+            this.CheckboxOptionArray = [];
+            this.submitted = false;
+        }
         // when radio Option index
         if(selectedOption.radioButtonIndex == 0 || selectedOption.radioButtonIndex) {
         this.RadioIndex = selectedOption.radioButtonIndex;
          this.QuestionSetOption = true
+         return ;
         }
         if (selectedOption.checked) {
             // push checkbox Option Index when checked
@@ -53,14 +58,10 @@ export class QuestionSetSelectedOption {
             });
             this.QuestionSetOption = true
         } else {
+        
             //splice checkboxOption Index when unchecked
-            this.CheckboxOptionArray.splice(this.CheckboxOptionArray.indexOf({
-               checkboxOriginalIndex: selectedOption.checkboxOptionIndex,
-                questionIndex: selectedOption.questionIndex
-            }), 1);
-
+            this.CheckboxOptionArray.splice(selectedOption.checkboxOptionIndex,1);
             if (this.CheckboxOptionArray.length == 0) { }
-
         }
     }
  // save radio Option and checkbox option in question set Array then emit outputs event
@@ -101,8 +102,18 @@ export class QuestionSetSelectedOption {
                 this.QuizQuestionSet.push(questionCheckbox);
             }
         })
-
+        let questionSetObject =  {
+                timer: this.duration,
+                html: this.questionSet.html,
+                type: this.questionSet.type,
+                questiones: this.QuizQuestionSet,
+                questionKey: this.questionSet.questionKey,
+                bookId: this.questionSet.bookId,
+                chapterId: this.questionSet.chapterId,
+                topicId: this.questionSet.topicId
+            }
         // emit outputs event
-        this.questionSetCheckboxSelectedOption.emit(this.QuizQuestionSet);
+        this.submitted = true;
+        this.questionSetCheckboxSelectedOption.emit(questionSetObject);
     }// nextquestion function  end
 }
