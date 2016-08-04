@@ -50,35 +50,27 @@ export class quizResultComponent {
     this._httpService.httpPost(url, body) // call httpService httpPost method 
       .subscribe((res) => {
         if (res.data) {
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",res.data)
+          this.result["correctAnswers"] = res.data["correctAnswers"];
+          let passingPercentage = res.data["percentage"]; // store passingPercentage in let
+          if (passingPercentage.toString().split(".")[1]) { // split percentage with dot
+            let perc = passingPercentage.toString().split(".")[1]; // store value after dot
+            if (perc.length > 2) { //if value iif greater than 2
+              this.result["percentage"] = passingPercentage.toFixed(2); // call toFixed function to get just 2 value after dot;
+            } else {
+              this.result["percentage"] = passingPercentage; // store percentage
+            }
+          }
+          else {
+            this.result["percentage"] = passingPercentage; // store percentage
+          }
           if (this.QuizData["passing-marks"] <= res.data.percentage) {
             this.isPassed = true;
-            this.result["correctAnswers"] = res.data["correctAnswers"];
-            if (res.data["percentage"].toString().split(".")[1]) {
-              let perc = res.data["percentage"].toString().split(".")[1];
-              if (perc.length > 2) {
-                this.result["percentage"] = res.data["percentage"].toFixed(2);
-              } else {
-                this.result["percentage"] = res.data["percentage"];
-              }
-            } else {
-              this.result["percentage"] = res.data["percentage"];
-            }
-            this.loading.dismiss()
+            // this.result["correctAnswers"] = res.data["correctAnswers"];
+            this.loading.dismiss();
           }
           else {
             this.isFailed = true;
-            this.result["correctAnswers"] = res.data["correctAnswers"];
-            if (res.data["percentage"].toString().split(".")[1]) {
-              let perc = res.data["percentage"].toString().split(".")[1];
-              if (perc.length > 2) {
-                this.result["percentage"] = res.data["percentage"].toFixed(2);
-              } else {
-                this.result["percentage"] = res.data["percentage"];
-              }
-
-            } else {
-              this.result["percentage"] = res.data["percentage"];
-            }
             this.loading.dismiss()
           }
         }

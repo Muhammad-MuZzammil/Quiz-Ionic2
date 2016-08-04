@@ -41,8 +41,6 @@ export class QuizService {
                 }
                 // check if question.type == 3
                 if (question.type == 3) {
-                    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                    console.log(question)
                     question.questiones.forEach((questionSet, questionSetIndex) => {
                         var questionSetRandomIndex = questionSetIndex == 0 ? question.questiones.length - 1 : question.questiones.length - (questionSetIndex + 1);
                         multipathObject["quiz-answer-users/" + userId + "/" + groupId + "/" + subgroupId + "/" + quizId + "/questionbanks/" + question.bookId + "/chapters/" + question.chapterId + "/topics/" + question.topicId + "/questions/" + questionRandomIndex + "/" + question.questionKey + "/timer"] = questionSet.timer;
@@ -60,7 +58,6 @@ export class QuizService {
 
             }) // quiz.forEach end
             return new Promise((resolve, reject) => {
-                 console.log("multipathObjecttttttttttttttttttttttttttttttttttttttttttttttttttttt",multipathObject)
                 firebase.database().ref().update(multipathObject, function (error) {
                     if (error) {
                         console.log(error)

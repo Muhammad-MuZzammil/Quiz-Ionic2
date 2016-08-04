@@ -86,7 +86,6 @@ export class startQuiz implements OnInit {
                 if (this.index === this.questionArr.length - 1) {
                     this.lastQuestion = true;
                 }
-                // console.log("this.index",this.index,this.questionArr.length, this.questionArr.length -1)
                 else if(this.index === this.questionArr.length) {
                       this.saveQuizToFirebase(this.Quiz, true)
                 }

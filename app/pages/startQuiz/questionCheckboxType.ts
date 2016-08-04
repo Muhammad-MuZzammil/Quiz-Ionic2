@@ -1,6 +1,6 @@
 import {Component, EventEmitter} from "@angular/core";
 interface ICheckBoxType {
-    timer:number,
+    timer: number,
     questionKey: string,
     bookId: string,
     chapterId: string,
@@ -64,9 +64,12 @@ export class QuestionCheckboxTypeComponent {
             }
             this.checkboxOption = true;
         } else {
-            this.CheckboxOptionArray.splice(this.CheckboxOptionArray.indexOf({
-                checkboxOriginalIndex: index
-            }), 1);
+            this.CheckboxOptionArray.forEach((checkboxSelectedOption, i) => {
+                if (checkboxSelectedOption.checkboxOriginalIndex === index) {
+                    this.CheckboxOptionArray.splice(i , 1);
+                }
+            })
+
 
             if (this.CheckboxOptionArray.length == 0) {
                 this.CheckboxSelectedOption.emit(null)
@@ -77,7 +80,7 @@ export class QuestionCheckboxTypeComponent {
     }// save checkbox question option in local array;
     nextQuestion(question) {
         this.submited = true;
-        
+
         this.CheckboxSelectedOption.emit(this.checkboxOptionDetail);
     }
 }    
