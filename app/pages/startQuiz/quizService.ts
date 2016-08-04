@@ -163,6 +163,8 @@ export class QuizService {
     getQuizInProgess(QuizUniqueId) {
         return new Promise((resolve, reject) => {
             firebase.database().ref('quiz-in-progress').child(QuizUniqueId).once("value", (quizData) => {
+                this.quizQuestionArr = [];
+                this.quizQuestionKeyArray = [];
                 if (quizData.val() !== null) {
                     for (var book in quizData.val()["questionbanks"]) {
                         for (var chapter in quizData.val()["questionbanks"][book].chapters) {

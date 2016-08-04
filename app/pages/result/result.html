@@ -5,18 +5,21 @@
     </ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content class="Result">
+<ion-content class="Result" >
+  <div *ngIf="canQuizGiven">
   <h2>Welcome to {{QuizData.quizTitle}}</h2>
   <h3>Quiz Title : {{QuizData.quizTitle}}</h3>
   <h4>
-    Passing Score : {{QuizData["passing-marks"]}} <br/>
-    Quiz Duration : {{QuizData.duration}} Minutes <br/>
-    Total Questions :{{totalQuestion}} <br/>
-    No. of Attempts Allowed : 1
+    Passing Score : {{QuizData["passing-marks"]}} <br/> Quiz Duration : {{QuizData.duration}} Minutes <br/> Total Questions
+    :{{totalQuestion}} <br/> No. of Attempts Allowed : 1
   </h4>
-  <div *ngIf="canQuizGiven">
-    <h2>Date: {{givenQuiz["start-time"]  | amDateFormat:'LL'}}</h2>
-    <h2>Your Score: {{givenQuiz["total-score"]}} %</h2>
+  <div *ngIf="givenQuiz">
+    <div *ngFor="let result of givenQuiz">
+      <h2>Date: {{result["start-time"] | amDateFormat:'LL'}}</h2>
+      <h2>Your Score: {{result["percentage"]}} %</h2>
+    </div>
+
   </div>
-   <button secondry seagreen (click)="gotostartQuiz()" style="margin-left: 40%" *ngIf="!canQuizGiven">Quiz Start</button>
+  <button secondry seagreen (click)="gotostartQuiz()" style="margin-left: 40%" *ngIf="!startQuiz">Quiz Start</button>
+  </div>
 </ion-content>
