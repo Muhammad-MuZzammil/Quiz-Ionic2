@@ -6,7 +6,7 @@
 </ion-header>
 <ion-content class="Quiz">
     <div *ngIf="question">
-        <div id="duration" text-center [hidden]="!showTime" padding></div>
+        <div id="duration" text-center [hidden]="!showTime" padding>{{quizTime}}</div>
         <h5 padding *ngIf="index <= questionLenght">{{ index + 1}} of {{questionLenght}}</h5>
         <ion-card>
             <ion-card-content [innerHTML]="question.html" padding></ion-card-content>
@@ -21,17 +21,4 @@
             <question-set-type [questionSet]="question" (questionSetCheckboxSelectedOption)="savequestionSetOption($event,question)" [duration]="remainingTime" [isLastQuestion]="lastQuestion"></question-set-type>
         </div>
     </div>
-
-    <!-- <ion-card>
-  <ion-card-content *ngIf="question">
-
-
-
-
-  </ion-card-content>
-
-</ion-card> -->
-    <!--ion-card-->
-
 </ion-content>
-<!--Ion-content-->

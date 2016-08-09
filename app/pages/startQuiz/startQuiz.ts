@@ -36,6 +36,8 @@ export class startQuiz implements OnInit {
     remainingTime: number;
     userObj;
     questionLenght: number;
+    interval;
+    quizTime: string
     constructor(public _navController: NavController,
         public params: NavParams,
         private _QuizService: QuizService,
@@ -96,14 +98,11 @@ export class startQuiz implements OnInit {
 
     // show Timer
     countdown(element, minutes, seconds, remainingTime) {
-
         var time = remainingTime ? remainingTime : minutes * 60 + seconds;
-        var interval = setInterval(() => {
-            var el = document.getElementById(element);
-            if (el) {
+        this.interval = setInterval(() => {
                 if (time == 0) {
-                    el.innerHTML = "Time's over!";
-                    clearInterval(interval);
+                   this.quizTime = "Time's over!";
+                    clearInterval(this.interval);
                     this.saveQuizToFirebase(this.Quiz, true)
                     return;
                 }
@@ -114,11 +113,10 @@ export class startQuiz implements OnInit {
                     if (seconds < 10) seconds = <any>"0" + seconds;
                     var text = minutes + ':' + seconds;
                     this.showTime = true;
-                    el.innerHTML = text;
+                    this.quizTime = text;
                     time--;
                     this.remainingTime = time
                 }
-            }
         }, 1000);// setInterval end
     }// show Timer end
 
@@ -156,7 +154,17 @@ export class startQuiz implements OnInit {
         // check if this.questionArr.length is greater than index if greater than assign next question in this.question Object
         if (this.questionArr.length - 1 == this.index) {
             this.index++;
-            this.saveQuizToFirebase(this.Quiz, true)
+            if (navigator.onLine) {
+                this.saveQuizToFirebase(this.Quiz, true)
+            }
+            else {
+                var interval = setInterval(() => {
+                    if (navigator.onLine) {
+                        this.saveQuizToFirebase(this.Quiz, true);
+                        clearInterval(interval)
+                    }
+                }, 10000)
+            }
         }
         else {
             if (this.questionArr.length > this.index) {
@@ -183,6 +191,7 @@ export class startQuiz implements OnInit {
         }
         this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.index).then(() => {
             if (submit) {
+                clearInterval(this.interval);
                 this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId, groupId: this.GroupId, subgroupId: this.subgroupId });
             }
         })

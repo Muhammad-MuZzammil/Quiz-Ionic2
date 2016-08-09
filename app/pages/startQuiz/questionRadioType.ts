@@ -57,7 +57,6 @@ export class QuestionRadioTypeComponent {
 
   nextQuestion() {
     this.optionRadioButton = false;
-    console.log("optionRadioButtonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",this.optionRadioButton)
     this.RadioButtonSelectedOption.emit(this.radioQuestionDetail);
   }
 }
