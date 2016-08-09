@@ -11,9 +11,9 @@ interface ICheckBoxType {
 @Component({
     selector: "checkbox-type",
     template: `
-  <h2 text-center>Options {{submited | json}}</h2>
-  <ion-list padding>
-        <ion-item *ngFor="let option of questionCheckbox.options; let i = index">
+  <h2 text-center>Options</h2>
+  <ion-list padding text-wrap>
+        <ion-item *ngFor="let option of questionCheckbox.options; let i = index" >
             <ion-checkbox (ionChange)="savequestion(option.html,checkbox.checked,null,i)" #checkbox [checked]=false></ion-checkbox>
             <ion-label [innerHTML]="option.html"></ion-label>
             
@@ -80,7 +80,7 @@ export class QuestionCheckboxTypeComponent {
     }// save checkbox question option in local array;
     nextQuestion(question) {
         this.submited = true;
-
+         this.checkboxOption = false;
         this.CheckboxSelectedOption.emit(this.checkboxOptionDetail);
     }
 }    

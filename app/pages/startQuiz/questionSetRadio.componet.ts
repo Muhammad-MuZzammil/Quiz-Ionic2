@@ -8,7 +8,7 @@ import {Component, EventEmitter} from "@angular/core";
                   <b style="margin-right: 10px;padding-top: 13px;">Q:{{questionIndex + 1}}</b>
                   <div [innerHTML]="question.html"></div>
               </div>
-              <ion-item *ngFor="let option of question.options; let radioOptionIndex = index">
+              <ion-item *ngFor="let option of question.options; let radioOptionIndex = index"  text-wrap>
                   <ion-radio value="{{radioOptionIndex}}" (click)="savequestion(null,radioOptionIndex,null)"></ion-radio>
                   <ion-label [innerHTML]="option.html" ></ion-label>
               </ion-item>

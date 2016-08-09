@@ -7,7 +7,7 @@
 <ion-content class="Quiz">
     <div *ngIf="question">
         <div id="duration" text-center [hidden]="!showTime" padding></div>
-        <h5 padding>{{ index + 1}} of {{questionLenght}}</h5>
+        <h5 padding *ngIf="index <= questionLenght">{{ index + 1}} of {{questionLenght}}</h5>
         <ion-card>
             <ion-card-content [innerHTML]="question.html" padding></ion-card-content>
         </ion-card>

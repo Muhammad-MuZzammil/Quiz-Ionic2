@@ -9,10 +9,16 @@ export class ResultQuizService {
         let quizResult = [];
         return new Promise((resolve, reject) => {
             firebase.database().ref("quiz-result").child(quiz.groupId).child(quiz.subgroupId).child(userId).child(quizId).once("value", (quizSnapshot) => {
-                for(var key in quizSnapshot.val()) {
-                    quizResult.push(quizSnapshot.val()[key])
+                console.log("quizSnapshottttttttttttttttttttttttttttttttttttttt", quizSnapshot.val())
+                if (quizSnapshot.val() !== null) {
+                    for (var key in quizSnapshot.val()) {
+                        quizResult.push(quizSnapshot.val()[key])
+                    }
+                    resolve(quizResult)
                 }
-                resolve(quizResult)
+                else {
+                    resolve("Null")
+                }
             })
         })
     }

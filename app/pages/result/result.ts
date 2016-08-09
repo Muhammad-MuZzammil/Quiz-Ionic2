@@ -1,6 +1,6 @@
 
 import {Component} from "@angular/core";
-import {NavController, NavParams,Loading} from 'ionic-angular';
+import {NavController, NavParams, Loading} from 'ionic-angular';
 import {HomePage} from '../home/home'
 import {startQuiz} from '../startQuiz/startQuiz'
 import {QuizService} from '../startQuiz/quizService'
@@ -22,7 +22,7 @@ export class ResultPage {
   givenQuiz: any = [];
   quizData;
   Loading: Loading;
-  startQuiz:boolean = false;
+  startQuiz: boolean = false;
   totalQuestion: number;
   canQuizGiven: boolean = false;
   constructor(public _navController: NavController, public params: NavParams, private quiz: QuizService, private groupQuizService: GroupQuizService, private _ResultQuizService: ResultQuizService) {
@@ -31,20 +31,21 @@ export class ResultPage {
       this.totalQuestion = null;
       this.totalQuestion = res.quizArr.length;
     });
-    this.QuizData = this.groupQuizService.groupQuiz[this.QuizId];    
-    
+    this.QuizData = this.groupQuizService.groupQuiz[this.QuizId];
+
   }
   ionViewWillEnter() {
-    this._ResultQuizService.checkIsQuizGiven(this.QuizData, this.groupQuizService.getQuizId(this.QuizId), this.groupQuizService.getCurrentUser()).then((res:any[]) => {
-      if (res.length > 0) {
+    this._ResultQuizService.checkIsQuizGiven(this.QuizData, this.groupQuizService.getQuizId(this.QuizId), this.groupQuizService.getCurrentUser()).then((res) => {
+      console.log("------------------------------------------", res)
+      if (res === "Null") {
+        this.startQuiz = false;
+        this.canQuizGiven = true
+      }
+      else {
         this.givenQuiz = res;
         this.startQuiz = true;
         this.canQuizGiven = true;
-      }
-      else {
-         this.startQuiz = false;
-         this.canQuizGiven = true
-      // this.Loading.dismiss()
+        // this.Loading.dismiss()
       }
     })
   }

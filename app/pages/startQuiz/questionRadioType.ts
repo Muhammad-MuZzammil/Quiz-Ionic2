@@ -14,7 +14,7 @@ interface RadioType {
   selector: "radio-type",
   template: `
   <h2 text-center>Options</h2>
-  <ion-list radio-group [(ngModel)]="optionRadioButton" padding>
+  <ion-list radio-group [(ngModel)]="optionRadioButton" padding text-wrap>
         <ion-item *ngFor="let option of questionRadio.options let i = index">
             <ion-label [innerHTML]="option.html"></ion-label>
             <ion-radio value="{{i}}" (click)="selectOption(i)"></ion-radio>
@@ -22,7 +22,6 @@ interface RadioType {
     </ion-list>
     <ion-buttons end>
         <button (click)="nextQuestion(question)" item-right seagreen *ngIf="!isLastQuestion" [disabled]="!optionRadioButton">Next</button>
-
         <button (click)="nextQuestion(question)" item-right seagreen *ngIf="isLastQuestion" [disabled]="!optionRadioButton ">Save</button>
     </ion-buttons>
   `,
@@ -57,6 +56,8 @@ export class QuestionRadioTypeComponent {
   }
 
   nextQuestion() {
+    this.optionRadioButton = false;
+    console.log("optionRadioButtonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",this.optionRadioButton)
     this.RadioButtonSelectedOption.emit(this.radioQuestionDetail);
   }
 }

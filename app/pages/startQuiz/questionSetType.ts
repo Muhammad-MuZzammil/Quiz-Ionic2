@@ -118,6 +118,8 @@ export class QuestionSetSelectedOption {
         }
         // emit outputs event
         this.submitted = true;
+        this.QuestionSetOption = false;
+
         this.questionSetCheckboxSelectedOption.emit(questionSetObject);
     }// nextquestion function  end
 }

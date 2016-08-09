@@ -58,6 +58,9 @@ export class HomePage {
                 } else {
                     this.loading.dismiss()
                 }
+            },(err)=> {
+                console.log("Error",err)
+                this.loading.dismiss()
             });// subscribe function end
     }// checkIsQuizCanGiven end
 

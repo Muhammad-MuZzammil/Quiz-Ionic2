@@ -20,6 +20,8 @@ export class GroupQuizService {
     }
 
     getQuiz() {
+        this.groupQuiz = [];
+        this.groupQuizId = [];
         return new Promise((resolve, reject) => {
             // first data user all subgroup membership
             firebase.database().ref("user-subgroup-memberships").child(this.userId).on("child_added", (group) => {

@@ -11,6 +11,7 @@
   <link ios-href="build/css/app.ios.css" rel="stylesheet">
   <link md-href="build/css/app.md.css" rel="stylesheet">
   <link wp-href="build/css/app.wp.css" rel="stylesheet">
+  <link rel="stylesheet" href="./lib/offline/theme/offline.theme.css">
 </head>
 
 <body>
@@ -25,9 +26,12 @@
   <script src="build/js/zone.js"></script>
   <!-- the bundle which is built from the app's source code -->
   <script src="build/js/app.bundle.js"></script>
- <!-- <script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script> -->
- <script src="./lib/firebase/firebase.js"></script>
- <script type="text/javascript">
+  <!-- <script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script> -->
+  <script src="./lib/firebase/firebase.js"></script>
+  <script src="./lib/offline/offline.min.js"></script>
+  <!--<script src="./lib/offline/offline.simulate-ui.min.js"></script>-->
+  <script src="./lib/offline/jquery.js"></script>
+  <script type="text/javascript">
 
  var config = {
    apiKey: "AIzaSyCSKyKkZ5ClJZffskObPM3Auda1vrTR8g8",
@@ -40,7 +44,41 @@
   //  firebase.database.enableLogging(false);
 
   firebase.database.enableLogging(true);
+ var delay = 1000;
+ Offline.options = {
+  // Should we check the connection status immediatly on page load.
+  checkOnLoad: false,
+
+  // Should we monitor AJAX requests to help decide if we have a connection.
+  interceptRequests: true,
+
+  // Should we automatically retest periodically when the connection is down (set to false to disable).
+  reconnect: {
+    // How many seconds should we wait before rechecking.
+    initialDelay: 3,
+
+    // How long should we wait between retries.
+    delay: (1.5)
+  },
+
+  // Should we store and attempt to remake requests which fail while the connection is down.
+  requests: true,
+
+  // Should we show a snake game while the connection is down to keep the user entertained?
+  // It's not included in the normal build, you should bring in js/snake.js in addition to
+  // offline.min.js.
+  game: true
+}
+  Offline.check();
+  Offline.on('confirmed-down', function () {
+    console.log('down');
+  });
+      Offline.on('confirmed-up', function () {
+    console.log('up');
+});
+
  </script>
+
 </body>
 
 </html>

@@ -3,6 +3,7 @@ import {NavParams, Loading, NavController} from 'ionic-angular';
 import {FailResultComponent} from "./fail.result.component";
 import {PassResultComponent} from "./pass.result.component";
 import {Http, Headers, RequestOptions} from '@angular/http';
+import {HomePage} from "../home/home";
 // import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 import {HttpService} from "./../services/httpService";
 import {GroupQuizService} from "./../services/getUserGroupQuiz"
@@ -62,5 +63,8 @@ export class quizResultComponent {
           }
         }
       });// subscribe end
+  }
+  goToHome() {
+    this._navController.push(HomePage)
   }
 }

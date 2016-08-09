@@ -3,7 +3,7 @@ import {Component, EventEmitter} from "@angular/core";
 @Component({
     selector: "question-set-checkbox-type",
     template:`
-         <ion-list *ngIf="question.type === 2">
+         <ion-list *ngIf="question.type === 2" text-wrap>
               <div style="display: inline-flex;padding-top: 15px;">
                   <b style="margin-right: 10px;padding-top: 13px;">Q:{{questionIndex + 1}}</b>
                   <div [innerHTML]="question.html"></div>
