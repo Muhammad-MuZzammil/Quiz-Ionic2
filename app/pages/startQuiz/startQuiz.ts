@@ -154,33 +154,23 @@ export class startQuiz implements OnInit {
 
     nextQuestion() {
         // check if this.questionArr.length is greater than index if greater than assign next question in this.question Object
-        console.log(this.questionArr.length - 1, this.index)
         if (this.questionArr.length - 1 == this.index) {
             this.index++;
-            console.log("333333333333333333333333333333333333333")
-            console.log(this.questionArr.length - 1, this.index)
             this.saveQuizToFirebase(this.Quiz, true)
         }
         else {
-            console.log("consoleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
             if (this.questionArr.length > this.index) {
-                console.log("11111111111111111111111111111111111111111111")
                 this.saveQuizToFirebase(this.Quiz, null)
                 this.QuestionSetOption = false;
                 this.index++;
                 // this.QuestionSetOptionRadioButton = false;
                 this.question = this.questionArr[this.index];
-
             }
             // check if this.questionArr.length is  equal to index if equal to then show save button
             if ((this.questionArr.length - 1) == this.index) {
-                console.log((this.questionArr.length - 1), this.index)
-                console.log("2222222222222222222222222222222222222")
-
                 this.lastQuestion = true;
             }
         }
-
     }//nextQuestion show next question after liking on next button
 
     // save Quiz To firebase funtion start
