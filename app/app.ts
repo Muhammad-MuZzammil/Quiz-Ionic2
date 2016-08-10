@@ -12,6 +12,7 @@ import {quizResultComponent} from "./pages/quizResult/quizResult";
 import {HttpService} from "./pages/services/httpService";
 import {GroupQuizService} from "./pages/services/getUserGroupQuiz";
 import {ResultQuizService} from "./pages/result/result.service.component";
+import { disableDeprecatedForms, provideForms } from '@angular/forms';
 @Component({
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
@@ -34,5 +35,7 @@ ionicBootstrap(QuizApp, [
     HTTP_PROVIDERS,
     HttpService,
     GroupQuizService,
-    ResultQuizService
+    ResultQuizService,
+    disableDeprecatedForms(), 
+    provideForms()
 ]);

@@ -22,6 +22,7 @@ export class ResultPage {
   givenQuiz: any = [];
   quizData;
   Loading: Loading;
+  protectedKey
   startQuiz: boolean = false;
   totalQuestion: number;
   canQuizGiven: boolean = false;
@@ -30,13 +31,13 @@ export class ResultPage {
     this.quiz.getQuizInProgess(this.groupQuizService.getQuizId(this.QuizId)).then((res: any) => {
       this.totalQuestion = null;
       this.totalQuestion = res.quizArr.length;
+      this.protectedKey = res.protectedKey
     });
     this.QuizData = this.groupQuizService.groupQuiz[this.QuizId];
 
   }
   ionViewWillEnter() {
     this._ResultQuizService.checkIsQuizGiven(this.QuizData, this.groupQuizService.getQuizId(this.QuizId), this.groupQuizService.getCurrentUser()).then((res) => {
-      console.log("------------------------------------------", res)
       if (res === "Null") {
         this.startQuiz = false;
         this.canQuizGiven = true
@@ -50,6 +51,12 @@ export class ResultPage {
     })
   }
   gotostartQuiz() {
-    this._navController.push(startQuiz, { quizshow: this.QuizId, groupId: this.QuizData.groupId, subgroupId: this.QuizData.subgroupId });
+    console.log("======================================================")
+    console.log(this.protectedKey);
+    if(this.protectedKey) {
+
+    }else {
+       this._navController.push(startQuiz, { quizshow: this.QuizId, groupId: this.QuizData.groupId, subgroupId: this.QuizData.subgroupId });      
+    }
   }
 }

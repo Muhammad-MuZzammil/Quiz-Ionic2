@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {NavParams, Loading, NavController} from 'ionic-angular';
+import {NavParams, LoadingController, NavController} from 'ionic-angular';
 import {FailResultComponent} from "./fail.result.component";
 import {PassResultComponent} from "./pass.result.component";
 import {Http, Headers, RequestOptions} from '@angular/http';
@@ -16,7 +16,7 @@ export class quizResultComponent {
   quiz: any
   groupId: NavParams
   subgroupId: NavParams
-  loading: Loading
+
   QuizData;
   isPassed: boolean;
   isFailed: boolean;
@@ -25,7 +25,8 @@ export class quizResultComponent {
     public http: Http,
     private _navController: NavController,
     private _httpService: HttpService,
-    private GroupQuizService: GroupQuizService
+    private GroupQuizService: GroupQuizService,
+    private Loading: LoadingController
   ) {
     this.quiz = this.params.get("quizId");
     this.groupId = this.params.get("groupId");
@@ -35,10 +36,10 @@ export class quizResultComponent {
 
   ionViewLoaded() {
     // get all quiz Schedule and show in cards;
-    this.loading = Loading.create({
+    let loading = this.Loading.create({
       content: 'Please wait...'
     });
-    this._navController.present(this.loading);
+    loading.present(loading);
 
     var UserQuizObject = {
       userId: this.GroupQuizService.getCurrentUser(),
@@ -54,12 +55,12 @@ export class quizResultComponent {
           if (this.QuizData["passing-marks"] <= res.data.percentage) {
             this.isPassed = true;
             this.result = res.data;
-            this.loading.dismiss();
+            loading.dismiss();
           }
           else {
             this.result = res.data;
             this.isFailed = true;
-            this.loading.dismiss()
+            loading.dismiss()
           }
         }
       });// subscribe end

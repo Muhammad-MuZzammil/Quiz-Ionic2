@@ -183,7 +183,12 @@ export class QuizService {
                             } // for in loop Topics end
                         } // for in loop chapters end
                     } // for in loop on Book end
-                    resolve({ quizArr: this.quizQuestionArr, quizQuestionKeyArray: this.quizQuestionKeyArray });
+                    if(quizData.val()["protectedKey"]) {
+                        resolve({ quizArr: this.quizQuestionArr, quizQuestionKeyArray: this.quizQuestionKeyArray, protectedKey: true });        
+                    }
+                    else {
+                        resolve({ quizArr: this.quizQuestionArr, quizQuestionKeyArray: this.quizQuestionKeyArray, protectedKey: false });        
+                    }
                 }
             })// firebase value event function end
         }) // Promise end
