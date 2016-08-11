@@ -160,9 +160,11 @@ export class QuizService {
     }//userQuiz end
 
     //Get Quiz In Progess Data
-    getQuizInProgess(QuizUniqueId) {
+    getQuizInProgess(groupId, subgroupId ,QuizUniqueId) {
+        console.log("============================================================")
+        console.log(groupId, subgroupId ,QuizUniqueId)
         return new Promise((resolve, reject) => {
-            firebase.database().ref('quiz-in-progress').child(QuizUniqueId).once("value", (quizData) => {
+            firebase.database().ref('quiz-in-progress').child(groupId).child(subgroupId).child(QuizUniqueId).once("value", (quizData) => {
                 this.quizQuestionArr = [];
                 this.quizQuestionKeyArray = [];
                 if (quizData.val() !== null) {

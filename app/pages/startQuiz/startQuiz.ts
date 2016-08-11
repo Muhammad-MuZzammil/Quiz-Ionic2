@@ -55,7 +55,7 @@ export class startQuiz implements OnInit {
         if (this._QuizService.quizQuestionArr) {
             this.getQuizInfo(this._QuizService.quizQuestionArr, this._QuizService.quizQuestionKeyArray);
         } else {
-            this._QuizService.getQuizInProgess(this.QuizUniqueId).then((res: any) => {
+            this._QuizService.getQuizInProgess(this.GroupId,this.subgroupId,this.QuizUniqueId).then((res: any) => {
                 this.getQuizInfo(res.quizArr, res.quizQuestionKeyArray);
             })
         }

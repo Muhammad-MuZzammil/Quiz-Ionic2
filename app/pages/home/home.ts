@@ -5,7 +5,8 @@ import {ResultPage} from '../result/result';
 import {QuizCardHtml} from "./quizCard";
 import {HttpService} from "./../services/httpService";
 import {GroupQuizService} from "./../services/getUserGroupQuiz";
-import {ProtectedKeyComponent} from "../protectedKey/protectedKey"
+import {ProtectedKeyComponent} from "../protectedKey/protectedKey-component"
+import {QuizService} from '../startQuiz/quizService'
 
 import 'rxjs/add/operator/toPromise';
 
@@ -17,7 +18,7 @@ export class HomePage {
     groupQuiz: any = [];
     quizObj: any = {};
 
-    constructor(private loading: LoadingController, private _navController: NavController, private _httpService: HttpService, private _groupQuizService: GroupQuizService) { }
+    constructor(private loading: LoadingController, private _navController: NavController, private _httpService: HttpService, private _groupQuizService: GroupQuizService, private quiz: QuizService) { }
     ngOnInit() {
         // get all quiz Schedule and show in cards;
         let loading = this.loading.create({
@@ -38,9 +39,9 @@ export class HomePage {
             content: 'Please wait...'
         });
         loading.present(loading);
-
+        let quizId = this._groupQuizService.getQuizId(quizObj.index);
         this.quizObj = {
-            "quizId": this._groupQuizService.getQuizId(quizObj.index),
+            "quizId": quizId,
             "scheduleId": quizObj.quiz.scheduleId,
             "subgroupId": quizObj.quiz.subgroupId,
             "userId": this._groupQuizService.getCurrentUser(),
@@ -56,15 +57,23 @@ export class HomePage {
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
                 if (res.statusCode == 0) {
-                    loading.dismiss()
-                    // this._navController.push(ProtectedKeyComponent)
-                    this._navController.push(ResultPage, { quizIdIndex: quizObj.index })
+                    this._groupQuizService.checkQuizProtectKey(quizId).then((res: any) => {
+                        // console.log(res);
+                        if (res) {
+                            loading.dismiss();
+                            this._navController.push(ProtectedKeyComponent, { quizIdIndex: quizObj.index , groupId: quizObj.quiz.groupId , subgroupId : quizObj.quiz.subgroupId});
+                        }
+                        else {
+                            loading.dismiss();
+                            this._navController.push(ResultPage, { quizIdIndex: quizObj.index , groupId: quizObj.quiz.groupId , subgroupId : quizObj.quiz.subgroupId});
+                        }
+                    })
                 } else {
-                    loading.dismiss()
+                    loading.dismiss();
                 }
             }, (err) => {
-                console.log("Error", err)
-                loading.dismiss()
+                console.log("Error", err);
+                loading.dismiss();
             });// subscribe function end
     }// checkIsQuizCanGiven end
 

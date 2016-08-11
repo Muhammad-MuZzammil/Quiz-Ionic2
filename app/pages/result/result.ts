@@ -22,19 +22,20 @@ export class ResultPage {
   givenQuiz: any = [];
   quizData;
   Loading: Loading;
-  protectedKey
   startQuiz: boolean = false;
   totalQuestion: number;
   canQuizGiven: boolean = false;
+  groupId: string;
+  subgroupId: string;
   constructor(public _navController: NavController, public params: NavParams, private quiz: QuizService, private groupQuizService: GroupQuizService, private _ResultQuizService: ResultQuizService) {
     this.QuizId = this.params.get('quizIdIndex');
-    this.quiz.getQuizInProgess(this.groupQuizService.getQuizId(this.QuizId)).then((res: any) => {
+    this.groupId = this.params.get('groupId');
+    this.subgroupId = this.params.get('subgroupId');
+    this.quiz.getQuizInProgess(this.groupId,this.subgroupId,this.groupQuizService.getQuizId(this.QuizId)).then((res: any) => {
       this.totalQuestion = null;
       this.totalQuestion = res.quizArr.length;
-      this.protectedKey = res.protectedKey
     });
     this.QuizData = this.groupQuizService.groupQuiz[this.QuizId];
-
   }
   ionViewWillEnter() {
     this._ResultQuizService.checkIsQuizGiven(this.QuizData, this.groupQuizService.getQuizId(this.QuizId), this.groupQuizService.getCurrentUser()).then((res) => {
@@ -51,12 +52,6 @@ export class ResultPage {
     })
   }
   gotostartQuiz() {
-    console.log("======================================================")
-    console.log(this.protectedKey);
-    if(this.protectedKey) {
-
-    }else {
        this._navController.push(startQuiz, { quizshow: this.QuizId, groupId: this.QuizData.groupId, subgroupId: this.QuizData.subgroupId });      
-    }
   }
 }

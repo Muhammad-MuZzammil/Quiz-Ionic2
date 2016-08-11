@@ -79,9 +79,16 @@ export class GroupQuizService {
         options.headers = headers;
         return this.http.post('https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkquizschedule', JSON.stringify(quizObj), options)
     }
+    checkQuizProtectKey(quizId) {
+        return new Promise((resolve, reject) => {
+            firebase.database().ref("has-quiz-protected-key").child(quizId).child("protectedKey").once("value", (snapshot) => {
+                resolve(snapshot.val());
+            })
+        });
+
+    }
     getUserQuizAnswer() {
         firebase.database().ref("quiz-answer-users").child("arsalanrajput").child("group").child("subgroup").child("html5").once("value", (quizAns) => {
-            console.log(quizAns.val());
             if (quizAns.val().questionbanks !== null) {
                 for (var book in quizAns.val().questionbanks) {
                     for (var chapter in quizAns.val().questionbanks[book].chapters) {
