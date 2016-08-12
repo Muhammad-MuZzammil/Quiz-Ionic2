@@ -3,6 +3,7 @@ import {NavController, NavParams} from 'ionic-angular';
 import {ResultPage} from '../result/result';
 import {GroupQuizService} from "../services/getUserGroupQuiz";
 import {HttpService} from "./../services/httpService";
+import {totDev} from "./../../app";
 @Component({
     template: `
       <ion-header>
@@ -29,8 +30,8 @@ export class ProtectedKeyComponent {
     groupId: string;
     subgroupId: string;
     userId: string;
-    errorMessage:string;
-    showError:boolean = false;
+    errorMessage: string;
+    showError: boolean = false;
     constructor(public _navController: NavController, public params: NavParams, private _groupQuizService: GroupQuizService, private _httpService: HttpService) {
         this.QuizId = this.params.get('quizIdIndex');
         this.groupId = this.params.get('groupId');
@@ -39,7 +40,7 @@ export class ProtectedKeyComponent {
     }
 
     checkProtectKey(ProtectedKey) {
-         this.showError = false;
+        this.showError = false;
         let obj = {
             groupId: this.groupId,
             subgroupId: this.subgroupId,
@@ -48,7 +49,7 @@ export class ProtectedKeyComponent {
             protectedKey: ProtectedKey
         }
         let body = JSON.stringify(obj);
-        let url = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkingProctingKey";
+        let url = `${totDev + "checkingProctingKey"}`
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
                 if (res.statusCode == 0) {

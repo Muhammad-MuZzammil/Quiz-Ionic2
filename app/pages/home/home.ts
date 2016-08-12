@@ -7,7 +7,7 @@ import {HttpService} from "./../services/httpService";
 import {GroupQuizService} from "./../services/getUserGroupQuiz";
 import {ProtectedKeyComponent} from "../protectedKey/protectedKey-component"
 import {QuizService} from '../startQuiz/quizService'
-
+import {totDev} from "./../../app";
 import 'rxjs/add/operator/toPromise';
 
 @Component({
@@ -53,7 +53,7 @@ export class HomePage {
 
         // // call _GetGroupQuizSchedule.checkQuizSchedule function
         let body = JSON.stringify(this.quizObj);
-        let url = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkquizschedule";
+        let url = `${totDev + "checkquizschedule" }`;
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
                 if (res.statusCode == 0) {

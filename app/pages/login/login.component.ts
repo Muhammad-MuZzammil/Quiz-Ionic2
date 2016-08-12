@@ -8,7 +8,7 @@ import {HomePage} from '../home/home'
 import {LoginService} from "./LoginService";
 import {LoginFormComponent} from "./loginForm.component";
 import {HttpService} from "./../services/httpService";
-
+import {totDev} from "./../../app";
 @Component({
     templateUrl: 'build/pages/login/login.html',
     directives: [LoginFormComponent]
@@ -18,7 +18,7 @@ export class LoginPage {
     // login function start
     login(UserCredentials) {
         let body = JSON.stringify(UserCredentials);
-        let url = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/signin";
+        let url = `${totDev + "signin"}`;
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
                 if (res.statusCode !== 0) {

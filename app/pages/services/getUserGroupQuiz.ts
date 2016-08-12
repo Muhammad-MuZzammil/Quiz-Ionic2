@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
+import {totDev} from "./../../app";
 @Injectable()
 
 export class GroupQuizService {
@@ -77,7 +78,7 @@ export class GroupQuizService {
         headers.append('Content-Type', 'text/plain');
         let options: RequestOptions = new RequestOptions();
         options.headers = headers;
-        return this.http.post('https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkquizschedule', JSON.stringify(quizObj), options)
+        return this.http.post(`${totDev + "checkquizschedule" }`, JSON.stringify(quizObj), options)
     }
     checkQuizProtectKey(quizId) {
         return new Promise((resolve, reject) => {
