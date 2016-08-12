@@ -161,8 +161,6 @@ export class QuizService {
 
     //Get Quiz In Progess Data
     getQuizInProgess(groupId, subgroupId ,QuizUniqueId) {
-        console.log("============================================================")
-        console.log(groupId, subgroupId ,QuizUniqueId)
         return new Promise((resolve, reject) => {
             firebase.database().ref('quiz-in-progress').child(groupId).child(subgroupId).child(QuizUniqueId).once("value", (quizData) => {
                 this.quizQuestionArr = [];

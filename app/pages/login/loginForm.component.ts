@@ -34,15 +34,7 @@ export class LoginFormComponent {
     authForm;
     user = { email: "", password: "" }
     LoginData: EventEmitter<Object> = new EventEmitter();
-    constructor() {
-        // this.authForm = form.group({
-        //       'email': ['', Validators.compose([Validators.required, CustomValidators.EmailValidation])],
-        //       'password': ['', Validators.compose([Validators.required])]
-        //   });
-
-        //   this.email = this.authForm.controls['email'];
-        //   this.password = this.authForm.controls['password'];
-    }
+    constructor() {}
     login(authForm) {
         if (authForm.valid) {
             let UserCredentials = new Login(authForm.value.email, authForm.value.password);

@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {NavController, NavParams} from 'ionic-angular';
 import {ResultPage} from '../result/result';
 import {GroupQuizService} from "../services/getUserGroupQuiz";
-
+import {HttpService} from "./../services/httpService";
 @Component({
     template: `
       <ion-header>
@@ -16,6 +16,7 @@ import {GroupQuizService} from "../services/getUserGroupQuiz";
               <ion-label floating>Protected Key</ion-label>
               <ion-input type="text" #protectedKey></ion-input>
          </ion-item>
+         <div *ngIf="showError" style="color:red;">{{errorMessage}}</div>
         <button type="submit" medium seagreen >Submit Protected Key</button>  
         </form> 
     </ion-content>
@@ -28,7 +29,9 @@ export class ProtectedKeyComponent {
     groupId: string;
     subgroupId: string;
     userId: string;
-    constructor(public _navController: NavController, public params: NavParams, private _groupQuizService: GroupQuizService) {
+    errorMessage:string;
+    showError:boolean = false;
+    constructor(public _navController: NavController, public params: NavParams, private _groupQuizService: GroupQuizService, private _httpService: HttpService) {
         this.QuizId = this.params.get('quizIdIndex');
         this.groupId = this.params.get('groupId');
         this.subgroupId = this.params.get('subgroupId');
@@ -36,16 +39,29 @@ export class ProtectedKeyComponent {
     }
 
     checkProtectKey(ProtectedKey) {
-        console.log("=========================================================");
-        console.log(ProtectedKey);
+         this.showError = false;
         let obj = {
             groupId: this.groupId,
             subgroupId: this.subgroupId,
-            quizId: this.QuizId,
+            quizId: this._groupQuizService.getQuizId(this.QuizId),
             userId: this.userId,
             protectedKey: ProtectedKey
         }
-        this._navController.push(ResultPage, { quizIdIndex: this.QuizId, groupId: this.groupId, subgroupId: this.subgroupId });
+        let body = JSON.stringify(obj);
+        let url = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/checkingProctingKey";
+        this._httpService.httpPost(url, body) // call httpService httpPost method 
+            .subscribe((res) => {
+                if (res.statusCode == 0) {
+                    this._navController.push(ResultPage, { quizIdIndex: this.QuizId, groupId: this.groupId, subgroupId: this.subgroupId });
+                }// if statement end inside subscribe
+                else {
+                    this.errorMessage = "Key does not match";
+                    this.showError = true;
+                }
+            }, (error) => {
+                console.log("errrrrrrrrrrrrrrrrrrrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+            });// subscribe function end
+        // 
     }
 }
 
