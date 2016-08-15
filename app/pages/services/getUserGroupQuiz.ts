@@ -95,6 +95,7 @@ export class GroupQuizService {
         });
 
     }
+    
     getUserQuizAnswer() {
         firebase.database().ref("quiz-answer-users").child("arsalanrajput").child("group").child("subgroup").child("html5").once("value", (quizAns) => {
             if (quizAns.val().questionbanks !== null) {

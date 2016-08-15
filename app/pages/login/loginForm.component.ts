@@ -13,6 +13,9 @@ import {Login} from "./login"
       <span class="text-error" *ngIf="email.dirty && !email.valid" padding>
           <span >* Email Address is not Valid</span>
       </span>
+      <span class="text-error"  padding>
+          <span>{{Error | json}}</span>
+      </span>
       <ion-item [class.error]="!password.valid && password.touched">
           <ion-label floating>Password</ion-label>
           <ion-input type="password" required [(ngModel)]="user.password" name="password" #password="ngModel" ></ion-input>
@@ -25,7 +28,8 @@ import {Login} from "./login"
   </form>
   `,
     directives: [],
-    outputs: ["LoginData"]
+    outputs: ["LoginData"],
+    inputs: ["Error"]
 })
 
 export class LoginFormComponent {
@@ -34,12 +38,12 @@ export class LoginFormComponent {
     authForm;
     user = { email: "", password: "" }
     LoginData: EventEmitter<Object> = new EventEmitter();
-    constructor() {}
+    constructor() { }
     login(authForm) {
         if (authForm.valid) {
             let UserCredentials = new Login(authForm.value.email, authForm.value.password);
             this.LoginData.emit(UserCredentials);
-        }else{
+        } else {
             console.log("----------------------------------------")
         }
     }

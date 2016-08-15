@@ -20,16 +20,18 @@ export class HomePage {
     UserName: string;
     constructor(private loading: LoadingController, private _navController: NavController, private _httpService: HttpService, private _groupQuizService: GroupQuizService, private quiz: QuizService) { }
     ngOnInit() {
-        // get all quiz Schedule and show in cards;
-        let loading = this.loading.create({
-            content: 'Please wait...'
-        });
-        loading.present(loading);
+        // // get all quiz Schedule and show in cards;
+        // let loading = this.loading.create({
+        //     content: 'Please wait...'
+        // });
+        // loading.present(loading);
         this.UserName = this._groupQuizService.getCurrentUserName();
         this._groupQuizService.getQuiz().then((res) => {
             this.groupQuiz = [];
             this.groupQuiz = res;
-            loading.dismiss()
+            // loading.dismiss()
+        }, (err) => {
+            // loading.dismiss()
         });
 
     }//ngOnInit end
@@ -54,7 +56,7 @@ export class HomePage {
 
         // // call _GetGroupQuizSchedule.checkQuizSchedule function
         let body = JSON.stringify(this.quizObj);
-        let url = `${tot + "checkquizschedule" }`;
+        let url = `${tot + "checkquizschedule"}`;
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
                 if (res.statusCode == 0) {
@@ -62,11 +64,11 @@ export class HomePage {
                         // console.log(res);
                         if (res) {
                             loading.dismiss();
-                            this._navController.push(ProtectedKeyComponent, { quizIdIndex: quizObj.index , groupId: quizObj.quiz.groupId , subgroupId : quizObj.quiz.subgroupId});
+                            this._navController.push(ProtectedKeyComponent, { quizIdIndex: quizObj.index, groupId: quizObj.quiz.groupId, subgroupId: quizObj.quiz.subgroupId });
                         }
                         else {
                             loading.dismiss();
-                            this._navController.push(ResultPage, { quizIdIndex: quizObj.index , groupId: quizObj.quiz.groupId , subgroupId : quizObj.quiz.subgroupId});
+                            this._navController.push(ResultPage, { quizIdIndex: quizObj.index, groupId: quizObj.quiz.groupId, subgroupId: quizObj.quiz.subgroupId });
                         }
                     })
                 } else {
