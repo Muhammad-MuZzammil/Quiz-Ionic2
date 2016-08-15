@@ -54,23 +54,19 @@ export class HomePage {
 
         this._groupQuizService.UserData(this.quizObj);
 
-        // // call _GetGroupQuizSchedule.checkQuizSchedule function
+        // call _GetGroupQuizSchedule.checkQuizSchedule function
         let body = JSON.stringify(this.quizObj);
         let url = `${tot + "checkquizschedule"}`;
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
                 if (res.statusCode == 0) {
-                    this._groupQuizService.checkQuizProtectKey(quizId).then((res: any) => {
-                        // console.log(res);
-                        if (res) {
-                            loading.dismiss();
-                            this._navController.push(ProtectedKeyComponent, { quizIdIndex: quizObj.index, groupId: quizObj.quiz.groupId, subgroupId: quizObj.quiz.subgroupId });
-                        }
-                        else {
-                            loading.dismiss();
-                            this._navController.push(ResultPage, { quizIdIndex: quizObj.index, groupId: quizObj.quiz.groupId, subgroupId: quizObj.quiz.subgroupId });
-                        }
-                    })
+                    if (res.statusDesc.data === "has procting key") {
+                        loading.dismiss();
+                        this._navController.push(ProtectedKeyComponent, { quizIdIndex: quizObj.index, groupId: quizObj.quiz.groupId, subgroupId: quizObj.quiz.subgroupId });
+                    } else {
+                        loading.dismiss();
+                        this._navController.push(ResultPage, { quizIdIndex: quizObj.index, groupId: quizObj.quiz.groupId, subgroupId: quizObj.quiz.subgroupId });
+                    }
                 } else {
                     loading.dismiss();
                 }
