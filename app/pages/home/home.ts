@@ -7,7 +7,7 @@ import {HttpService} from "./../services/httpService";
 import {GroupQuizService} from "./../services/getUserGroupQuiz";
 import {ProtectedKeyComponent} from "../protectedKey/protectedKey-component"
 import {QuizService} from '../startQuiz/quizService'
-import {totDev} from "./../../app";
+import {tot} from "./../../app";
 import 'rxjs/add/operator/toPromise';
 
 @Component({
@@ -17,7 +17,7 @@ import 'rxjs/add/operator/toPromise';
 export class HomePage {
     groupQuiz: any = [];
     quizObj: any = {};
-
+    UserName: string;
     constructor(private loading: LoadingController, private _navController: NavController, private _httpService: HttpService, private _groupQuizService: GroupQuizService, private quiz: QuizService) { }
     ngOnInit() {
         // get all quiz Schedule and show in cards;
@@ -25,6 +25,7 @@ export class HomePage {
             content: 'Please wait...'
         });
         loading.present(loading);
+        this.UserName = this._groupQuizService.getCurrentUserName();
         this._groupQuizService.getQuiz().then((res) => {
             this.groupQuiz = [];
             this.groupQuiz = res;
@@ -53,7 +54,7 @@ export class HomePage {
 
         // // call _GetGroupQuizSchedule.checkQuizSchedule function
         let body = JSON.stringify(this.quizObj);
-        let url = `${totDev + "checkquizschedule" }`;
+        let url = `${tot + "checkquizschedule" }`;
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
                 if (res.statusCode == 0) {

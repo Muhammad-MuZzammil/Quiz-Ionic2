@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
-import {totDev} from "./../../app";
+import {tot} from "./../../app";
 @Injectable()
 
 export class GroupQuizService {
@@ -12,6 +12,7 @@ export class GroupQuizService {
     QuizScheduleKey = [];
     userData: Object;
     handleError = "Error";
+    UserName: string;
     constructor(private http: Http) {
         // Get data from localStorage;
         this.user = localStorage.getItem("ngStorage-LoggedInUser")
@@ -70,15 +71,21 @@ export class GroupQuizService {
     UserData(userData) {
         this.userData = userData;
     }
-    getUserQuizData() {
+    getUserQuizData() :Object {
         return this.userData;
+    }
+    saveCurrentUserName(user) {
+        this.UserName = `${user.firstName + " " + user.lastName}`
+    }
+    getCurrentUserName() :string {
+        return this.UserName;
     }
     checkQuizSchedule(quizObj) {
         let headers: Headers = new Headers();
         headers.append('Content-Type', 'text/plain');
         let options: RequestOptions = new RequestOptions();
         options.headers = headers;
-        return this.http.post(`${totDev + "checkquizschedule" }`, JSON.stringify(quizObj), options)
+        return this.http.post(`${tot + "checkquizschedule" }`, JSON.stringify(quizObj), options)
     }
     checkQuizProtectKey(quizId) {
         return new Promise((resolve, reject) => {

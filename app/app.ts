@@ -13,7 +13,7 @@ import {HttpService} from "./pages/services/httpService";
 import {GroupQuizService} from "./pages/services/getUserGroupQuiz";
 import {ResultQuizService} from "./pages/result/result.service.component";
 import { disableDeprecatedForms, provideForms } from '@angular/forms';
-export const totDev = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/";
+export const tot = "https://b7v23qvdy1.execute-api.us-east-1.amazonaws.com/dev/";
 @Component({
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })

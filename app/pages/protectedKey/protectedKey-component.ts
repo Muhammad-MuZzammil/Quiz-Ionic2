@@ -1,9 +1,9 @@
 import {Component} from "@angular/core";
-import {NavController, NavParams} from 'ionic-angular';
+import {NavController, NavParams,LoadingController} from 'ionic-angular';
 import {ResultPage} from '../result/result';
 import {GroupQuizService} from "../services/getUserGroupQuiz";
 import {HttpService} from "./../services/httpService";
-import {totDev} from "./../../app";
+import {tot} from "./../../app";
 @Component({
     template: `
       <ion-header>
@@ -32,7 +32,7 @@ export class ProtectedKeyComponent {
     userId: string;
     errorMessage: string;
     showError: boolean = false;
-    constructor(public _navController: NavController, public params: NavParams, private _groupQuizService: GroupQuizService, private _httpService: HttpService) {
+    constructor(public _navController: NavController, public params: NavParams, private _groupQuizService: GroupQuizService, private _httpService: HttpService,private _loading: LoadingController) {
         this.QuizId = this.params.get('quizIdIndex');
         this.groupId = this.params.get('groupId');
         this.subgroupId = this.params.get('subgroupId');
@@ -40,6 +40,10 @@ export class ProtectedKeyComponent {
     }
 
     checkProtectKey(ProtectedKey) {
+           let loading = this._loading.create({
+            content: 'Please wait...'
+        });
+        loading.present(loading);
         this.showError = false;
         let obj = {
             groupId: this.groupId,
@@ -49,17 +53,20 @@ export class ProtectedKeyComponent {
             protectedKey: ProtectedKey
         }
         let body = JSON.stringify(obj);
-        let url = `${totDev + "checkingProctingKey"}`
+        let url = `${tot + "checkingProctingKey"}`
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
                 if (res.statusCode == 0) {
+                    loading.dismiss();
                     this._navController.push(ResultPage, { quizIdIndex: this.QuizId, groupId: this.groupId, subgroupId: this.subgroupId });
                 }// if statement end inside subscribe
                 else {
                     this.errorMessage = "Key does not match";
                     this.showError = true;
+                    loading.dismiss();
                 }
             }, (error) => {
+                loading.dismiss();
                 console.log("errrrrrrrrrrrrrrrrrrrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
             });// subscribe function end
         // 

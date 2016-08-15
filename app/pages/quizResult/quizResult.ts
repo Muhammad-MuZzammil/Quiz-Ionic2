@@ -7,7 +7,7 @@ import {HomePage} from "../home/home";
 // import {GetGroupQuizSchedule} from "../home/GetGroupQuizSchedule";
 import {HttpService} from "./../services/httpService";
 import {GroupQuizService} from "./../services/getUserGroupQuiz"
-import {totDev} from "./../../app";
+import {tot} from "./../../app";
 @Component({
   templateUrl: "build/pages/quizResult/quizResult.html",
   directives: [FailResultComponent, PassResultComponent]
@@ -49,7 +49,7 @@ export class quizResultComponent {
       quizId: this.quiz
     }
     let body = JSON.stringify(UserQuizObject);
-    let url = `${ totDev + "quizresult" }`;
+    let url = `${ tot + "quizresult" }`;
     this._httpService.httpPost(url, body) // call httpService httpPost method 
       .subscribe((res) => {
         if (res.data) {
