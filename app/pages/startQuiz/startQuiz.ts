@@ -37,6 +37,7 @@ export class startQuiz implements OnInit {
     userObj;
     questionLenght: number;
     interval;
+    UserName:string;
     quizTime: string
     constructor(public _navController: NavController,
         public params: NavParams,
@@ -44,6 +45,7 @@ export class startQuiz implements OnInit {
         private _groupQuizService: GroupQuizService) { }
 
     ngOnInit() {
+        this.UserName =  this._groupQuizService.getCurrentUserName();
         this.QuizParams = this.params.get('quizshow');
         this.GroupId = this.params.get('groupId');
         this.subgroupId = this.params.get('subgroupId');

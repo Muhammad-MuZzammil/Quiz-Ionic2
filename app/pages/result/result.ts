@@ -27,10 +27,12 @@ export class ResultPage {
   canQuizGiven: boolean = false;
   groupId: string;
   subgroupId: string;
+  UserName:string;
   constructor(public _navController: NavController, public params: NavParams, private quiz: QuizService, private groupQuizService: GroupQuizService, private _ResultQuizService: ResultQuizService) {
     this.QuizId = this.params.get('quizIdIndex');
     this.groupId = this.params.get('groupId');
     this.subgroupId = this.params.get('subgroupId');
+    this.UserName =  this.groupQuizService.getCurrentUserName();
     this.quiz.getQuizInProgess(this.groupId,this.subgroupId,this.groupQuizService.getQuizId(this.QuizId)).then((res: any) => {
       this.totalQuestion = null;
       this.totalQuestion = res.quizArr.length;

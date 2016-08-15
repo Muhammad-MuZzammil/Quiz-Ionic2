@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {NavController, NavParams,LoadingController} from 'ionic-angular';
+import {NavController, NavParams, LoadingController} from 'ionic-angular';
 import {ResultPage} from '../result/result';
 import {GroupQuizService} from "../services/getUserGroupQuiz";
 import {HttpService} from "./../services/httpService";
@@ -8,7 +8,7 @@ import {tot} from "./../../app";
     template: `
       <ion-header>
              <ion-navbar hideBackButton>
-                  Welcome to Quiz Page
+                  Welcome to Quiz Page <strong style="float:right" text-capitalize padding-right>{{UserName}}</strong>
              </ion-navbar>
     </ion-header>
     <ion-content>
@@ -32,15 +32,17 @@ export class ProtectedKeyComponent {
     userId: string;
     errorMessage: string;
     showError: boolean = false;
-    constructor(public _navController: NavController, public params: NavParams, private _groupQuizService: GroupQuizService, private _httpService: HttpService,private _loading: LoadingController) {
+    UserName: string;
+    constructor(public _navController: NavController, public params: NavParams, private _groupQuizService: GroupQuizService, private _httpService: HttpService, private _loading: LoadingController) {
         this.QuizId = this.params.get('quizIdIndex');
         this.groupId = this.params.get('groupId');
         this.subgroupId = this.params.get('subgroupId');
         this.userId = this._groupQuizService.getCurrentUser();
+        this.UserName = this._groupQuizService.getCurrentUserName();
     }
 
     checkProtectKey(ProtectedKey) {
-           let loading = this._loading.create({
+        let loading = this._loading.create({
             content: 'Please wait...'
         });
         loading.present(loading);

@@ -17,7 +17,7 @@ export class quizResultComponent {
   quiz: any
   groupId: NavParams
   subgroupId: NavParams
-
+  UserName: string;
   QuizData;
   isPassed: boolean;
   isFailed: boolean;
@@ -33,6 +33,7 @@ export class quizResultComponent {
     this.groupId = this.params.get("groupId");
     this.subgroupId = this.params.get("subgroupId");
     this.QuizData = this.GroupQuizService.groupQuiz[this.GroupQuizService.groupQuizId.indexOf(this.quiz)];
+    this.UserName =  this.GroupQuizService.getCurrentUserName();
   }
 
   ionViewLoaded() {
@@ -49,7 +50,7 @@ export class quizResultComponent {
       quizId: this.quiz
     }
     let body = JSON.stringify(UserQuizObject);
-    let url = `${ tot + "quizresult" }`;
+    let url = `${tot + "quizresult"}`;
     this._httpService.httpPost(url, body) // call httpService httpPost method 
       .subscribe((res) => {
         if (res.data) {

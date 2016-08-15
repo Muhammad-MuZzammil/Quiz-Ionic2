@@ -23,7 +23,6 @@ export class LoginPage {
         this._httpService.httpPost(url, body) // call httpService httpPost method 
             .subscribe((res) => {
                 if (res.statusCode !== 0) {
-                    console.log("ressssssssssssssssssssssssssssssssssssss",res);
                     this._groupQuizService.saveCurrentUserName(res.user);
                     this._loginService.FirebaseLoginUser(res).then((res) => {
                         this._navController.push(HomePage);
