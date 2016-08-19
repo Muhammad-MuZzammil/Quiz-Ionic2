@@ -5,7 +5,7 @@ import {QuestionSetRadioComponent} from "./questionSetRadio.componet";
 @Component({
     selector: "question-set-type",
     template: `
-  <div *ngFor="let question of questionSet.questiones; let questionIndex = index" >
+  <div *ngFor="let question of questionSet.questions; let questionIndex = index" >
           <question-set-radio-type [question]="question" 
                                    [questionIndex]="questionIndex" (radioOption)="savequestion($event)">
            </question-set-radio-type>
@@ -71,7 +71,7 @@ export class QuestionSetSelectedOption {
     // save radio Option and checkbox option in question set Array then emit outputs event
     nextQuestion() {
         this.QuizQuestionSet = [];
-        this.questionSet.questiones.forEach((questionSet, i) => {
+        this.questionSet.questions.forEach((questionSet, i) => {
             // if question set question type == 1
             if (questionSet.type === 1) {
                 var questionSetRadioButtonOptionIndex = this.RadioIndex;
@@ -110,7 +110,7 @@ export class QuestionSetSelectedOption {
             timer: this.duration,
             html: this.questionSet.html,
             type: this.questionSet.type,
-            questiones: this.QuizQuestionSet,
+            questions: this.QuizQuestionSet,
             questionKey: this.questionSet.questionKey,
             bookId: this.questionSet.bookId,
             chapterId: this.questionSet.chapterId,

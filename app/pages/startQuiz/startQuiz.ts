@@ -91,7 +91,7 @@ export class startQuiz implements OnInit {
                     this.lastQuestion = true;
                 }
                 else if (this.index === this.questionArr.length) {
-                    this.saveQuizToFirebase(this.Quiz, true)
+                    this.saveQuizToFirebase(this.Quiz, true,this.index)
                 }
                 this.countdown("duration", this.duration, 0, this.remainingTime);
             }
@@ -105,7 +105,7 @@ export class startQuiz implements OnInit {
                 if (time == 0) {
                    this.quizTime = "Time's over!";
                     clearInterval(this.interval);
-                    this.saveQuizToFirebase(this.Quiz, true)
+                    this.saveQuizToFirebase(this.Quiz, true,this.index)
                     return;
                 }
                 if (time) {
@@ -155,14 +155,14 @@ export class startQuiz implements OnInit {
     nextQuestion() {
         // check if this.questionArr.length is greater than index if greater than assign next question in this.question Object
         if (this.questionArr.length - 1 == this.index) {
-            this.index++;
             if (navigator.onLine) {
-                this.saveQuizToFirebase(this.Quiz, true)
+                this.saveQuizToFirebase(this.Quiz, true,this.index);
+                this.index++;   
             }
             else {
                 var interval = setInterval(() => {
                     if (navigator.onLine) {
-                        this.saveQuizToFirebase(this.Quiz, true);
+                        this.saveQuizToFirebase(this.Quiz, true,this.index);
                         clearInterval(interval)
                     }
                 }, 10000)
@@ -170,9 +170,12 @@ export class startQuiz implements OnInit {
         }
         else {
             if (this.questionArr.length > this.index) {
-                this.saveQuizToFirebase(this.Quiz, null)
+                let currentIndex = this.index;
+                currentIndex += 1;
+                this.saveQuizToFirebase(this.Quiz, null,currentIndex)
                 this.QuestionSetOption = false;
                 this.index++;
+                
                 // this.QuestionSetOptionRadioButton = false;
                 this.question = this.questionArr[this.index];
             }
@@ -184,14 +187,14 @@ export class startQuiz implements OnInit {
     }//nextQuestion show next question after liking on next button
 
     // save Quiz To firebase funtion start
-    saveQuizToFirebase(quiz, submit) {
+    saveQuizToFirebase(quiz, submit,index) {
         var UserQuizObject = {
             userId: this._groupQuizService.getCurrentUser(),
             groupId: this.GroupId,
             subgroupId: this.subgroupId,
             quizId: this.QuizUniqueId
         }
-        this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, this.index).then(() => {
+        this._QuizService.saveQuizToFirebase(UserQuizObject, quiz, index).then(() => {
             if (submit) {
                 clearInterval(this.interval);
                 this._navController.push(quizResultComponent, { quizId: this.QuizUniqueId, groupId: this.GroupId, subgroupId: this.subgroupId });

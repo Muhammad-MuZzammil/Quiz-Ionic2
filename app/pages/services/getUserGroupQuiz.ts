@@ -106,8 +106,8 @@ export class GroupQuizService {
                                 // console.log(question,"question question question")
                                 for (var questionKey in question) {
                                     // console.log(question[questionKey],"question[questionKey]")
-                                    if (question[questionKey].questiones) {
-                                        console.log(question[questionKey].questiones)
+                                    if (question[questionKey].questions) {
+                                        console.log(question[questionKey].questions)
                                     } else {
                                         console.log(question[questionKey], "options")
                                         question[questionKey].options.forEach(selectedOption => {
