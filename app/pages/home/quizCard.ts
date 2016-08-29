@@ -4,15 +4,12 @@ import {CalendarPipe} from 'angular2-moment';
   selector: "quiz-card",
   pipes: [CalendarPipe],
   template: `
-      <ion-card class="height100px" *ngFor="let quiz of quizData; let i = index">
+      <ion-card class="height80px" *ngFor="let quiz of quizData; let i = index">
           <ion-card-content>
-              <b>{{quiz.quizTitle}}</b><br/>
-              <i>{{quiz.startTime | amCalendar }}</i>
-              <i>Duration:{{quiz.duration }}</i>
+              <b>{{quiz.quizTitle}}</b>
               <ion-buttons right>
-                  <button seagreen *ngIf="quiz.scheduleIsStarted" (click)="checkIsQuizCanGiven(quiz,i)">Go to Quiz</button>
+                  <button clear class="backgroundColor" *ngIf="quiz.scheduleIsStarted" (click)="checkIsQuizCanGiven(quiz,i)">Go to Quiz</button>
               </ion-buttons>
-
           </ion-card-content>
       </ion-card>
   `,

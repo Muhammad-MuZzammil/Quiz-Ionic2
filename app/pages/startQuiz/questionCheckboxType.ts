@@ -14,9 +14,9 @@ interface ICheckBoxType {
   <h2 text-center>Options</h2>
   <ion-list padding text-wrap>
         <ion-item *ngFor="let option of questionCheckbox.options; let i = index" >
-            <ion-checkbox (ionChange)="savequestion(option.html,checkbox.checked,null,i)" #checkbox [checked]=false></ion-checkbox>
-            <ion-label [innerHTML]="option.html"></ion-label>
-            
+            <ion-checkbox (ionChange)="savequestion(option.text,checkbox.checked,null,i)" #checkbox [checked]=false></ion-checkbox>
+            <ion-label [innerHTML]="option.text"></ion-label>
+
         </ion-item>
     </ion-list>
     <ion-buttons end>

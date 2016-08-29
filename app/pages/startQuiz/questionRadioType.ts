@@ -16,7 +16,7 @@ interface RadioType {
   <h2 text-center>Options</h2>
   <ion-list radio-group [(ngModel)]="optionRadioButton" padding text-wrap>
         <ion-item *ngFor="let option of questionRadio.options let i = index">
-            <ion-label [innerHTML]="option.html"></ion-label>
+            <ion-label [innerHTML]="option.text"></ion-label>
             <ion-radio value="{{i}}" (click)="selectOption(i)"></ion-radio>
         </ion-item>
     </ion-list>

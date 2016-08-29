@@ -95,33 +95,4 @@ export class GroupQuizService {
         });
 
     }
-    
-    getUserQuizAnswer() {
-        firebase.database().ref("quiz-answer-users").child("arsalanrajput").child("group").child("subgroup").child("html5").once("value", (quizAns) => {
-            if (quizAns.val().questionbanks !== null) {
-                for (var book in quizAns.val().questionbanks) {
-                    for (var chapter in quizAns.val().questionbanks[book].chapters) {
-                        for (var topic in quizAns.val().questionbanks[book].chapters[chapter].topics) {
-                            quizAns.val().questionbanks[book].chapters[chapter].topics[topic].questions.forEach(question => {
-                                // console.log(question,"question question question")
-                                for (var questionKey in question) {
-                                    // console.log(question[questionKey],"question[questionKey]")
-                                    if (question[questionKey].questions) {
-                                        console.log(question[questionKey].questions)
-                                    } else {
-                                        console.log(question[questionKey], "options")
-                                        question[questionKey].options.forEach(selectedOption => {
-                                            console.log(selectedOption, "selectedOption")
-                                        });
-                                    }
-                                    // console.log(this.quiz.questionbanks[book].chapters[chapter].topics[topic].questions[questionKey],"questionKey")
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-
-        })
-    }
 }

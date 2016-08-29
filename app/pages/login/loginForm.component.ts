@@ -6,8 +6,10 @@ import {Login} from "./login"
     selector: "login-form",
     template: `
   <form #authForm="ngForm" (ngSubmit)="login(authForm)" novalidate>
-      <ion-item>
-          <ion-label floating>Email</ion-label>
+    <img src="../../img/panacloudLogo.jpg"/>
+    <h1 text-center style="color:#45BABC;">Login</h1>
+      <ion-item >
+          <ion-label lightseagreen floating>Email</ion-label>
           <ion-input type="email" [(ngModel)]="user.email" required name="email" #email="ngModel"></ion-input>
       </ion-item>
       <span class="text-error" *ngIf="email.dirty && !email.valid" padding>
@@ -17,14 +19,14 @@ import {Login} from "./login"
           <span>{{Error | json}}</span>
       </span>
       <ion-item [class.error]="!password.valid && password.touched">
-          <ion-label floating>Password</ion-label>
+          <ion-label lightseagreen floating>Password</ion-label>
           <ion-input type="password" required [(ngModel)]="user.password" name="password" #password="ngModel" ></ion-input>
       </ion-item>
       <span class="text-error" *ngIf="password.dirty && !password.valid" padding>
           password is required
       </span>
       <br/><br/>
-      <button type="submit" [disabled]="!authForm.valid" full seagreen>Submit</button>
+      <button type="submit" [disabled]="!authForm.valid" full lightseagreen>Submit</button>
   </form>
   `,
     directives: [],

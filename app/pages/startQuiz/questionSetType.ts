@@ -98,7 +98,7 @@ export class QuestionSetSelectedOption {
                 //make question checkbox Object
                 var questionCheckbox = {
                     timer: this.duration,
-                    html: questionSet.html,
+                    text: questionSet.text,
                     type: questionSet.type,
                     optionOriginalIndex: this.CheckboxOptionArray
                 }
@@ -108,7 +108,7 @@ export class QuestionSetSelectedOption {
         })
         let questionSetObject = {
             timer: this.duration,
-            html: this.questionSet.html,
+            text: this.questionSet.text,
             type: this.questionSet.type,
             questions: this.QuizQuestionSet,
             questionKey: this.questionSet.questionKey,

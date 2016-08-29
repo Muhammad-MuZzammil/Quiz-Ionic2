@@ -9,7 +9,7 @@
         <div id="duration" text-center [hidden]="!showTime" padding>{{quizTime}}</div>
         <h5 padding *ngIf="index <= questionLenght">{{ index + 1}} of {{questionLenght}}</h5>
         <ion-card>
-            <ion-card-content [innerHTML]="question.html" padding></ion-card-content>
+            <ion-card-content [innerHTML]="question.text" padding></ion-card-content>
         </ion-card>
         <div *ngIf="question.type == 1">
             <radio-type [questionRadio]="question" (RadioButtonSelectedOption)="saveRadioButtonOption($event, question)" [remainingTime]="remainingTime" [isLastQuestion]="lastQuestion"></radio-type>

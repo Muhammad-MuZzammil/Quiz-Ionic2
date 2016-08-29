@@ -1,6 +1,6 @@
 <ion-header>
-  <ion-navbar hideBackButton>
-      Result  <strong style="float:right" text-capitalize padding-right>{{UserName}}</strong>
+  <ion-navbar hideBackButton lightseagreen class="foreColorWhite">
+    Result <strong style="float:right" text-capitalize padding-right>{{UserName}}</strong>
   </ion-navbar>
 </ion-header>
 <ion-content class="Result">
@@ -12,10 +12,18 @@
       :{{totalQuestion}} <br/> No. of Attempts Allowed : 1
     </h4>
     <div *ngIf="givenQuiz">
-      <div *ngFor="let result of givenQuiz">
-        <h2>Date: {{result["start-time"] | amDateFormat:'LL'}}</h2>
-        <h2>Your Score: {{result["percentage"]}} %</h2>
-      </div>
+      <table *ngFor="let result of givenQuiz" class="tableCenter">
+        <thead class="tableHeader">
+          <tr>
+            <td>{{result["start-time"] | amDateFormat:'LL'}}</td>
+          </tr>
+        </thead>
+        <tbody class="tableBody">
+          <tr>
+            <td>{{result["percentage"]}} %</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <button secondry seagreen (click)="gotostartQuiz()" style="margin-left: 40%" *ngIf="!startQuiz">Quiz Start</button>
   </div>

@@ -6,11 +6,11 @@ import {Component, EventEmitter} from "@angular/core";
          <ion-list *ngIf="question.type === 2" text-wrap>
               <div style="display: inline-flex;padding-top: 15px;">
                   <b style="margin-right: 10px;padding-top: 13px;">Q:{{questionIndex + 1}}</b>
-                  <div [innerHTML]="question.html"></div>
+                  <div [innerHTML]="question.text"></div>
               </div>
               <ion-item *ngFor="let option of question.options; let checkboxOptionIndex = index">
                   <ion-checkbox (ionChange)="savequestion(checkbox.checked,checkboxOptionIndex,questionIndex)" #checkbox [checked]=false></ion-checkbox>
-                  <ion-label [innerHTML]="option.html"></ion-label>
+                  <ion-label [innerHTML]="option.text"></ion-label>
               </ion-item>
           </ion-list>
     `,

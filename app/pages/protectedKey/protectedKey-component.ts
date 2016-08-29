@@ -7,7 +7,7 @@ import {tot} from "./../../app";
 @Component({
     template: `
       <ion-header>
-             <ion-navbar hideBackButton>
+             <ion-navbar hideBackButton lightseagreen class="foreColorWhite">
                   Welcome to Quiz Page <strong style="float:right" text-capitalize padding-right>{{UserName}}</strong>
              </ion-navbar>
     </ion-header>
@@ -15,10 +15,10 @@ import {tot} from "./../../app";
         <form (ngSubmit)="checkProtectKey(protectedKey.value)">
         <ion-item>
               <ion-label floating>Protected Key</ion-label>
-              <ion-input type="text" #protectedKey></ion-input>
+              <ion-input type="password" #protectedKey></ion-input>
          </ion-item>
          <div *ngIf="showError" style="color:red;">{{errorMessage}}</div>
-        <button type="submit" medium seagreen >Submit Protected Key</button>  
+        <button type="submit" medium lightseagreen >Submit Protected Key</button>  
         </form> 
     </ion-content>
     `
